@@ -4,8 +4,12 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
 import ModalFooterNav from '@/components/dashboard/modals/ModalFooterNav'
-import { inputBase } from '@/lib/dashboard/design'
+import { FormField, formInputClass } from '@/components/dashboard/ui/FormField'
 import { createComposant } from '@/app/dashboard/actions/quick-actions'
+import {
+  nouveauComposantStep1Schema,
+  nouveauComposantStep2Schema,
+} from '@/lib/validations/quick-actions'
 import type { NouveauComposantFormData } from '@/components/dashboard/quick-actions/types'
 
 const STEPS = ['Identification', 'Stocks & coûts', 'Récapitulatif']
@@ -41,7 +45,8 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [data, setData] = useState<NouveauComposantFormData>(initialData)
-  const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [serverError, setServerError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const isDirty = data.code !== '' || data.nom !== '' || data.stock_actuel > 0
@@ -50,25 +55,41 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
     if (open) {
       setStep(1)
       setData(initialData)
-      setError(null)
+      setFieldErrors({})
+      setServerError(null)
     }
   }, [open])
 
+  function applyZodErrors(issues: { path: PropertyKey[]; message: string }[]) {
+    const errs: Record<string, string> = {}
+    issues.forEach((issue) => {
+      errs[String(issue.path[0])] = issue.message
+    })
+    setFieldErrors(errs)
+  }
+
   function validateStep(s: number): boolean {
-    setError(null)
+    setFieldErrors({})
+    setServerError(null)
     if (s === 1) {
-      if (!data.code.trim()) {
-        setError('Le code est obligatoire.')
-        return false
-      }
-      if (!data.nom.trim()) {
-        setError('Le nom est obligatoire.')
+      const parsed = nouveauComposantStep1Schema.safeParse({
+        code: data.code,
+        nom: data.nom,
+        categorie: data.categorie,
+        unite_mesure: data.unite_mesure,
+      })
+      if (!parsed.success) {
+        applyZodErrors(parsed.error.issues)
         return false
       }
     }
     if (s === 2) {
-      if (data.stock_actuel < 0 || data.cout_unitaire_moyen_pondere < 0) {
-        setError('Les valeurs ne peuvent pas être négatives.')
+      const parsed = nouveauComposantStep2Schema.safeParse({
+        stock_actuel: data.stock_actuel,
+        cout_unitaire_moyen_pondere: data.cout_unitaire_moyen_pondere,
+      })
+      if (!parsed.success) {
+        applyZodErrors(parsed.error.issues)
         return false
       }
     }
@@ -76,12 +97,19 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
   }
 
   async function handleSubmit() {
-    if (!validateStep(1) || !validateStep(2)) return
+    if (!validateStep(1)) {
+      setStep(1)
+      return
+    }
+    if (!validateStep(2)) {
+      setStep(2)
+      return
+    }
     setIsSubmitting(true)
     const result = await createComposant(data)
     setIsSubmitting(false)
     if (result.error) {
-      setError(result.error)
+      setServerError(result.error)
       return
     }
     onClose()
@@ -93,8 +121,8 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
   return (
     <MultiStepModal
       open={open}
-      title="Nouvel intrant / composant"
-      subtitle="Ajoutez une matière première ou un emballage"
+      title="Enregistrer un Intrant / Stock"
+      subtitle="Étape 1 du parcours — matière première ou emballage"
       steps={STEPS}
       currentStep={step}
       isDirty={isDirty}
@@ -104,7 +132,8 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
           currentStep={step}
           totalSteps={STEPS.length}
           onPrevious={() => {
-            setError(null)
+            setFieldErrors({})
+            setServerError(null)
             setStep((s) => s - 1)
           }}
           onNext={() => validateStep(step) && setStep((s) => s + 1)}
@@ -114,43 +143,36 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
         />
       }
     >
-      {error && (
+      {serverError && (
         <div className="mb-4 rounded-md border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-          {error}
+          {serverError}
         </div>
       )}
 
       {step === 1 && (
         <div className="space-y-4">
-          <div>
-            <label htmlFor="code" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-              Code unique
-            </label>
+          <FormField label="Code unique" htmlFor="code" required error={fieldErrors.code}>
             <input
               id="code"
               value={data.code}
-              onChange={(e) => setData((d) => ({ ...d, code: e.target.value }))}
-              className={`${inputBase} h-11 w-full font-mono`}
+              onChange={(e) =>
+                setData((d) => ({ ...d, code: e.target.value.toUpperCase() }))
+              }
+              className={formInputClass(!!fieldErrors.code)}
               placeholder="Ex. JUS-RAISIN-01"
             />
-          </div>
-          <div>
-            <label htmlFor="nom" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-              Désignation
-            </label>
+          </FormField>
+          <FormField label="Désignation" htmlFor="nom" required error={fieldErrors.nom}>
             <input
               id="nom"
               value={data.nom}
               onChange={(e) => setData((d) => ({ ...d, nom: e.target.value }))}
-              className={`${inputBase} h-11 w-full`}
+              className={formInputClass(!!fieldErrors.nom)}
               placeholder="Ex. Jus de raisin concentré"
             />
-          </div>
+          </FormField>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label htmlFor="categorie" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-                Catégorie
-              </label>
+            <FormField label="Catégorie" htmlFor="categorie" required>
               <select
                 id="categorie"
                 value={data.categorie}
@@ -160,7 +182,7 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
                     categorie: e.target.value as NouveauComposantFormData['categorie'],
                   }))
                 }
-                className={`${inputBase} h-11 w-full`}
+                className={formInputClass()}
               >
                 {CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -168,11 +190,8 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
                   </option>
                 ))}
               </select>
-            </div>
-            <div>
-              <label htmlFor="unite" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-                Unité de mesure
-              </label>
+            </FormField>
+            <FormField label="Unité de mesure" htmlFor="unite" required>
               <select
                 id="unite"
                 value={data.unite_mesure}
@@ -182,7 +201,7 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
                     unite_mesure: e.target.value as NouveauComposantFormData['unite_mesure'],
                   }))
                 }
-                className={`${inputBase} h-11 w-full`}
+                className={formInputClass()}
               >
                 {UNITES.map((u) => (
                   <option key={u.value} value={u.value}>
@@ -190,51 +209,55 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
                   </option>
                 ))}
               </select>
-            </div>
+            </FormField>
           </div>
         </div>
       )}
 
       {step === 2 && (
         <div className="space-y-4">
-          <div>
-            <label htmlFor="stock" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-              Stock actuel
-            </label>
+          <FormField
+            label="Stock actuel"
+            htmlFor="stock"
+            required
+            error={fieldErrors.stock_actuel}
+          >
             <input
               id="stock"
               type="number"
               min={0}
               step="0.01"
-              value={data.stock_actuel}
+              value={data.stock_actuel || ''}
               onChange={(e) =>
                 setData((d) => ({
                   ...d,
                   stock_actuel: parseFloat(e.target.value) || 0,
                 }))
               }
-              className={`${inputBase} h-11 w-full`}
+              className={formInputClass(!!fieldErrors.stock_actuel)}
             />
-          </div>
-          <div>
-            <label htmlFor="cout" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-              Coût unitaire moyen pondéré ($)
-            </label>
+          </FormField>
+          <FormField
+            label="Coût unitaire moyen pondéré ($)"
+            htmlFor="cout"
+            required
+            error={fieldErrors.cout_unitaire_moyen_pondere}
+          >
             <input
               id="cout"
               type="number"
               min={0}
               step="0.01"
-              value={data.cout_unitaire_moyen_pondere}
+              value={data.cout_unitaire_moyen_pondere || ''}
               onChange={(e) =>
                 setData((d) => ({
                   ...d,
                   cout_unitaire_moyen_pondere: parseFloat(e.target.value) || 0,
                 }))
               }
-              className={`${inputBase} h-11 w-full`}
+              className={formInputClass(!!fieldErrors.cout_unitaire_moyen_pondere)}
             />
-          </div>
+          </FormField>
         </div>
       )}
 

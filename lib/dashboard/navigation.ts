@@ -6,6 +6,8 @@ import {
   Layers,
   DollarSign,
   Users,
+  ScrollText,
+  Lock,
 } from 'lucide-react'
 import type { AppRole } from '@/types/spgcr'
 
@@ -24,34 +26,40 @@ export const DASHBOARD_NAV: NavItem[] = [
     roles: 'all',
   },
   {
-    label: 'Lots de Production',
-    href: '/dashboard/lots',
-    icon: Package,
-    roles: 'all',
-  },
-  {
-    label: 'Gestion des Composants / Stocks',
+    label: '1. Composants & Stocks',
     href: '/dashboard/composants',
-    icon: Wine,
+    icon: Package,
     roles: ['admin_msd', 'responsable_production'],
   },
   {
-    label: 'Nomenclatures (BOM)',
+    label: '2. Catalogue & Recettes',
     href: '/dashboard/nomenclatures',
     icon: Layers,
     roles: ['admin_msd', 'responsable_production'],
   },
   {
-    label: 'Analyses Financières / Coûts de Revient',
-    href: '/dashboard/analyses',
-    icon: DollarSign,
-    roles: ['admin_msd'],
+    label: '3. Lots de Production',
+    href: '/dashboard/lots',
+    icon: Wine,
+    roles: 'all',
   },
   {
-    label: 'Gestion des Utilisateurs / Validation',
+    label: '4. Analyses Financières',
+    href: '/dashboard/analyses',
+    icon: DollarSign,
+    roles: ['admin_msd', 'responsable_production'],
+  },
+  {
+    label: 'Gestion des Utilisateurs',
     href: '/dashboard/utilisateurs',
     icon: Users,
     roles: ['admin_msd'],
+  },
+  {
+    label: 'Historique & Logs',
+    href: '/dashboard/historique',
+    icon: ScrollText,
+    roles: ['admin_msd', 'responsable_production'],
   },
 ]
 

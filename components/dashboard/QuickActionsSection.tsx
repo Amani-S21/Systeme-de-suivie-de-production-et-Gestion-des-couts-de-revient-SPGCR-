@@ -11,7 +11,7 @@ export default async function QuickActionsSection({
   role,
   userId,
 }: QuickActionsSectionProps) {
-  const { produitsFinis, operateurs, composants } =
+  const { produitsFinis, operateurs, composants, activeLot } =
     await fetchQuickActionsOptions(userId)
 
   return (
@@ -21,6 +21,7 @@ export default async function QuickActionsSection({
       produitsFinis={produitsFinis}
       operateurs={operateurs}
       composants={composants}
+      activeLot={activeLot}
     />
   )
 }
