@@ -59,7 +59,7 @@ export default function DashboardHeader({
   }
 
   return (
-    <header className="z-30 w-full shrink-0 border-b border-slate-200 bg-white">
+    <header className="relative z-50 w-full shrink-0 border-b border-slate-200 bg-white shadow-sm">
       <div className="flex h-14 w-full items-center gap-3 px-4 sm:h-16 sm:gap-4 sm:px-6 lg:px-8">
         {/* Gauche — logo + titre */}
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">

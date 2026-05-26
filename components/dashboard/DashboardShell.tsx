@@ -47,7 +47,7 @@ export default function DashboardShell({
         onSidebarToggle={handleSidebarToggle}
       />
 
-      <div className="flex min-h-0 flex-1">
+      <div className="relative flex h-full min-h-0 flex-1">
         <DashboardSidebar
           role={role}
           collapsed={sidebarCollapsed}
