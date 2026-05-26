@@ -1,50 +1,60 @@
 'use server'
 
 import { createActionClient } from '@/lib/supabase-action'
-import { redirect } from 'next/navigation'
 
-export async function login(formData: FormData) {
-  const email = formData.get('email') as string
+export async function login(
+  _: unknown,
+  formData: FormData
+): Promise<{ success?: true; error?: string }> {
+  const email = (formData.get('email') as string)?.trim()
   const password = formData.get('password') as string
 
   if (!email || !password) {
-    throw new Error('Veuillez remplir tous les champs.')
+    return { error: 'Veuillez remplir tous les champs.' }
   }
 
-  const supabase = await createActionClient()
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
-
-  if (error) throw new Error(error.message)
-  redirect('/dashboard')
+  try {
+    const supabase = await createActionClient()
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) return { error: error.message }
+    return { success: true }
+  } catch {
+    return { error: 'Erreur inattendue lors de la connexion.' }
+  }
 }
 
-export async function signup(formData: FormData) {
-  const email = formData.get('email') as string
+export async function signup(
+  _: unknown,
+  formData: FormData
+): Promise<{ success?: true; error?: string }> {
+  const email = (formData.get('email') as string)?.trim()
   const password = formData.get('password') as string
-  const firstName = formData.get('firstName') as string
-  const lastName = formData.get('lastName') as string
+  const firstName = (formData.get('firstName') as string)?.trim()
+  const lastName = (formData.get('lastName') as string)?.trim()
 
   if (!email || !password || !firstName || !lastName) {
-    throw new Error('Veuillez remplir tous les champs requis.')
+    return { error: 'Veuillez remplir tous les champs requis.' }
   }
 
-  const supabase = await createActionClient()
-  
-  // Inscription avec métadonnées pour notre trigger PostgreSQL public.profiles
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        first_name: firstName,
-        last_name: lastName,
-        role: 'stock', // Rôle par défaut selon le PRD
-      },
-    },
-  })
+  try {
+    const supabase = await createActionClient()
 
-  if (error) throw new Error(error.message)
-  
-  // Redirection ou message de confirmation
-  redirect('/dashboard')
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          nom: lastName,
+          prenom: firstName,
+          role: 'operateur_usine',
+        },
+      },
+    })
+
+    if (error) return { error: error.message }
+    return { success: true }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Erreur inattendue lors de l'inscription."
+    return { error: msg }
+  }
 }

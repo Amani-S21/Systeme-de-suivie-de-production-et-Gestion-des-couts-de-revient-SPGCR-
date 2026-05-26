@@ -3,7 +3,7 @@
 import { useState, useEffect, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { login, signup } from './actions'
-import { Mail, Lock, User, ArrowLeft, Loader2, CheckCircle2, AlertCircle, ShieldCheck, Home } from 'lucide-react'
+import { Mail, Lock, User, ArrowLeft, Loader2, CheckCircle2, AlertCircle, ShieldCheck, Home, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 
 type AuthMode = 'login' | 'signup' | 'forgot'
@@ -19,12 +19,14 @@ export default function LoginPage() {
   
   // État dédié à la redirection sécurisée
   const [shouldRedirect, setShouldRedirect] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   // États pour les champs contrôlés (Validation en temps réel)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   // États de validation locale
   const [isEmailValid, setIsEmailValid] = useState(false)
@@ -76,12 +78,17 @@ export default function LoginPage() {
     startTransition(async () => {
       try {
         if (mode === 'login') {
-          await login(formData)
-          setShouldRedirect(true) // Secours si l'action ne redirige pas via redirect()
+          const res = await login(null, formData)
+          if (res?.success) {
+            setShowSuccessModal(true)
+            setTimeout(() => setShouldRedirect(true), 2000)
+          }
         } else if (mode === 'signup') {
-          await signup(formData)
-          setSuccess('Inscription réussie. Connexion en cours...')
-          setShouldRedirect(true)
+          const res = await signup(null, formData)
+          if (res?.success) {
+            setShowSuccessModal(true)
+            setTimeout(() => setShouldRedirect(true), 2000)
+          }
         } else if (mode === 'forgot') {
           setSuccess('Si ce compte est enregistré, un e-mail de réinitialisation a été transmis.')
           setLoading(false)
@@ -279,12 +286,12 @@ export default function LoginPage() {
                 </div>
                 <input
                   name="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full rounded-xl border py-2.5 pl-9 pr-10 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-1 ${
+                  className={`block w-full rounded-xl border py-2.5 pl-9 pr-14 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-1 ${
                     password.length > 0 
                       ? isPasswordStrong 
                         ? 'border-emerald-200 bg-emerald-50/10 focus:border-emerald-500 focus:ring-emerald-500' 
@@ -294,14 +301,24 @@ export default function LoginPage() {
                   placeholder="••••••••"
                 />
                 {password.length > 0 && (
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    {isPasswordStrong ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                    ) : (
-                      <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
-                        {password.length}/8
-                      </span>
-                    )}
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
+                      title={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                    <div className="pointer-events-none flex items-center">
+                      {isPasswordStrong ? (
+                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                      ) : (
+                        <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+                          {password.length}/8
+                        </span>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
@@ -363,6 +380,23 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
+      {/* Modale de succès */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fadeIn">
+          <div className="rounded-2xl bg-white p-8 shadow-2xl max-w-sm w-full mx-4 text-center space-y-4 border border-slate-100">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 mb-2">
+              <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">Connexion réussie !</h3>
+            <p className="text-sm text-slate-500">
+              Vous allez être redirigé vers votre tableau de bord...
+            </p>
+            <div className="pt-4 flex justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
