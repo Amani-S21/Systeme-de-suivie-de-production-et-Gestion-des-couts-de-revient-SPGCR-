@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server'
 import AdminOverview from '@/components/dashboard/AdminOverview'
 import ResponsableOverview from '@/components/dashboard/ResponsableOverview'
 import OperateurOverview from '@/components/dashboard/OperateurOverview'
+import QuickActionsSection from '@/components/dashboard/QuickActionsSection'
 import type { AppRole } from '@/types/spgcr'
 
 export default async function DashboardPage() {
@@ -33,6 +34,11 @@ export default async function DashboardPage() {
           Vue d&apos;ensemble
         </h1>
       </div>
+
+      <div className="mb-8">
+        <QuickActionsSection role={role} userId={user.id} />
+      </div>
+
       {role === 'admin_msd' && <AdminOverview />}
       {role === 'responsable_production' && <ResponsableOverview />}
       {role === 'operateur_usine' && <OperateurOverview userId={user.id} />}
