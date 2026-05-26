@@ -1,11 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useMemo, useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import type { LucideIcon } from 'lucide-react'
 import {
   ArrowRight, Search, Package, CheckCircle2, Clock, XCircle,
-  Eye, Pencil, Trash2, ArrowUpDown,
+  Eye, Pencil, Trash2, ArrowUpDown, Plus,
 } from 'lucide-react'
 import KpiCard from '@/components/dashboard/ui/KpiCard'
 import EmptyState from '@/components/dashboard/ui/EmptyState'
@@ -137,7 +137,14 @@ export default function LotsPageClient({
   role, userId, lots, bomLinesByProduitFiniId, produitsFinis, operateurs, kpis,
 }: LotsPageClientProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [query, setQuery] = useState('')
+  
+  useEffect(() => {
+    const s = searchParams.get('search')
+    if (s) setQuery(s)
+  }, [searchParams])
+
   const [status, setStatus] = useState<StatusFilter>('all')
   const [sortKey, setSortKey] = useState<SortKey>('dateLancement')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
@@ -151,179 +158,220 @@ export default function LotsPageClient({
     else { setSortKey(key); setSortDir('asc') }
   }
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase()
+  const filteredLots = useMemo(() => {
+    const q = query.toLowerCase().trim()
     return lots
       .filter((l) => {
-        const statOk = status === 'all' || l.statut === status
-        const qOk = !q || l.numeroLot.toLowerCase().includes(q) || l.produitNom.toLowerCase().includes(q)
-        return statOk && qOk
+        const matchesQuery = !q || l.numeroLot.toLowerCase().includes(q) || l.produitNom.toLowerCase().includes(q)
+        const matchesStatus = status === 'all' || l.statut === status
+        return matchesQuery && matchesStatus
       })
       .sort((a, b) => {
         const mul = sortDir === 'asc' ? 1 : -1
-        if (sortKey === 'dateLancement') return mul * a.dateLancement.localeCompare(b.dateLancement)
-        if (sortKey === 'statut') return mul * a.statut.localeCompare(b.statut)
-        if (sortKey === 'produitNom') return mul * a.produitNom.localeCompare(b.produitNom)
-        return mul * a.numeroLot.localeCompare(b.numeroLot)
+        if (sortKey === 'dateLancement') {
+          return mul * (new Date(a.dateLancement).getTime() - new Date(b.dateLancement).getTime())
+        }
+        return mul * String(a[sortKey]).localeCompare(String(b[sortKey]))
       })
   }, [lots, query, status, sortKey, sortDir])
 
-  function handleExportExcel() {
-    exportToCsv('lots_production', filtered.map((l) => ({
+  const kpiData = [
+    { label: 'Lots Actifs', value: kpis.lotsActifs, icon: Clock, accent: 'amber' as const },
+    { label: 'Volume en Cuve', value: kpis.volumeCuve, icon: Package, accent: 'indigo' as const },
+    { label: 'Clôtures (Mois)', value: kpis.cloturesCeMois, icon: CheckCircle2, accent: 'emerald' as const },
+  ]
+
+  function handleExportCsv() {
+    exportToCsv('lots_production', filteredLots.map(l => ({
       'N° Lot': l.numeroLot,
       Produit: l.produitNom,
       Opérateur: l.operateurNom,
-      'Qté prévue': l.quantitePrevue,
-      'Date lancement': formatDate(l.dateLancement),
+      Date: formatDate(l.dateLancement),
       Statut: l.statut,
     })))
   }
-  function handleExportPdf() { exportToPrint('Lots de Production — SPGCR') }
-  async function handleConfirmDelete() { setDeleteId(null) }
+
+  const lotToCloturer = clotureLotId ? lots.find(l => l.id === clotureLotId) : null
 
   return (
-    <div className="space-y-6">
-      {/* KPIs */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <KpiCard label="Lots Actifs" value={kpis.lotsActifs} icon={Package} accent="amber" subtext="Statut en_cours" />
-        <KpiCard label="Volume en Cuve" value={kpis.volumeCuve} icon={Clock} accent="indigo" subtext="Sur les lots en cours" />
-        <KpiCard label="Clôturés (Ce mois)" value={kpis.cloturesCeMois} icon={CheckCircle2} accent="emerald" subtext="Statut termine" />
+    <>
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {kpiData.map((kpi) => (
+          <KpiCard key={kpi.label} {...kpi} />
+        ))}
       </div>
 
-      {/* Filters toolbar */}
-      <section className="rounded-xl border border-slate-100 bg-white shadow-sm">
-        <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-1 flex-wrap gap-2">
-            <div className="relative min-w-[200px] flex-1">
-              <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Rechercher par numéro de lot ou produit…"
-                className="h-9 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-xs outline-none transition focus:border-blue-300 focus:ring-2 focus:ring-blue-100"
-              />
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {(['all','en_cours','termine','annule'] as const).map((s) => (
-                <button key={s} type="button" onClick={() => setStatus(s)}
-                  className={`rounded-md border px-3 py-1.5 text-xs font-semibold transition ${
-                    status === s ? 'border-blue-300 bg-blue-50 text-blue-800'
-                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
-                  }`}>
-                  {s === 'all' ? 'Tous' : s === 'en_cours' ? 'En cours' : s === 'termine' ? 'Terminés' : 'Annulés'}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <ExportButtons onExportExcel={handleExportExcel} onExportPdf={handleExportPdf} />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Lots de Production</h1>
+          <p className="text-sm text-slate-500 font-medium">Suivi en temps réel des ordres de fabrication.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <ExportButtons onExportExcel={handleExportCsv} onExportPdf={() => exportToPrint('Lots de Production — SPGCR')} />
+          {role !== 'operateur_usine' && (
             <button
-              type="button"
               onClick={() => setNewLotOpen(true)}
-              className="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+              className="flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-slate-950/20 transition-all hover:bg-slate-800 active:scale-95"
             >
-              <ArrowRight className="h-3.5 w-3.5" />
-              Lancer un lot
+              <Plus className="h-4 w-4" />
+              Nouveau Lot
             </button>
+          )}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        {/* Toolbar */}
+        <div className="bg-slate-50/50 border-b border-slate-100 p-4 flex flex-col sm:flex-row gap-4 items-center">
+          <div className="relative flex-1 w-full">
+            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Rechercher un lot ou un produit..."
+              className="h-10 w-full pl-10 pr-4 rounded-xl border border-slate-200 bg-white text-sm focus:border-slate-300 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
+            />
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as StatusFilter)}
+              className="h-10 px-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 outline-none transition-all focus:border-slate-300"
+            >
+              <option value="all">Tous les statuts</option>
+              <option value="en_cours">En cours</option>
+              <option value="termine">Terminé</option>
+              <option value="annule">Annulé</option>
+            </select>
           </div>
         </div>
-      </section>
 
-      {/* Table */}
-      {lots.length === 0 ? (
-        <EmptyState icon={Package} title="Aucun lot de production"
-          description="Commencez par lancer un nouveau lot." />
-      ) : filtered.length === 0 ? (
-        <EmptyState icon={Search} title="Aucun résultat"
-          description="Aucun lot ne correspond à votre recherche ou filtre." />
-      ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-100 bg-white shadow-sm">
-          <table className="min-w-[920px] w-full text-left text-sm">
+        {/* List */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/80 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                <th className="px-4 py-3"><SortBtn col="N° Lot" active={sortKey==='numeroLot'} dir={sortDir} onClick={()=>toggleSort('numeroLot')}/></th>
-                <th className="px-4 py-3"><SortBtn col="Produit" active={sortKey==='produitNom'} dir={sortDir} onClick={()=>toggleSort('produitNom')}/></th>
-                <th className="px-4 py-3">Opérateur</th>
-                <th className="px-4 py-3">Qté prévue</th>
-                <th className="px-4 py-3"><SortBtn col="Date" active={sortKey==='dateLancement'} dir={sortDir} onClick={()=>toggleSort('dateLancement')}/></th>
-                <th className="px-4 py-3"><SortBtn col="Statut" active={sortKey==='statut'} dir={sortDir} onClick={()=>toggleSort('statut')}/></th>
-                <th className="px-4 py-3 text-right">Actions</th>
+              <tr className="border-b border-slate-100 bg-slate-50/30 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <th className="px-6 py-4">
+                  <SortBtn col="N° Lot" active={sortKey === 'numeroLot'} dir={sortDir} onClick={() => toggleSort('numeroLot')} />
+                </th>
+                <th className="px-6 py-4">
+                  <SortBtn col="Produit" active={sortKey === 'produitNom'} dir={sortDir} onClick={() => toggleSort('produitNom')} />
+                </th>
+                <th className="px-6 py-4">Opérateur</th>
+                <th className="px-6 py-4">
+                  <SortBtn col="Date" active={sortKey === 'dateLancement'} dir={sortDir} onClick={() => toggleSort('dateLancement')} />
+                </th>
+                <th className="px-6 py-4">
+                  <SortBtn col="Statut" active={sortKey === 'statut'} dir={sortDir} onClick={() => toggleSort('statut')} />
+                </th>
+                <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filtered.map((lot) => {
-                const bomLines = bomLinesByProduitFiniId[lot.produitFiniId] ?? []
-                const isClotureOpen = clotureLotId === lot.id
-                const isConsulterOpen = consulterLotId === lot.id
-                return (
-                  <>
-                    <tr key={lot.id} className="group transition-colors hover:bg-slate-50/80">
-                      <td className="px-4 py-3.5 font-mono text-xs font-bold text-slate-800">{lot.numeroLot}</td>
-                      <td className="px-4 py-3.5">
-                        <p className="font-semibold text-slate-800">{lot.produitNom}</p>
-                        {lot.produitCode && <p className="mt-0.5 font-mono text-xs text-slate-500">{lot.produitCode}</p>}
-                      </td>
-                      <td className="px-4 py-3.5 text-slate-700">{lot.operateurNom}</td>
-                      <td className="px-4 py-3.5 tabular-nums text-slate-700">{formatNumber(lot.quantitePrevue, 0)} btl.</td>
-                      <td className="px-4 py-3.5 text-slate-600">{formatDate(lot.dateLancement)}</td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex items-center gap-1.5">
-                          <StatutMeta statut={lot.statut} />
-                          <StatutBadge statut={lot.statut} />
-                        </div>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex items-center justify-end gap-1">
-                          <button type="button" title="Consulter"
-                            onClick={() => { setConsulterLotId((v) => v===lot.id ? null : lot.id); setClotureLotId(null) }}
-                            className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors">
-                            <Eye className="h-3.5 w-3.5" />
+              {filteredLots.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-20">
+                    <EmptyState
+                      icon={Package}
+                      title="Aucun lot trouvé"
+                      description="Réessayez avec un autre numéro de lot ou statut."
+                    />
+                  </td>
+                </tr>
+              ) : (
+                filteredLots.map((lot) => (
+                  <tr key={lot.id} className="group hover:bg-slate-50 transition-colors">
+                    <td className="px-6 py-4 font-mono text-xs font-bold text-slate-900">{lot.numeroLot}</td>
+                    <td className="px-6 py-4">
+                      <div className="font-bold text-slate-900">{lot.produitNom}</div>
+                      <div className="text-[10px] text-slate-500 font-mono uppercase tracking-tight">{lot.produitCode}</div>
+                    </td>
+                    <td className="px-6 py-4 text-slate-600 font-medium">{lot.operateurNom}</td>
+                    <td className="px-6 py-4 text-slate-500 text-xs">{formatDate(lot.dateLancement)}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <StatutMeta statut={lot.statut} />
+                        <StatutBadge statut={lot.statut} />
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => setConsulterLotId(lot.id)}
+                          title="Fiche de production"
+                          className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        {lot.statut === 'en_cours' && (
+                          <button
+                            onClick={() => setClotureLotId(lot.id)}
+                            title="Clôturer le lot"
+                            className="p-2 text-amber-500 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-all"
+                          >
+                            <CheckCircle2 className="h-4 w-4" />
                           </button>
-                          {lot.statut === 'en_cours' && (
-                            <button type="button" title="Clôturer"
-                              onClick={() => { setClotureLotId((v) => v===lot.id ? null : lot.id); setConsulterLotId(null) }}
-                              className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors">
-                              <Pencil className="h-3.5 w-3.5" />
-                            </button>
-                          )}
-                          <button type="button" title="Supprimer"
+                        )}
+                        {(role as string) === 'admin' && (
+                          <button
                             onClick={() => setDeleteId(lot.id)}
-                            className="rounded-md p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 transition-colors">
-                            <Trash2 className="h-3.5 w-3.5" />
+                            title="Supprimer"
+                            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                          >
+                            <Trash2 className="h-4 w-4" />
                           </button>
-                        </div>
-                      </td>
-                    </tr>
-                    {(isClotureOpen || isConsulterOpen) && (
-                      <tr>
-                        <td colSpan={7} className="px-4 py-4 bg-slate-50/50">
-                          {isClotureOpen ? (
-                            <ClotureLotForm lotId={lot.id} numeroLot={lot.numeroLot}
-                              quantiteProduite={lot.quantitePrevue}
-                              onSuccess={() => { setClotureLotId(null); router.refresh() }} />
-                          ) : (
-                            <BomConsumptionPanel lot={lot} bomLines={bomLines} />
-                          )}
-                        </td>
-                      </tr>
-                    )}
-                  </>
-                )
-              })}
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
-          <div className="border-t border-slate-100 px-4 py-2 text-right text-xs text-slate-400">
-            {filtered.length} / {lots.length} lot{lots.length !== 1 ? 's' : ''}
-          </div>
+        </div>
+      </div>
+
+      {consulterLotId && (
+        <div className="mt-8 animate-fadeIn">
+          <BomConsumptionPanel
+            lot={lots.find(l => l.id === consulterLotId)!}
+            bomLines={bomLinesByProduitFiniId[lots.find(l => l.id === consulterLotId)!.produitFiniId] || []}
+          />
+          <button
+            onClick={() => setConsulterLotId(null)}
+            className="mt-4 text-xs font-bold text-slate-400 hover:text-slate-600 underline uppercase tracking-widest"
+          >
+            Masquer la fiche de production
+          </button>
         </div>
       )}
 
-      <NouveauLotModal open={newLotOpen} onClose={() => setNewLotOpen(false)}
-        role={role} currentUserId={userId} produitsFinis={produitsFinis} operateurs={operateurs} />
+      {/* Modals */}
+      <NouveauLotModal
+        open={newLotOpen}
+        onClose={() => setNewLotOpen(false)}
+        role={role}
+        currentUserId={userId}
+        produitsFinis={produitsFinis}
+        operateurs={operateurs}
+      />
 
-      <ConfirmDeleteModal open={!!deleteId} title="Supprimer ce lot ?"
-        description="Cette action est irréversible. Le lot et ses données de clôture seront définitivement supprimés."
-        onConfirm={handleConfirmDelete} onCancel={() => setDeleteId(null)} />
-    </div>
+      {lotToCloturer && (
+        <ClotureLotForm
+          lotId={lotToCloturer.id}
+          numeroLot={lotToCloturer.numeroLot}
+          quantiteProduite={lotToCloturer.quantitePrevue}
+          onSuccess={() => { setClotureLotId(null); router.refresh() }}
+        />
+      )}
+
+      <ConfirmDeleteModal
+        open={!!deleteId}
+        title="Supprimer le lot ?"
+        description="Cette action supprimera également les calculs de prix de revient associés."
+        onConfirm={() => setDeleteId(null)}
+        onCancel={() => setDeleteId(null)}
+      />
+    </>
   )
 }

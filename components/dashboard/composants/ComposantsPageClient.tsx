@@ -1,6 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import {
   Plus, Search, ArrowUpDown, Eye, Pencil, Trash2,
 } from 'lucide-react'
@@ -46,6 +47,7 @@ function SortBtn({ col, active, dir, onClick }: {
 }
 
 export default function ComposantsPageClient({ composants }: ComposantsPageClientProps) {
+  const searchParams = useSearchParams()
   const [modalOpen, setModalOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [categorie, setCategorie] = useState('all')
@@ -54,6 +56,11 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [viewId, setViewId] = useState<string | null>(null)
   const [editTarget, setEditTarget] = useState<ComposantRow | null>(null)
+
+  useEffect(() => {
+    const s = searchParams.get('search')
+    if (s) setQuery(s)
+  }, [searchParams])
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
@@ -98,7 +105,6 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
   }
 
   async function handleConfirmDelete() {
-    // TODO: call server action to delete composant by deleteId
     setDeleteId(null)
   }
 
@@ -116,9 +122,7 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
       />
 
       <div className={`${cardBase} overflow-hidden`}>
-        {/* ── Toolbar ─────────────────────────────────────────── */}
         <div className="flex flex-col gap-3 border-b border-slate-100 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
-          {/* Search + cat filter */}
           <div className="flex flex-1 flex-wrap gap-2">
             <div className="relative min-w-[200px] flex-1">
               <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
@@ -142,11 +146,9 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
               ))}
             </select>
           </div>
-          {/* Export buttons */}
           <ExportButtons onExportExcel={handleExportExcel} onExportPdf={handleExportPdf} />
         </div>
 
-        {/* ── Table ───────────────────────────────────────────── */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[820px] text-left text-sm">
             <thead>
@@ -190,30 +192,26 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
                     <td className="px-5 py-3.5 font-semibold tabular-nums text-slate-800">
                       {formatCurrency(Number(c.cout_unitaire_moyen_pondere))}
                     </td>
-                    {/* Row actions */}
                     <td className="px-5 py-3.5">
                       <div className="flex items-center justify-end gap-1">
                         <button
                           type="button"
-                          title="Consulter"
                           onClick={() => setViewId((v) => v === c.id ? null : c.id)}
-                          className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                          className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors"
                         >
                           <Eye className="h-3.5 w-3.5" />
                         </button>
                         <button
                           type="button"
-                          title="Modifier"
                           onClick={() => { setEditTarget(c); setModalOpen(true) }}
-                          className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                          className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors"
                         >
                           <Pencil className="h-3.5 w-3.5" />
                         </button>
                         <button
                           type="button"
-                          title="Supprimer"
                           onClick={() => setDeleteId(c.id)}
-                          className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                          className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
@@ -225,14 +223,8 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
             </tbody>
           </table>
         </div>
-
-        {/* row count */}
-        <div className="border-t border-slate-100 px-5 py-2 text-right text-xs text-slate-400">
-          {filtered.length} / {composants.length} composant{composants.length !== 1 ? 's' : ''}
-        </div>
       </div>
 
-      {/* Detail panel */}
       {viewTarget && (
         <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-5 text-sm text-slate-700">
           <p className="font-bold text-slate-900">{viewTarget.nom} <span className="font-mono text-xs text-slate-500">({viewTarget.code})</span></p>
@@ -261,7 +253,7 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
       <ConfirmDeleteModal
         open={!!deleteId}
         title="Supprimer ce composant ?"
-        description="Cette action est irréversible. Le composant et ses données de stock seront définitivement supprimés."
+        description="Cette action est irréversible."
         onConfirm={handleConfirmDelete}
         onCancel={() => setDeleteId(null)}
       />
