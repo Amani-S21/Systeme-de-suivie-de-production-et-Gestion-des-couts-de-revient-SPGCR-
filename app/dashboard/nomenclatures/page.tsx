@@ -1,12 +1,22 @@
-import { Layers } from 'lucide-react'
-import DashboardSectionPlaceholder from '@/components/dashboard/DashboardSectionPlaceholder'
+import {
+  fetchComposantsForBom,
+  fetchFormulesList,
+  fetchProduitsFinisForBom,
+} from '@/lib/dashboard/queries/nomenclatures-page'
+import NomenclaturesPageClient from '@/components/dashboard/nomenclatures/NomenclaturesPageClient'
 
-export default function NomenclaturesPage() {
+export default async function NomenclaturesPage() {
+  const [formules, produitsFinis, composants] = await Promise.all([
+    fetchFormulesList(),
+    fetchProduitsFinisForBom(),
+    fetchComposantsForBom(),
+  ])
+
   return (
-    <DashboardSectionPlaceholder
-      icon={Layers}
-      title="Nomenclatures (BOM)"
-      description="Configuration des nomenclatures par produit fini — module à venir."
+    <NomenclaturesPageClient
+      formules={formules}
+      produitsFinis={produitsFinis}
+      composants={composants}
     />
   )
 }
