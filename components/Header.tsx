@@ -2,9 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ArrowRight, ShieldCheck, BarChart2, ChevronRight } from 'lucide-react'
+import { Menu, X, ArrowRight, ShieldCheck, BarChart2, ChevronRight, LogOut, User2 } from 'lucide-react'
+
+const ROLE_LABELS: Record<string, string> = {
+  admin_msd: 'Administrateur',
+  responsable_production: 'Responsable Production',
+  operateur_usine: 'Opérateur',
+}
 
 const navLinks = [
   { label: 'Accueil',         href: '/' },
@@ -13,10 +20,22 @@ const navLinks = [
   { label: 'Contact',         href: '/#contact' },
 ]
 
-export default function Header() {
+type Props = {
+  user: { email: string } | null
+  profile: { nom: string; prenom: string; role: string } | null
+}
+
+export default function Header({ user, profile }: Props) {
   const [isOpen, setIsOpen]         = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
+
+  async function handleSignOut() {
+    await fetch('/api/auth/signout', { method: 'POST' })
+    router.push('/login')
+    router.refresh()
+  }
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 24)
@@ -104,20 +123,49 @@ export default function Header() {
 
           {/* ── ACTIONS DROITE ── */}
           <div className="hidden md:flex items-center gap-3 flex-shrink-0">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-slate-200 bg-slate-50">
-              <ShieldCheck className="w-3 h-3 text-indigo-600" />
-              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                Accès sécurisé
-              </span>
-            </div>
-            <Link
-              href="/login"
-              className="group relative flex items-center gap-2 px-5 py-2.5 bg-slate-950 text-white font-black uppercase text-[10px] tracking-widest rounded-md overflow-hidden transition-all duration-300 hover:bg-indigo-600 shadow-sm active:scale-[0.97]"
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
-              <span className="relative z-10">Connexion</span>
-              <ArrowRight className="relative z-10 w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
-            </Link>
+            {user ? (
+              // CONNECTÉ : affichage du profil + déconnexion
+              <>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-md border border-slate-200 bg-slate-50">
+                  <User2 className="w-3 h-3 text-indigo-600 flex-shrink-0" />
+                  <div className="leading-tight">
+                    <div className="text-[10px] font-black text-slate-800">
+                      {profile ? `${profile.prenom} ${profile.nom}` : user.email}
+                    </div>
+                    {profile && (
+                      <div className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                        {ROLE_LABELS[profile.role] ?? profile.role}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="group flex items-center gap-2 px-4 py-2 bg-slate-950 text-white font-black uppercase text-[10px] tracking-widest rounded-md hover:bg-rose-600 transition-colors duration-200 shadow-sm"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              // NON CONNECTÉ : badge sécurité + bouton connexion
+              <>
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-slate-200 bg-slate-50">
+                  <ShieldCheck className="w-3 h-3 text-indigo-600" />
+                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                    Accès sécurisé
+                  </span>
+                </div>
+                <Link
+                  href="/login"
+                  className="group relative flex items-center gap-2 px-5 py-2.5 bg-slate-950 text-white font-black uppercase text-[10px] tracking-widest rounded-md overflow-hidden transition-all duration-300 hover:bg-indigo-600 shadow-sm active:scale-[0.97]"
+                >
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
+                  <span className="relative z-10">Connexion</span>
+                  <ArrowRight className="relative z-10 w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
+                </Link>
+              </>
+            )}
           </div>
 
           {/* ── BURGER MOBILE ── */}
@@ -199,13 +247,22 @@ export default function Header() {
               transition={{ delay: 0.38, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="relative z-10 px-6 pb-10 pt-4 space-y-4 border-t border-slate-100 flex-shrink-0"
             >
-              <Link
-                href="/login"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center justify-center gap-3 w-full py-4 bg-slate-950 text-white font-black uppercase text-[11px] tracking-widest rounded-md hover:bg-indigo-600 transition-colors duration-300 active:scale-[0.98]"
-              >
-                Connexion Opérateur <ArrowRight className="w-4 h-4" />
-              </Link>
+              {user ? (
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-rose-600 text-white font-black uppercase text-[11px] tracking-widest rounded-md hover:bg-rose-700 transition-colors duration-300 active:scale-[0.98]"
+                >
+                  <LogOut className="w-4 h-4" /> Déconnexion
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-slate-950 text-white font-black uppercase text-[11px] tracking-widest rounded-md hover:bg-indigo-600 transition-colors duration-300 active:scale-[0.98]"
+                >
+                  Connexion Opérateur <ArrowRight className="w-4 h-4" />
+                </Link>
+              )}
               <div className="flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-slate-400">
                 <ShieldCheck className="w-3 h-3 text-indigo-600" />
                 Accès sécurisé · Vin Ushindi · ISIG Goma
