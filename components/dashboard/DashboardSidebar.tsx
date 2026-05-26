@@ -34,41 +34,99 @@ export default function DashboardSidebar({
     })
   }
 
-  const renderNav = (iconOnly: boolean) => (
-    <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-4">
-      {navItems.map((item) => {
-        const isActive =
-          pathname === item.href ||
-          (item.href !== '/dashboard' && pathname.startsWith(item.href))
-        const Icon = item.icon
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            title={iconOnly ? item.label : undefined}
-            onClick={onMobileClose}
-            className={`group relative flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-300 ${
-              iconOnly ? 'justify-center px-2' : ''
-            } ${
-              isActive
-                ? 'bg-slate-100 text-slate-900'
-                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
-            }`}
-          >
-            {isActive && (
-              <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-slate-800" />
-            )}
-            <Icon
-              className={`h-4 w-4 shrink-0 ${
-                isActive ? 'text-slate-800' : 'text-slate-400 group-hover:text-slate-700'
+  const renderNav = (iconOnly: boolean) => {
+    // Separate step-items (labelled 1-4) from utility links
+    const stepItems = navItems.filter((i) => /^\d\./.test(i.label))
+    const overviewItem = navItems.find((i) => i.href === '/dashboard')
+    const utilityItems = navItems.filter(
+      (i) => !/^\d\./.test(i.label) && i.href !== '/dashboard'
+    )
+
+    const renderLink = (item: (typeof navItems)[0]) => {
+      const isActive =
+        pathname === item.href ||
+        (item.href !== '/dashboard' && pathname.startsWith(item.href))
+      const Icon = item.icon
+      const isStep = /^\d\./.test(item.label)
+
+      return (
+        <Link
+          key={item.href}
+          href={item.href}
+          title={iconOnly ? item.label : undefined}
+          onClick={onMobileClose}
+          className={`group relative flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+            iconOnly ? 'justify-center px-2' : ''
+          } ${
+            isActive
+              ? isStep
+                ? 'bg-blue-50 text-blue-900 border border-blue-100'
+                : 'bg-slate-100 text-slate-900'
+              : isStep
+              ? 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+          }`}
+        >
+          {isActive && (
+            <span
+              className={`absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full ${
+                isStep ? 'bg-blue-600' : 'bg-slate-800'
               }`}
             />
-            {!iconOnly && <span className="truncate leading-snug">{item.label}</span>}
-          </Link>
-        )
-      })}
-    </nav>
-  )
+          )}
+          <Icon
+            className={`h-4 w-4 shrink-0 ${
+              isActive
+                ? isStep
+                  ? 'text-blue-700'
+                  : 'text-slate-800'
+                : 'text-slate-400 group-hover:text-slate-700'
+            }`}
+          />
+          {!iconOnly && (
+            <span className="truncate leading-snug">{item.label}</span>
+          )}
+        </Link>
+      )
+    }
+
+    return (
+      <nav className="flex-1 overflow-y-auto py-3">
+        {/* Vue d'ensemble */}
+        {overviewItem && (
+          <div className="px-2 pb-1">{renderLink(overviewItem)}</div>
+        )}
+
+        {/* Parcours industriel */}
+        {stepItems.length > 0 && (
+          <div className="mt-3 px-2">
+            {!iconOnly && (
+              <p className="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                Parcours industriel
+              </p>
+            )}
+            <div className="space-y-0.5">
+              {stepItems.map(renderLink)}
+            </div>
+          </div>
+        )}
+
+        {/* Utility links (Utilisateurs…) */}
+        {utilityItems.length > 0 && (
+          <div className="mt-3 border-t border-slate-100 px-2 pt-3">
+            {!iconOnly && (
+              <p className="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                Administration
+              </p>
+            )}
+            <div className="space-y-0.5">
+              {utilityItems.map(renderLink)}
+            </div>
+          </div>
+        )}
+      </nav>
+    )
+  }
 
   const sidebarFooter = (iconOnly: boolean) => (
     <div className="shrink-0 border-t border-slate-100 p-2">

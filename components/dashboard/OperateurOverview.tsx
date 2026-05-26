@@ -4,7 +4,6 @@ import { formatNumber, formatDate } from '@/lib/dashboard/format'
 import KpiCard from '@/components/dashboard/ui/KpiCard'
 import LotStatusBadge from '@/components/dashboard/ui/LotStatusBadge'
 import EmptyTableRow from '@/components/dashboard/ui/EmptyTableRow'
-import OperateurQuickActions from '@/components/dashboard/OperateurQuickActions'
 import type { LotStatut } from '@/types/spgcr'
 import { cardBase } from '@/lib/dashboard/design'
 
@@ -38,8 +37,6 @@ export default async function OperateurOverview({ userId }: OperateurOverviewPro
           accent="emerald"
         />
       </div>
-
-      <OperateurQuickActions activeLot={data.activeLot} />
 
       <div className={`${cardBase} overflow-hidden`}>
         <div className="border-b border-slate-100 px-5 py-4">

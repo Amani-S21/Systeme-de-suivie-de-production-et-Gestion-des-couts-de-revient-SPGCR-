@@ -4,9 +4,13 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
 import ModalFooterNav from '@/components/dashboard/modals/ModalFooterNav'
-import { inputBase } from '@/lib/dashboard/design'
+import { FormField, formInputClass } from '@/components/dashboard/ui/FormField'
 import { generateNumeroLot } from '@/lib/dashboard/generate-numero-lot'
 import { createProductionLot } from '@/app/dashboard/actions/quick-actions'
+import {
+  nouveauLotStep1Schema,
+  nouveauLotStep2Schema,
+} from '@/lib/validations/quick-actions'
 import type {
   NouveauLotFormData,
   OperateurOption,
@@ -44,7 +48,8 @@ export default function NouveauLotModal({
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [data, setData] = useState<NouveauLotFormData>(() => initialData(currentUserId))
-  const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [serverError, setServerError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const isOperateurOnly = role === 'operateur_usine'
@@ -57,29 +62,39 @@ export default function NouveauLotModal({
     if (open) {
       setStep(1)
       setData(initialData(currentUserId))
-      setError(null)
+      setFieldErrors({})
+      setServerError(null)
     }
   }, [open, currentUserId])
 
+  function applyZodErrors(issues: { path: PropertyKey[]; message: string }[]) {
+    const errs: Record<string, string> = {}
+    issues.forEach((issue) => {
+      errs[String(issue.path[0])] = issue.message
+    })
+    setFieldErrors(errs)
+  }
+
   function validateStep(s: number): boolean {
-    setError(null)
+    setFieldErrors({})
+    setServerError(null)
     if (s === 1) {
-      if (!data.produitFiniId) {
-        setError('Choisissez un produit fini.')
-        return false
-      }
-      if (!data.quantite || data.quantite < 1) {
-        setError('Indiquez une quantité prévue d\'au moins 1 bouteille.')
+      const parsed = nouveauLotStep1Schema.safeParse({
+        produitFiniId: data.produitFiniId,
+        quantite: data.quantite,
+      })
+      if (!parsed.success) {
+        applyZodErrors(parsed.error.issues)
         return false
       }
     }
     if (s === 2) {
-      if (!data.numeroLot.trim()) {
-        setError('Le numéro de lot est obligatoire.')
-        return false
-      }
-      if (!data.operateurId) {
-        setError('Assignez un opérateur.')
+      const parsed = nouveauLotStep2Schema.safeParse({
+        numeroLot: data.numeroLot,
+        operateurId: data.operateurId,
+      })
+      if (!parsed.success) {
+        applyZodErrors(parsed.error.issues)
         return false
       }
     }
@@ -92,17 +107,22 @@ export default function NouveauLotModal({
   }
 
   function handlePrevious() {
-    setError(null)
+    setFieldErrors({})
+    setServerError(null)
     setStep((s) => Math.max(s - 1, 1))
   }
 
   async function handleSubmit() {
+    if (!validateStep(1)) {
+      setStep(1)
+      return
+    }
     if (!validateStep(2)) {
       setStep(2)
       return
     }
     setIsSubmitting(true)
-    setError(null)
+    setServerError(null)
     const result = await createProductionLot({
       numero_lot: data.numeroLot,
       produit_fini_id: data.produitFiniId,
@@ -111,7 +131,7 @@ export default function NouveauLotModal({
     })
     setIsSubmitting(false)
     if (result.error) {
-      setError(result.error)
+      setServerError(result.error)
       return
     }
     onClose()
@@ -124,8 +144,8 @@ export default function NouveauLotModal({
   return (
     <MultiStepModal
       open={open}
-      title="Nouveau lot de production"
-      subtitle="Lancez une mise en bouteille Vin Ushindi"
+      title="Ouvrir un lot de production"
+      subtitle="Étape 3 du parcours — mise en bouteille Vin Ushindi"
       steps={STEPS}
       currentStep={step}
       isDirty={isDirty}
@@ -142,25 +162,27 @@ export default function NouveauLotModal({
         />
       }
     >
-      {error && (
+      {serverError && (
         <div className="mb-4 rounded-md border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-          {error}
+          {serverError}
         </div>
       )}
 
       {step === 1 && (
         <div className="space-y-4">
-          <div>
-            <label htmlFor="produit" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-              Produit fini (Vin Ushindi)
-            </label>
+          <FormField
+            label="Produit fini (Vin Ushindi)"
+            htmlFor="produit"
+            required
+            error={fieldErrors.produitFiniId}
+          >
             <select
               id="produit"
               value={data.produitFiniId}
               onChange={(e) =>
                 setData((d) => ({ ...d, produitFiniId: e.target.value }))
               }
-              className={`${inputBase} h-11 w-full`}
+              className={formInputClass(!!fieldErrors.produitFiniId)}
             >
               <option value="">— Sélectionner —</option>
               {produitsFinis.map((p) => (
@@ -170,11 +192,13 @@ export default function NouveauLotModal({
                 </option>
               ))}
             </select>
-          </div>
-          <div>
-            <label htmlFor="quantite" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-              Quantité prévue (bouteilles)
-            </label>
+          </FormField>
+          <FormField
+            label="Quantité prévue (bouteilles)"
+            htmlFor="quantite"
+            required
+            error={fieldErrors.quantite}
+          >
             <input
               id="quantite"
               type="number"
@@ -186,27 +210,29 @@ export default function NouveauLotModal({
                   quantite: parseInt(e.target.value, 10) || 0,
                 }))
               }
-              className={`${inputBase} h-11 w-full`}
+              className={formInputClass(!!fieldErrors.quantite)}
               placeholder="Ex. 500"
             />
-          </div>
+          </FormField>
         </div>
       )}
 
       {step === 2 && (
         <div className="space-y-4">
           {!isOperateurOnly && (
-            <div>
-              <label htmlFor="operateur" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-                Opérateur assigné
-              </label>
+            <FormField
+              label="Opérateur assigné"
+              htmlFor="operateur"
+              required
+              error={fieldErrors.operateurId}
+            >
               <select
                 id="operateur"
                 value={data.operateurId}
                 onChange={(e) =>
                   setData((d) => ({ ...d, operateurId: e.target.value }))
                 }
-                className={`${inputBase} h-11 w-full`}
+                className={formInputClass(!!fieldErrors.operateurId)}
               >
                 {operateurs.map((o) => (
                   <option key={o.id} value={o.id}>
@@ -214,18 +240,20 @@ export default function NouveauLotModal({
                   </option>
                 ))}
               </select>
-            </div>
+            </FormField>
           )}
           {isOperateurOnly && (
             <p className="rounded-md border border-slate-100 bg-slate-50 px-4 py-3 text-sm text-slate-600">
               Ce lot vous sera automatiquement assigné en tant qu&apos;opérateur.
             </p>
           )}
-          <div>
-            <div className="mb-1.5 flex items-center justify-between">
-              <label htmlFor="numeroLot" className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Numéro de lot
-              </label>
+          <FormField
+            label="Numéro de lot"
+            htmlFor="numeroLot"
+            required
+            error={fieldErrors.numeroLot}
+          >
+            <div className="mb-1.5 flex justify-end">
               <button
                 type="button"
                 onClick={() =>
@@ -251,9 +279,9 @@ export default function NouveauLotModal({
                   numeroLotManuel: true,
                 }))
               }
-              className={`${inputBase} h-11 w-full font-mono text-sm`}
+              className={`${formInputClass(!!fieldErrors.numeroLot)} font-mono text-sm`}
             />
-          </div>
+          </FormField>
         </div>
       )}
 

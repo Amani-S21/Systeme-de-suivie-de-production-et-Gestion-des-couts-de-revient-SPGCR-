@@ -1,12 +1,17 @@
-import { Users } from 'lucide-react'
-import DashboardSectionPlaceholder from '@/components/dashboard/DashboardSectionPlaceholder'
+import { redirect } from 'next/navigation'
+import {
+  assertAdmin,
+  fetchAllProfilesForAdmin,
+} from '@/lib/dashboard/queries/utilisateurs-page'
+import UtilisateursPageClient from '@/components/dashboard/utilisateurs/UtilisateursPageClient'
 
-export default function UtilisateursPage() {
-  return (
-    <DashboardSectionPlaceholder
-      icon={Users}
-      title="Gestion des Utilisateurs"
-      description="Validation des comptes et attribution des rôles — module administrateur à venir."
-    />
-  )
+export default async function UtilisateursPage() {
+  const isAdmin = await assertAdmin()
+  if (!isAdmin) redirect('/dashboard')
+
+  const profiles = await fetchAllProfilesForAdmin()
+  const pending = profiles.filter((p) => !p.actif)
+  const active = profiles.filter((p) => p.actif)
+
+  return <UtilisateursPageClient pending={pending} active={active} />
 }

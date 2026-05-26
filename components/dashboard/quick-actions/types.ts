@@ -1,6 +1,16 @@
 import type { AppRole } from '@/types/spgcr'
 
-export type QuickActionId = 'nouveau-lot' | 'nouveau-composant' | 'nouvelle-bom'
+export type QuickActionId =
+  | 'nouveau-lot'
+  | 'nouveau-composant'
+  | 'nouvelle-bom'
+  | 'gestion-lot'
+
+export interface ActiveLotInfo {
+  id: string
+  numeroLot: string
+  quantiteProduite: number
+}
 
 export interface ProduitFiniOption {
   id: string
@@ -28,6 +38,7 @@ export interface QuickActionsGridProps {
   produitsFinis: ProduitFiniOption[]
   operateurs: OperateurOption[]
   composants: ComposantOption[]
+  activeLot: ActiveLotInfo | null
 }
 
 export interface NouveauLotFormData {

@@ -4,8 +4,12 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
 import ModalFooterNav from '@/components/dashboard/modals/ModalFooterNav'
-import { inputBase } from '@/lib/dashboard/design'
+import { FormField, formInputClass } from '@/components/dashboard/ui/FormField'
 import { createNomenclatureBom } from '@/app/dashboard/actions/quick-actions'
+import {
+  nouvelleBomStep1Schema,
+  nouvelleBomStep2Schema,
+} from '@/lib/validations/quick-actions'
 import type {
   ComposantOption,
   NouvelleBomFormData,
@@ -36,7 +40,8 @@ export default function NouvelleBomModal({
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [data, setData] = useState<NouvelleBomFormData>(initialData)
-  const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [serverError, setServerError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const isDirty =
@@ -48,23 +53,38 @@ export default function NouvelleBomModal({
     if (open) {
       setStep(1)
       setData(initialData)
-      setError(null)
+      setFieldErrors({})
+      setServerError(null)
     }
   }, [open])
 
+  function applyZodErrors(issues: { path: PropertyKey[]; message: string }[]) {
+    const errs: Record<string, string> = {}
+    issues.forEach((issue) => {
+      errs[String(issue.path[0])] = issue.message
+    })
+    setFieldErrors(errs)
+  }
+
   function validateStep(s: number): boolean {
-    setError(null)
-    if (s === 1 && !data.produit_fini_id) {
-      setError('Sélectionnez un produit fini.')
-      return false
-    }
-    if (s === 2) {
-      if (!data.composant_id) {
-        setError('Sélectionnez un composant.')
+    setFieldErrors({})
+    setServerError(null)
+    if (s === 1) {
+      const parsed = nouvelleBomStep1Schema.safeParse({
+        produit_fini_id: data.produit_fini_id,
+      })
+      if (!parsed.success) {
+        applyZodErrors(parsed.error.issues)
         return false
       }
-      if (!data.quantite_requise || data.quantite_requise <= 0) {
-        setError('La quantité requise doit être positive.')
+    }
+    if (s === 2) {
+      const parsed = nouvelleBomStep2Schema.safeParse({
+        composant_id: data.composant_id,
+        quantite_requise: data.quantite_requise,
+      })
+      if (!parsed.success) {
+        applyZodErrors(parsed.error.issues)
         return false
       }
     }
@@ -72,12 +92,19 @@ export default function NouvelleBomModal({
   }
 
   async function handleSubmit() {
-    if (!validateStep(1) || !validateStep(2)) return
+    if (!validateStep(1)) {
+      setStep(1)
+      return
+    }
+    if (!validateStep(2)) {
+      setStep(2)
+      return
+    }
     setIsSubmitting(true)
     const result = await createNomenclatureBom(data)
     setIsSubmitting(false)
     if (result.error) {
-      setError(result.error)
+      setServerError(result.error)
       return
     }
     onClose()
@@ -90,8 +117,8 @@ export default function NouvelleBomModal({
   return (
     <MultiStepModal
       open={open}
-      title="Nouvelle nomenclature BOM"
-      subtitle="Définir une ligne de recette produit / composant"
+      title="Définir une Nomenclature BOM"
+      subtitle="Étape 2 du parcours — recette standard Vin Ushindi"
       steps={STEPS}
       currentStep={step}
       isDirty={isDirty}
@@ -101,7 +128,8 @@ export default function NouvelleBomModal({
           currentStep={step}
           totalSteps={STEPS.length}
           onPrevious={() => {
-            setError(null)
+            setFieldErrors({})
+            setServerError(null)
             setStep((s) => s - 1)
           }}
           onNext={() => validateStep(step) && setStep((s) => s + 1)}
@@ -111,24 +139,26 @@ export default function NouvelleBomModal({
         />
       }
     >
-      {error && (
+      {serverError && (
         <div className="mb-4 rounded-md border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-          {error}
+          {serverError}
         </div>
       )}
 
       {step === 1 && (
-        <div>
-          <label htmlFor="pf" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-            Produit fini cible
-          </label>
+        <FormField
+          label="Produit fini cible"
+          htmlFor="pf"
+          required
+          error={fieldErrors.produit_fini_id}
+        >
           <select
             id="pf"
             value={data.produit_fini_id}
             onChange={(e) =>
               setData((d) => ({ ...d, produit_fini_id: e.target.value }))
             }
-            className={`${inputBase} h-11 w-full`}
+            className={formInputClass(!!fieldErrors.produit_fini_id)}
           >
             <option value="">— Sélectionner —</option>
             {produitsFinis.map((p) => (
@@ -137,22 +167,24 @@ export default function NouvelleBomModal({
               </option>
             ))}
           </select>
-        </div>
+        </FormField>
       )}
 
       {step === 2 && (
         <div className="space-y-4">
-          <div>
-            <label htmlFor="comp" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-              Composant
-            </label>
+          <FormField
+            label="Composant"
+            htmlFor="comp"
+            required
+            error={fieldErrors.composant_id}
+          >
             <select
               id="comp"
               value={data.composant_id}
               onChange={(e) =>
                 setData((d) => ({ ...d, composant_id: e.target.value }))
               }
-              className={`${inputBase} h-11 w-full`}
+              className={formInputClass(!!fieldErrors.composant_id)}
             >
               <option value="">— Sélectionner —</option>
               {composants.map((c) => (
@@ -161,11 +193,13 @@ export default function NouvelleBomModal({
                 </option>
               ))}
             </select>
-          </div>
-          <div>
-            <label htmlFor="qte" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-              Quantité requise par unité produite
-            </label>
+          </FormField>
+          <FormField
+            label="Quantité requise par unité produite"
+            htmlFor="qte"
+            required
+            error={fieldErrors.quantite_requise}
+          >
             <input
               id="qte"
               type="number"
@@ -178,9 +212,9 @@ export default function NouvelleBomModal({
                   quantite_requise: parseFloat(e.target.value) || 0,
                 }))
               }
-              className={`${inputBase} h-11 w-full`}
+              className={formInputClass(!!fieldErrors.quantite_requise)}
             />
-          </div>
+          </FormField>
         </div>
       )}
 
@@ -197,8 +231,7 @@ export default function NouvelleBomModal({
           <div className="flex justify-between gap-4">
             <dt className="text-slate-500">Quantité requise</dt>
             <dd className="font-medium">
-              {data.quantite_requise}{' '}
-              {composant?.unite_mesure ?? ''}
+              {data.quantite_requise} {composant?.unite_mesure ?? ''}
             </dd>
           </div>
         </dl>

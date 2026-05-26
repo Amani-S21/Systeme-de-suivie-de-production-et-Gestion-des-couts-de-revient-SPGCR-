@@ -2,6 +2,12 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/utils/supabase/server'
+import {
+  nouveauComposantSchema,
+  nouvelleBomSchema,
+  nouveauLotStep1Schema,
+  nouveauLotStep2Schema,
+} from '@/lib/validations/quick-actions'
 import type {
   NouveauComposantFormData,
   NouvelleBomFormData,
@@ -20,14 +26,20 @@ export async function createProductionLot(input: {
 
   if (!user) return { error: 'Session expirée. Reconnectez-vous.' }
 
-  if (!input.numero_lot?.trim()) {
-    return { error: 'Le numéro de lot est obligatoire.' }
+  const step1 = nouveauLotStep1Schema.safeParse({
+    produitFiniId: input.produit_fini_id,
+    quantite: input.quantite_produite,
+  })
+  if (!step1.success) {
+    return { error: step1.error.issues[0]?.message ?? 'Données invalides.' }
   }
-  if (!input.produit_fini_id) {
-    return { error: 'Sélectionnez un produit fini.' }
-  }
-  if (!input.quantite_produite || input.quantite_produite < 1) {
-    return { error: 'La quantité doit être au moins 1.' }
+
+  const step2 = nouveauLotStep2Schema.safeParse({
+    numeroLot: input.numero_lot,
+    operateurId: input.operateur_id || user.id,
+  })
+  if (!step2.success) {
+    return { error: step2.error.issues[0]?.message ?? 'Données invalides.' }
   }
 
   const { error } = await supabase.from('lots_production').insert({
@@ -57,17 +69,18 @@ export async function createComposant(input: NouveauComposantFormData) {
 
   if (!user) return { error: 'Session expirée. Reconnectez-vous.' }
 
-  if (!input.code?.trim() || !input.nom?.trim()) {
-    return { error: 'Le code et le nom sont obligatoires.' }
+  const parsed = nouveauComposantSchema.safeParse(input)
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? 'Données invalides.' }
   }
 
   const { error } = await supabase.from('composants').insert({
-    code: input.code.trim(),
-    nom: input.nom.trim(),
-    categorie: input.categorie,
-    unite_mesure: input.unite_mesure,
-    stock_actuel: input.stock_actuel,
-    cout_unitaire_moyen_pondere: input.cout_unitaire_moyen_pondere,
+    code: parsed.data.code.trim(),
+    nom: parsed.data.nom.trim(),
+    categorie: parsed.data.categorie,
+    unite_mesure: parsed.data.unite_mesure,
+    stock_actuel: parsed.data.stock_actuel,
+    cout_unitaire_moyen_pondere: parsed.data.cout_unitaire_moyen_pondere,
   })
 
   if (error) {
@@ -89,17 +102,15 @@ export async function createNomenclatureBom(input: NouvelleBomFormData) {
 
   if (!user) return { error: 'Session expirée. Reconnectez-vous.' }
 
-  if (!input.produit_fini_id || !input.composant_id) {
-    return { error: 'Produit fini et composant requis.' }
-  }
-  if (!input.quantite_requise || input.quantite_requise <= 0) {
-    return { error: 'La quantité requise doit être positive.' }
+  const parsed = nouvelleBomSchema.safeParse(input)
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? 'Données invalides.' }
   }
 
   const { error } = await supabase.from('nomenclatures_bom').insert({
-    produit_fini_id: input.produit_fini_id,
-    composant_id: input.composant_id,
-    quantite_requise: input.quantite_requise,
+    produit_fini_id: parsed.data.produit_fini_id,
+    composant_id: parsed.data.composant_id,
+    quantite_requise: parsed.data.quantite_requise,
   })
 
   if (error) {

@@ -2,8 +2,9 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState, useTransition } from 'react'
-import { ChevronDown, LogOut, Search, User2 } from 'lucide-react'
+import { ChevronDown, LogOut, Search, User2, ArrowRight, Package } from 'lucide-react'
 import { signOut } from '@/app/dashboard/actions'
+import { globalSearch, type SearchResult } from '@/app/dashboard/actions/search'
 import type { AppRole } from '@/types/spgcr'
 import { ROLE_LABELS } from '@/lib/dashboard/navigation'
 
@@ -37,18 +38,46 @@ export default function DashboardHeader({
   const [menuOpen, setMenuOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const menuRef = useRef<HTMLDivElement>(null)
+  
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [showResults, setShowResults] = useState(false)
+  const searchRef = useRef<HTMLDivElement>(null)
+
+  // Debounce search
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (searchQuery.length >= 2) {
+        setIsSearching(true)
+        const results = await globalSearch(searchQuery)
+        setSearchResults(results)
+        setIsSearching(false)
+        setShowResults(true)
+      } else {
+        setSearchResults([])
+        setShowResults(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setMenuOpen(false)
       }
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowResults(false)
+      }
     }
-    if (menuOpen) {
+    if (menuOpen || showResults) {
       document.addEventListener('mousedown', handleClickOutside)
     }
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [menuOpen])
+  }, [menuOpen, showResults])
 
   const initials = `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase()
 
@@ -83,14 +112,81 @@ export default function DashboardHeader({
 
         {/* Centre — recherche */}
         <div className="flex min-w-0 flex-1 justify-center px-2 sm:px-6">
-          <div className="relative w-full max-w-xl">
-            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <input
-              type="search"
-              placeholder="Rechercher un lot, un composant…"
-              className="h-10 w-full rounded-full border border-2 shadow-sm border-slate-400 bg-slate-50/80 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 transition-all duration-300 focus:border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-200/60 sm:h-11"
-              aria-label="Recherche globale"
-            />
+          <div className="relative w-full max-w-xl" ref={searchRef}>
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => searchQuery.length >= 2 && setShowResults(true)}
+                placeholder="Rechercher un lot, un composant…"
+                className="h-10 w-full rounded-full border-2 border-slate-400 bg-slate-50/80 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 transition-all duration-300 focus:border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-200/60 sm:h-11"
+                aria-label="Recherche globale"
+              />
+              {isSearching && (
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-slate-500" />
+                </div>
+              )}
+            </div>
+
+            {/* Résultats de recherche */}
+            {showResults && (
+              <div className="absolute top-full mt-2 w-full animate-fadeIn overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-2xl ring-1 ring-slate-900/5">
+                {searchResults.length > 0 ? (
+                  <div className="max-h-[70vh] overflow-y-auto p-2">
+                    {searchResults.map((result) => (
+                      <Link
+                        key={`${result.type}-${result.id}`}
+                        href={result.href}
+                        onClick={() => {
+                          setShowResults(false)
+                          setSearchQuery('')
+                        }}
+                        className="group flex items-center gap-3 rounded-xl p-3 transition-colors hover:bg-slate-50"
+                      >
+                        <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${
+                          result.type === 'lot' ? 'bg-amber-100 text-amber-600' :
+                          result.type === 'composant' ? 'bg-blue-100 text-blue-600' :
+                          'bg-emerald-100 text-emerald-600'
+                        }`}>
+                          {result.type === 'lot' ? <Package className="h-4 w-4" /> :
+                           result.type === 'composant' ? <Search className="h-4 w-4" /> :
+                           <Package className="h-4 w-4" />}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="truncate text-sm font-bold text-slate-900">
+                              {result.title}
+                            </span>
+                            <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-slate-500">
+                              {result.type}
+                            </span>
+                          </div>
+                          {result.subtitle && (
+                            <p className="truncate text-xs text-slate-500">
+                              {result.subtitle}
+                            </p>
+                          )}
+                        </div>
+                        <ArrowRight className="h-4 w-4 translate-x-[-4px] text-slate-300 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 text-slate-300">
+                      <Search className="h-6 w-6" />
+                    </div>
+                    <p className="mt-3 text-sm font-semibold text-slate-900">Aucun résultat trouvé</p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      Vérifiez l'orthographe ou essayez un autre mot-clé.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
