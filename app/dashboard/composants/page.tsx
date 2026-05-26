@@ -1,12 +1,7 @@
-import { Wine } from 'lucide-react'
-import DashboardSectionPlaceholder from '@/components/dashboard/DashboardSectionPlaceholder'
+import { fetchComposantsList } from '@/lib/dashboard/queries/composants-page'
+import ComposantsPageClient from '@/components/dashboard/composants/ComposantsPageClient'
 
-export default function ComposantsPage() {
-  return (
-    <DashboardSectionPlaceholder
-      icon={Wine}
-      title="Gestion des Composants / Stocks"
-      description="Module de gestion des matières premières, intrants et emballages — en cours de développement."
-    />
-  )
+export default async function ComposantsPage() {
+  const composants = await fetchComposantsList()
+  return <ComposantsPageClient composants={composants} />
 }
