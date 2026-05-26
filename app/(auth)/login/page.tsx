@@ -87,7 +87,8 @@ export default function LoginPage() {
           const res = await signup(null, formData)
           if (res?.success) {
             setShowSuccessModal(true)
-            setTimeout(() => setShouldRedirect(true), 2000)
+            // Laisser plus de temps pour lire le message d'activation
+            setTimeout(() => setShouldRedirect(true), 4000)
           }
         } else if (mode === 'forgot') {
           setSuccess('Si ce compte est enregistré, un e-mail de réinitialisation a été transmis.')
@@ -387,9 +388,13 @@ export default function LoginPage() {
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 mb-2">
               <CheckCircle2 className="h-8 w-8 text-emerald-600" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900">Connexion réussie !</h3>
-            <p className="text-sm text-slate-500">
-              Vous allez être redirigé vers votre tableau de bord...
+            <h3 className="text-xl font-bold text-slate-900">
+              {mode === 'signup' ? 'Inscription réussie !' : 'Connexion réussie !'}
+            </h3>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              {mode === 'signup' 
+                ? 'Votre compte sera activé sous peu, puis vous serez connecté automatiquement.'
+                : 'Vous allez être redirigé vers votre tableau de bord...'}
             </p>
             <div className="pt-4 flex justify-center">
               <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
@@ -397,6 +402,7 @@ export default function LoginPage() {
           </div>
         </div>
       )}
+
     </div>
   )
 }
