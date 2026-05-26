@@ -8,6 +8,7 @@ import {
   Users,
   ScrollText,
   Lock,
+  Building2,
 } from 'lucide-react'
 import type { AppRole } from '@/types/spgcr'
 
@@ -53,6 +54,12 @@ export const DASHBOARD_NAV: NavItem[] = [
     label: 'Gestion des Utilisateurs',
     href: '/dashboard/utilisateurs',
     icon: Users,
+    roles: ['admin_msd'],
+  },
+  {
+    label: 'Gestion des Succursales',
+    href: '/dashboard/succursales',
+    icon: Building2,
     roles: ['admin_msd'],
   },
   {
