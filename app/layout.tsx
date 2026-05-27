@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SPGCR — Gestion de Production Vin Ushindi",
-  description: "Système Intégré Spécialisé développé en partenariat avec l'ULPGL Goma et la Maison Aux Sources de Dieu.",
+  description: "Système Intégré Spécialisé développé en partenariat avec l'ISIG Goma et la Maison Aux Sources de Dieu.",
 };
 
 export default function RootLayout({
