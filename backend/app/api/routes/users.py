@@ -32,7 +32,7 @@ def create(payload: UserCreate, db: Session = Depends(get_db)) -> User:
 
 @router.patch("/{user_id}", response_model=UserRead, dependencies=[Depends(require_roles(UserRole.admin))])
 def update(user_id: int, payload: UserUpdate, db: Session = Depends(get_db)) -> User:
-    user = update_user(db, db.get(User, user_id), payload)  # type: ignore[arg-type]
+    user = update_user(db, db.get(User, user_id), payload)
     db.commit()
     db.refresh(user)
     return user

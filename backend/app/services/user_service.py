@@ -35,6 +35,8 @@ def create_user(db: Session, payload: UserCreate) -> User:
 
 
 def update_user(db: Session, user: User, payload: UserUpdate) -> User:
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Utilisateur introuvable")
     data = payload.model_dump(exclude_unset=True)
     password = data.pop("password", None)
     for key, value in data.items():

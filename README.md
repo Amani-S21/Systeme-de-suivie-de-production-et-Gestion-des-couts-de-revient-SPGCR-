@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SPCR - Suivi de Production et Gestion des Couts de Revient
 
-## Getting Started
+Application decoupee en deux parties :
 
-First, run the development server:
+- `backend/` : API FastAPI, PostgreSQL, SQLAlchemy, Alembic, JWT, roles et permissions.
+- `frontend/` : interface React/Vite reprenant le design du dashboard SPCR.
+
+## Prerequis
+
+- Python 3.11+
+- Node.js 20+
+- PostgreSQL
+
+## Configuration
+
+Copier `.example.env` vers `.env`, puis remplacer les valeurs PostgreSQL et admin.
+
+Le fichier `.env` est ignore par Git. Il contient notamment :
+
+- `DATABASE_URL`
+- `SECRET_KEY`
+- `DEFAULT_ADMIN_EMAIL`
+- `DEFAULT_ADMIN_PASSWORD`
+- `VITE_API_URL`
+
+## Backend FastAPI
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r backend\requirements.txt
+npm run migrate
+npm run backend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Au demarrage, FastAPI cree automatiquement l'admin par defaut si son email n'existe pas encore.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+API locale : `http://localhost:8000`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Documentation FastAPI : `http://localhost:8000/docs`
 
-## Learn More
+## Frontend React
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Interface locale : `http://localhost:5173`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Roles
 
-## Deploy on Vercel
+- `admin` : acces complet, utilisateurs, parametres, couts, production.
+- `responsable` : production, matieres premieres, produits, couts, rapports.
+- `operateur` : tableau de bord et production.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Migrations
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Les tables PostgreSQL sont creees par Alembic depuis :
+
+```text
+backend/migrations/versions/202606170001_initial_schema.py
+```
+
+Pour appliquer les migrations :
+
+```bash
+npm run migrate
+```
