@@ -29,8 +29,9 @@ Le fichier `.env` est ignore par Git. Il contient notamment :
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r backend\requirements.txt
-npm run migrate
-npm run backend
+cd backend
+alembic upgrade head
+uvicorn app.main:app --reload
 ```
 
 Au demarrage, FastAPI cree automatiquement l'admin par defaut si son email n'existe pas encore.
@@ -42,6 +43,7 @@ Documentation FastAPI : `http://localhost:8000/docs`
 ## Frontend React
 
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
