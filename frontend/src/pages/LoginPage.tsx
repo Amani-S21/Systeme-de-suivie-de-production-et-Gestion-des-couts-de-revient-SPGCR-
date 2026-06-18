@@ -194,7 +194,7 @@ export default function LoginPage() {
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">Prénom</label>
                 <div className="relative mt-1.5">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center">
                     <User className="h-4 w-4 text-slate-400" />
                   </div>
                   <input
@@ -203,15 +203,15 @@ export default function LoginPage() {
                     required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="block w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-11 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-slate-950 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-950"
-                    placeholder="Jean"
+                    className="block w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-12 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-slate-950 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-950"
+                    placeholder="Prénom"
                   />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">Nom</label>
                 <div className="relative mt-1.5">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center">
                     <User className="h-4 w-4 text-slate-400" />
                   </div>
                   <input
@@ -220,8 +220,8 @@ export default function LoginPage() {
                     required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="block w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-11 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-slate-950 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-950"
-                    placeholder="Kambale"
+                    className="block w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-12 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-slate-950 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-950"
+                    placeholder="Nom"
                   />
                 </div>
               </div>
@@ -234,8 +234,12 @@ export default function LoginPage() {
               {mode === 'login' ? "Nom d'utilisateur" : 'Adresse Email Professionnelle'}
             </label>
             <div className="relative mt-1.5">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <Mail className="h-4 w-4 text-slate-400" />
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center">
+                {mode === 'login' ? (
+                  <User className="h-4 w-4 text-slate-400" />
+                ) : (
+                  <Mail className="h-4 w-4 text-slate-400" />
+                )}
               </div>
               <input
                 name={mode === 'login' ? 'login' : 'email'}
@@ -244,17 +248,17 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`block w-full rounded-xl border py-2.5 pl-11 pr-12 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-1 ${
+                className={`block w-full rounded-xl border py-2.5 pl-12 pr-12 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-1 ${
                   email.length > 0 
                     ? isEmailValid 
                       ? 'border-emerald-200 bg-emerald-50/10 focus:border-emerald-500 focus:ring-emerald-500' 
                       : 'border-rose-200 bg-rose-50/10 focus:border-rose-500 focus:ring-rose-500'
                     : 'border-slate-200 bg-slate-50/50 focus:border-slate-950 focus:ring-slate-950'
                 }`}
-                placeholder={mode === 'login' ? "Nom d'utilisateur" : 'nom@entreprise.com'}
+                placeholder={mode === 'login' ? "Nom d'utilisateur" : 'Adresse email'}
               />
               {email.length > 0 && (
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <div className="absolute inset-y-0 right-0 flex w-11 items-center justify-center pointer-events-none">
                   {isEmailValid ? (
                     <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                   ) : (
@@ -283,7 +287,7 @@ export default function LoginPage() {
                 )}
               </div>
               <div className="relative mt-1.5">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center">
                   <Lock className="h-4 w-4 text-slate-400" />
                 </div>
                 <input
@@ -293,7 +297,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full rounded-xl border py-2.5 pl-11 pr-24 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-1 ${
+                  className={`block w-full rounded-xl border py-2.5 pl-12 pr-24 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-1 ${
                     password.length > 0 
                       ? isPasswordStrong 
                         ? 'border-emerald-200 bg-emerald-50/10 focus:border-emerald-500 focus:ring-emerald-500' 
