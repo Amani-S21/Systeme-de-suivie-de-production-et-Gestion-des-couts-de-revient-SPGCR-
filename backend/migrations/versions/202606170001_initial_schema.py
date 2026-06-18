@@ -1,6 +1,7 @@
 """initial schema"""
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
 
 revision = "202606170001"
 down_revision = None
@@ -9,12 +10,12 @@ depends_on = None
 
 
 def upgrade() -> None:
-    role_enum = sa.Enum("admin_msd", "responsable_production", "operateur_usine", name="userrole")
-    status_enum = sa.Enum("planifiee", "en_cours", "terminee", "annulee", name="productionstatus")
-    movement_enum = sa.Enum("entree", "sortie", "ajustement", name="movementtype")
-    role_enum.create(op.get_bind(), checkfirst=True)
-    status_enum.create(op.get_bind(), checkfirst=True)
-    movement_enum.create(op.get_bind(), checkfirst=True)
+    role_enum = postgresql.ENUM("admin_msd", "responsable_production", "operateur_usine", name="userrole", create_type=False)
+    status_enum = postgresql.ENUM("planifiee", "en_cours", "terminee", "annulee", name="productionstatus", create_type=False)
+    movement_enum = postgresql.ENUM("entree", "sortie", "ajustement", name="movementtype", create_type=False)
+    postgresql.ENUM("admin_msd", "responsable_production", "operateur_usine", name="userrole").create(op.get_bind(), checkfirst=True)
+    postgresql.ENUM("planifiee", "en_cours", "terminee", "annulee", name="productionstatus").create(op.get_bind(), checkfirst=True)
+    postgresql.ENUM("entree", "sortie", "ajustement", name="movementtype").create(op.get_bind(), checkfirst=True)
 
     op.create_table(
         "users",
