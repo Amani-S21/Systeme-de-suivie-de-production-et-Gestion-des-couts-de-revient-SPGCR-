@@ -22,7 +22,7 @@ export default function LoginPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   // États pour les champs contrôlés (Validation en temps réel)
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(mode === 'login' ? (import.meta.env.VITE_DEFAULT_ADMIN_LOGIN || 'admin') : '')
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -35,8 +35,8 @@ export default function LoginPage() {
   // Validation dynamique
   useEffect(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    setIsEmailValid(emailRegex.test(email))
-  }, [email])
+    setIsEmailValid(mode === 'login' ? email.trim().length >= 3 : emailRegex.test(email))
+  }, [email, mode])
 
   useEffect(() => {
     setIsPasswordStrong(password.length >= 8)
@@ -63,7 +63,7 @@ export default function LoginPage() {
     setSuccess(null)
 
     if (!isEmailValid) {
-      setError("Le format de l'adresse email est invalide.")
+      setError(mode === 'login' ? "Le nom d'utilisateur est obligatoire." : "Le format de l'adresse email est invalide.")
       return
     }
     if (mode !== 'forgot' && !isPasswordStrong) {
@@ -227,19 +227,19 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Saisie de l'Adresse Email */}
+          {/* Saisie login ou adresse email selon le mode */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
-              Adresse Email Professionnelle
+              {mode === 'login' ? "Nom d'utilisateur" : 'Adresse Email Professionnelle'}
             </label>
             <div className="relative mt-1.5">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <Mail className="h-4 w-4 text-slate-400" />
               </div>
               <input
-                name="email"
-                type="email"
-                autoComplete="email"
+                name={mode === 'login' ? 'login' : 'email'}
+                type={mode === 'login' ? 'text' : 'email'}
+                autoComplete={mode === 'login' ? 'username' : 'email'}
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -250,7 +250,7 @@ export default function LoginPage() {
                       : 'border-rose-200 bg-rose-50/10 focus:border-rose-500 focus:ring-rose-500'
                     : 'border-slate-200 bg-slate-50/50 focus:border-slate-950 focus:ring-slate-950'
                 }`}
-                placeholder="nom@entreprise.com"
+                placeholder={mode === 'login' ? 'admin' : 'nom@entreprise.com'}
               />
               {email.length > 0 && (
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -375,11 +375,6 @@ export default function LoginPage() {
         </form>
 
         {/* Pied de page académique épuré */}
-        <div className="border-t border-slate-100 pt-4 text-center">
-          <p className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">
-            Travail de Fin de Cycle — ISIG Goma
-          </p>
-        </div>
       </div>
       {/* Modale de succès */}
       {showSuccessModal && (
