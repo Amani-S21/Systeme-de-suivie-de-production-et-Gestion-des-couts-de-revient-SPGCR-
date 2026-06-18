@@ -99,6 +99,41 @@ export default function Footer() {
   return (
     <footer id="contact" className="w-full bg-white border-t border-slate-200 font-sans mt-auto selection:bg-indigo-500 scroll-mt-24">
 
+      <div className="border-t border-slate-100 bg-slate-50/70">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="mb-8 max-w-2xl">
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-indigo-600">
+              Contact & assistance
+            </span>
+            <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-slate-950">
+              Coordination SPGCR
+            </h3>
+            <p className="mt-2 text-sm font-medium leading-relaxed text-slate-500">
+              Pour toute demande liee aux acces, aux donnees de production, aux rapports
+              de cout de revient ou au parametrage BOM, contactez l equipe responsable du
+              pilotage industriel.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-md border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-4">
+            {contactItems.map((item) => (
+              <div key={item.label} className="bg-white p-5 transition-colors hover:bg-slate-50">
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-md border border-indigo-100 bg-indigo-50 text-indigo-600">
+                  <item.icon className="h-4 w-4" />
+                </div>
+                <p className="text-[9px] font-black uppercase tracking-[0.22em] text-slate-400">
+                  {item.label}
+                </p>
+                <p className="mt-1 text-sm font-black text-slate-900">{item.value}</p>
+                <p className="mt-1 text-xs font-medium leading-relaxed text-slate-500">
+                  {item.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* ═══════════════════════════════════════════
           BANDE GARANTIES TECHNIQUES
       ═══════════════════════════════════════════ */}
