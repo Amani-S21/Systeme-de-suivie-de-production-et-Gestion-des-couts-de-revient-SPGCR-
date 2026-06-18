@@ -29,6 +29,7 @@ export async function adminCreateUser(data: {
 }): Promise<{ success?: true; error?: string }> {
   await api.createUser({
     email: data.email,
+    login: data.email.split('@')[0],
     password: data.password || 'TemporaryPassword123!',
     first_name: data.prenom,
     last_name: data.nom,

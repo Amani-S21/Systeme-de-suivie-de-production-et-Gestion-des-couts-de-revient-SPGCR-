@@ -1,10 +1,10 @@
 import { login as apiLogin } from '@/api'
 
 export async function login(_: unknown, formData: FormData): Promise<{ success?: true; error?: string }> {
-  const email = String(formData.get('email') || '').trim()
+  const login = String(formData.get('login') || '').trim()
   const password = String(formData.get('password') || '')
   try {
-    const result = await apiLogin(email, password)
+    const result = await apiLogin(login, password)
     localStorage.setItem('spcr_token', result.access_token)
     localStorage.setItem('spcr_user', JSON.stringify(result.user))
     return { success: true }
@@ -16,6 +16,7 @@ export async function login(_: unknown, formData: FormData): Promise<{ success?:
 export async function signup(_: unknown, formData: FormData): Promise<{ success?: true; error?: string }> {
   const payload = {
     email: String(formData.get('email') || '').trim(),
+    login: String(formData.get('login') || formData.get('email') || '').trim().split('@')[0],
     password: String(formData.get('password') || ''),
     first_name: String(formData.get('firstName') || '').trim(),
     last_name: String(formData.get('lastName') || '').trim(),
