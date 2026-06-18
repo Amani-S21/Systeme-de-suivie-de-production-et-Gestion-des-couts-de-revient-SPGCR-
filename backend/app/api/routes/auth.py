@@ -21,6 +21,8 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
 
 @router.post("/signup", response_model=Token)
 def signup(payload: UserCreate, db: Session = Depends(get_db)) -> Token:
+    if not payload.login:
+        payload.login = payload.email.split("@")[0]
     payload.role = UserRole.operateur_usine
     payload.is_active = False
     user = create_user(db, payload)

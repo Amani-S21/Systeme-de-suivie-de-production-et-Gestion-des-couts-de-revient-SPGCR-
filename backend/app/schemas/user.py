@@ -8,6 +8,7 @@ from app.schemas.common import OrmModel
 
 class UserBase(OrmModel):
     email: EmailStr
+    login: str = Field(min_length=3, max_length=120)
     first_name: str = Field(min_length=1, max_length=120)
     last_name: str = Field(min_length=1, max_length=120)
     role: UserRole = UserRole.operateur_usine
@@ -19,6 +20,7 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(OrmModel):
+    login: str | None = Field(default=None, min_length=3, max_length=120)
     first_name: str | None = None
     last_name: str | None = None
     role: UserRole | None = None

@@ -3,6 +3,7 @@ export type UserRole = 'admin_msd' | 'responsable_production' | 'operateur_usine
 export interface User {
   id: number
   email: string
+  login: string
   first_name: string
   last_name: string
   role: UserRole

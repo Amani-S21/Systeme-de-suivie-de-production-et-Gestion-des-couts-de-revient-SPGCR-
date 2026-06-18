@@ -11,8 +11,13 @@ def get_by_email(db: Session, email: str) -> User | None:
     return db.scalar(select(User).where(User.email == email.lower()))
 
 
-def authenticate(db: Session, email: str, password: str) -> User | None:
-    user = get_by_email(db, email)
+def get_by_login(db: Session, login: str) -> User | None:
+    return db.scalar(select(User).where(User.login == login.lower()))
+
+
+def authenticate(db: Session, identifier: str, password: str) -> User | None:
+    normalized = identifier.lower().strip()
+    user = get_by_login(db, normalized) or get_by_email(db, normalized)
     if not user or not verify_password(password, user.hashed_password):
         return None
     return user
@@ -21,8 +26,11 @@ def authenticate(db: Session, email: str, password: str) -> User | None:
 def create_user(db: Session, payload: UserCreate) -> User:
     if get_by_email(db, payload.email):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email deja utilise")
+    if get_by_login(db, payload.login):
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Login deja utilise")
     user = User(
         email=payload.email.lower(),
+        login=payload.login.lower().strip(),
         hashed_password=get_password_hash(payload.password),
         first_name=payload.first_name,
         last_name=payload.last_name,

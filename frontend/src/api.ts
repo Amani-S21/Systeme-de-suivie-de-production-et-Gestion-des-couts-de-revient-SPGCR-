@@ -20,8 +20,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return response.json()
 }
 
-export async function login(email: string, password: string) {
-  const body = new URLSearchParams({ username: email, password })
+export async function login(username: string, password: string) {
+  const body = new URLSearchParams({ username, password })
   const response = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
