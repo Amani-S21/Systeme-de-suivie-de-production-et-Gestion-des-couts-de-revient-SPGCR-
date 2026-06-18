@@ -55,6 +55,7 @@ export default function LoginPage() {
     setMode(newMode)
     setError(null)
     setSuccess(null)
+    setEmail(newMode === 'login' ? (import.meta.env.VITE_DEFAULT_ADMIN_LOGIN || 'admin') : '')
   }
 
   function handleAuth(event: React.FormEvent<HTMLFormElement>) {
