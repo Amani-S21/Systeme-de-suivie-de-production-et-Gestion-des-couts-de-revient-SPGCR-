@@ -33,9 +33,9 @@ const guarantees = [
 ]
 
 const footerLinks = [
-  { label: 'Confidentialité',     href: '#' },
-  { label: "Conditions d'accès",  href: '#' },
-  { label: 'Documentation',       href: '#' },
+  { label: 'Confidentialité',     href: '/docs/confidentialite.pdf' },
+  { label: "Conditions d'accès",  href: '/docs/conditions-acces.pdf' },
+  { label: 'Documentation',       href: '/docs/documentation.pdf' },
 ]
 
 const navCols = [

@@ -67,7 +67,7 @@ export default function Header({ user, profile }: Props) {
           </span>
         </div>
         <span className="text-[9px] font-bold text-slate-600 uppercase tracking-[0.2em]">
-          ISIG Goma · TFC {new Date().getFullYear()}
+          Maison Aux Sources de Dieu · Vin Ushindi
         </span>
       </div>
 
@@ -265,7 +265,7 @@ export default function Header({ user, profile }: Props) {
               )}
               <div className="flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-slate-400">
                 <ShieldCheck className="w-3 h-3 text-indigo-600" />
-                Accès sécurisé · Vin Ushindi · ISIG Goma
+                Accès sécurisé · Vin Ushindi
               </div>
             </motion.div>
           </motion.div>

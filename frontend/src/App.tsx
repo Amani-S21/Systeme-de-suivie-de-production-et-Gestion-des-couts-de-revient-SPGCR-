@@ -15,6 +15,8 @@ import ProfilPageClient from '@/components/dashboard/profil/ProfilPageClient'
 import DashboardSectionPlaceholder from '@/components/dashboard/DashboardSectionPlaceholder'
 import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/LoginPage'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import { api } from '@/api'
 import type { DashboardSummary, Material, Product, Production, User } from '@/types'
 import type { AppRole } from '@/types/spgcr'
@@ -315,7 +317,15 @@ export default function App() {
   }, [])
 
   if (path.startsWith('/login')) return <LoginPage />
-  if (!path.startsWith('/dashboard')) return <HomePage />
+  if (!path.startsWith('/dashboard')) {
+    return (
+      <>
+        <Header user={null} profile={null} />
+        <HomePage />
+        <Footer />
+      </>
+    )
+  }
   if (!user) return <LoginPage />
   if (!user.is_active) return <PendingValidation user={user} />
   return <DashboardApp path={path} user={user} reloadUser={reloadUser} />
