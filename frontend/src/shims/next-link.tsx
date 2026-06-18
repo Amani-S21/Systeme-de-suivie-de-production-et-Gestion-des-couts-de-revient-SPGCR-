@@ -6,7 +6,12 @@ interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 
 function scrollToHash(hash: string) {
-  if (!hash) return
+  if (!hash) {
+    window.setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, 0)
+    return
+  }
   window.setTimeout(() => {
     const target = document.querySelector(hash)
     target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
