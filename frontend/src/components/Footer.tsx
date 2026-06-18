@@ -70,7 +70,7 @@ const navCols = [
 // ─────────────────────────────────────────────
 export default function Footer() {
   return (
-    <footer className="w-full bg-white border-t border-slate-200 font-sans mt-auto selection:bg-indigo-500">
+    <footer id="contact" className="w-full bg-white border-t border-slate-200 font-sans mt-auto selection:bg-indigo-500 scroll-mt-24">
 
       {/* ═══════════════════════════════════════════
           BANDE GARANTIES TECHNIQUES
@@ -198,6 +198,8 @@ export default function Footer() {
               <a
                 key={l.label}
                 href={l.href}
+                target="_blank"
+                rel="noreferrer"
                 className="text-[9px] font-bold text-slate-400 hover:text-slate-700 uppercase tracking-widest transition-colors duration-150"
               >
                 {l.label}

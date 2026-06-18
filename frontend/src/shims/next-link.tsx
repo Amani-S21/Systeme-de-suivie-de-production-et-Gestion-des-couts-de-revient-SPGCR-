@@ -5,6 +5,14 @@ interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   children: ReactNode
 }
 
+function scrollToHash(hash: string) {
+  if (!hash) return
+  window.setTimeout(() => {
+    const target = document.querySelector(hash)
+    target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, 0)
+}
+
 export default function Link({ href, children, onClick, ...props }: LinkProps) {
   return (
     <a
@@ -14,6 +22,7 @@ export default function Link({ href, children, onClick, ...props }: LinkProps) {
           event.preventDefault()
           window.history.pushState({}, '', href)
           window.dispatchEvent(new PopStateEvent('popstate'))
+          scrollToHash(new URL(href, window.location.origin).hash)
         }
         onClick?.(event)
       }}

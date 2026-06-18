@@ -25,7 +25,7 @@ import type { LotStatut } from '@/types/spgcr'
 function useLocationPath() {
   const [path, setPath] = useState(window.location.pathname + window.location.search)
   useEffect(() => {
-    const update = () => setPath(window.location.pathname + window.location.search)
+    const update = () => setPath(window.location.pathname + window.location.search + window.location.hash)
     window.addEventListener('popstate', update)
     window.addEventListener('spcr:refresh', update)
     return () => {
@@ -34,6 +34,17 @@ function useLocationPath() {
     }
   }, [])
   return path
+}
+
+function useHashScroll(path: string) {
+  useEffect(() => {
+    if (!window.location.hash) return
+    window.setTimeout(() => {
+      document
+        .querySelector(window.location.hash)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 80)
+  }, [path])
 }
 
 function money(value: string | number) {
@@ -298,6 +309,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
 
 export default function App() {
   const path = useLocationPath()
+  useHashScroll(path)
   const [user, setUser] = useState<User | null>(() => {
     const raw = localStorage.getItem('spcr_user')
     return raw ? JSON.parse(raw) : null

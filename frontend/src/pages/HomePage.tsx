@@ -482,7 +482,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════
           6. FAQ
       ══════════════════════════════════════════ */}
-      <section className="py-28 px-6 bg-white border-b border-slate-200">
+      <section id="faq" className="py-28 px-6 bg-white border-b border-slate-200">
         <div className="max-w-3xl mx-auto">
           <FadeIn className="mb-14">
             <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-[0.25em] block mb-2">Support</span>
