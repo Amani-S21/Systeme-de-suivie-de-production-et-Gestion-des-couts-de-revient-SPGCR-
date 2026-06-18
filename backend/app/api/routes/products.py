@@ -16,7 +16,7 @@ def index(db: Session = Depends(get_db), _: User = Depends(get_current_user)):
     return list_products(db)
 
 
-@router.post("", response_model=ProductRead, dependencies=[Depends(require_roles(UserRole.admin, UserRole.responsable))])
+@router.post("", response_model=ProductRead, dependencies=[Depends(require_roles(UserRole.admin_msd, UserRole.responsable_production))])
 def create(payload: ProductCreate, db: Session = Depends(get_db)):
     product = create_product(db, payload)
     db.commit()
@@ -24,7 +24,7 @@ def create(payload: ProductCreate, db: Session = Depends(get_db)):
     return product
 
 
-@router.patch("/{product_id}", response_model=ProductRead, dependencies=[Depends(require_roles(UserRole.admin, UserRole.responsable))])
+@router.patch("/{product_id}", response_model=ProductRead, dependencies=[Depends(require_roles(UserRole.admin_msd, UserRole.responsable_production))])
 def update(product_id: int, payload: ProductUpdate, db: Session = Depends(get_db)):
     product = update_product(db, product_id, payload)
     db.commit()

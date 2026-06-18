@@ -16,7 +16,7 @@ def ensure_default_admin(db: Session) -> None:
             password=settings.default_admin_password,
             first_name=settings.default_admin_first_name,
             last_name=settings.default_admin_last_name,
-            role=UserRole.admin,
+            role=UserRole.admin_msd,
             is_active=True,
         ),
     )

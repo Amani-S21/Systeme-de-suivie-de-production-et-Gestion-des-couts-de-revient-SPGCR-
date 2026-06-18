@@ -2,9 +2,9 @@ from enum import StrEnum
 
 
 class UserRole(StrEnum):
-    admin = "admin"
-    responsable = "responsable"
-    operateur = "operateur"
+    admin_msd = "admin_msd"
+    responsable_production = "responsable_production"
+    operateur_usine = "operateur_usine"
 
 
 class ProductionStatus(StrEnum):

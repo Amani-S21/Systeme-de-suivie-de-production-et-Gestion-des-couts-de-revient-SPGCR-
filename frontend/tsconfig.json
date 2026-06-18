@@ -11,6 +11,12 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Node",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "next/link": ["src/shims/next-link.tsx"],
+      "next/navigation": ["src/shims/next-navigation.ts"]
+    },
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,

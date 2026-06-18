@@ -10,7 +10,7 @@ class UserBase(OrmModel):
     email: EmailStr
     first_name: str = Field(min_length=1, max_length=120)
     last_name: str = Field(min_length=1, max_length=120)
-    role: UserRole = UserRole.operateur
+    role: UserRole = UserRole.operateur_usine
     is_active: bool = True
 
 

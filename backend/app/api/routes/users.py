@@ -17,12 +17,12 @@ def me(current_user: User = Depends(get_current_user)) -> User:
     return current_user
 
 
-@router.get("", response_model=list[UserRead], dependencies=[Depends(require_roles(UserRole.admin))])
+@router.get("", response_model=list[UserRead], dependencies=[Depends(require_roles(UserRole.admin_msd))])
 def list_users(db: Session = Depends(get_db)) -> list[User]:
     return list(db.scalars(select(User).order_by(User.created_at.desc())))
 
 
-@router.post("", response_model=UserRead, dependencies=[Depends(require_roles(UserRole.admin))])
+@router.post("", response_model=UserRead, dependencies=[Depends(require_roles(UserRole.admin_msd))])
 def create(payload: UserCreate, db: Session = Depends(get_db)) -> User:
     user = create_user(db, payload)
     db.commit()
@@ -30,7 +30,7 @@ def create(payload: UserCreate, db: Session = Depends(get_db)) -> User:
     return user
 
 
-@router.patch("/{user_id}", response_model=UserRead, dependencies=[Depends(require_roles(UserRole.admin))])
+@router.patch("/{user_id}", response_model=UserRead, dependencies=[Depends(require_roles(UserRole.admin_msd))])
 def update(user_id: int, payload: UserUpdate, db: Session = Depends(get_db)) -> User:
     user = update_user(db, db.get(User, user_id), payload)
     db.commit()

@@ -9,7 +9,7 @@ depends_on = None
 
 
 def upgrade() -> None:
-    role_enum = sa.Enum("admin", "responsable", "operateur", name="userrole")
+    role_enum = sa.Enum("admin_msd", "responsable_production", "operateur_usine", name="userrole")
     status_enum = sa.Enum("planifiee", "en_cours", "terminee", "annulee", name="productionstatus")
     movement_enum = sa.Enum("entree", "sortie", "ajustement", name="movementtype")
     role_enum.create(op.get_bind(), checkfirst=True)
@@ -23,7 +23,7 @@ def upgrade() -> None:
         sa.Column("hashed_password", sa.String(255), nullable=False),
         sa.Column("first_name", sa.String(120), nullable=False),
         sa.Column("last_name", sa.String(120), nullable=False),
-        sa.Column("role", role_enum, nullable=False, server_default="operateur"),
+        sa.Column("role", role_enum, nullable=False, server_default="operateur_usine"),
         sa.Column("is_active", sa.Boolean(), nullable=False, server_default=sa.true()),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),

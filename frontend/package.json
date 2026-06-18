@@ -10,9 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
     "@vitejs/plugin-react": "^4.5.2",
+    "framer-motion": "^12.23.24",
     "lucide-react": "^0.468.0",
     "recharts": "^2.15.3",
+    "tailwindcss": "^4.1.13",
     "vite": "^6.3.5",
     "typescript": "^5.8.3",
     "react": "^19.1.0",

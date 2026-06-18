@@ -16,7 +16,7 @@ def index(db: Session = Depends(get_db), _: User = Depends(get_current_user)):
     return list_materials(db)
 
 
-@router.post("", response_model=MaterialRead, dependencies=[Depends(require_roles(UserRole.admin, UserRole.responsable))])
+@router.post("", response_model=MaterialRead, dependencies=[Depends(require_roles(UserRole.admin_msd, UserRole.responsable_production))])
 def create(payload: MaterialCreate, db: Session = Depends(get_db)):
     material = create_material(db, payload)
     db.commit()
@@ -24,7 +24,7 @@ def create(payload: MaterialCreate, db: Session = Depends(get_db)):
     return material
 
 
-@router.patch("/{material_id}", response_model=MaterialRead, dependencies=[Depends(require_roles(UserRole.admin, UserRole.responsable))])
+@router.patch("/{material_id}", response_model=MaterialRead, dependencies=[Depends(require_roles(UserRole.admin_msd, UserRole.responsable_production))])
 def update(material_id: int, payload: MaterialUpdate, db: Session = Depends(get_db)):
     material = update_material(db, material_id, payload)
     db.commit()
@@ -32,7 +32,7 @@ def update(material_id: int, payload: MaterialUpdate, db: Session = Depends(get_
     return material
 
 
-@router.post("/{material_id}/movements", response_model=MaterialRead, dependencies=[Depends(require_roles(UserRole.admin, UserRole.responsable))])
+@router.post("/{material_id}/movements", response_model=MaterialRead, dependencies=[Depends(require_roles(UserRole.admin_msd, UserRole.responsable_production))])
 def movement(material_id: int, payload: StockMovementCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     material = add_stock_movement(db, material_id, payload, user)
     db.commit()

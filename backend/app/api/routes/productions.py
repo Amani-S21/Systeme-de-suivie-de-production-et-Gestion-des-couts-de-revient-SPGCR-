@@ -24,7 +24,7 @@ def create(payload: ProductionCreate, db: Session = Depends(get_db), user: User 
     return production
 
 
-@router.patch("/{production_id}", response_model=ProductionRead, dependencies=[Depends(require_roles(UserRole.admin, UserRole.responsable))])
+@router.patch("/{production_id}", response_model=ProductionRead, dependencies=[Depends(require_roles(UserRole.admin_msd, UserRole.responsable_production))])
 def update(production_id: int, payload: ProductionUpdate, db: Session = Depends(get_db)):
     production = update_production(db, production_id, payload)
     db.commit()
