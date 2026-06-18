@@ -3,7 +3,7 @@ import { api } from '@/api'
 export function createClient() {
   return {
     functions: {
-      invoke: async (_name: string, options?: { body?: any }) => {
+      invoke: async (_name: string, options?: { body?: any }): Promise<{ data: any; error: any }> => {
         const productionId = Number(options?.body?.lotId || options?.body?.productionId || 0)
         if (!productionId) return { data: null, error: null }
         const data = await api.calculateCost(productionId, {
