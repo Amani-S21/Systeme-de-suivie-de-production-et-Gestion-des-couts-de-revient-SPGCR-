@@ -17,6 +17,7 @@ const navLinks = [
   { label: 'Accueil',         href: '/' },
   { label: 'Fonctionnement',  href: '/#workflow' },
   { label: 'Fonctionnalités', href: '/#fonctionnalites' },
+  { label: 'FAQ',             href: '/#faq' },
   { label: 'Contact',         href: '/#contact' },
 ]
 
@@ -28,6 +29,7 @@ type Props = {
 export default function Header({ user, profile }: Props) {
   const [isOpen, setIsOpen]         = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [activeHref, setActiveHref] = useState('/')
   const pathname = usePathname()
   const router = useRouter()
 
@@ -38,9 +40,36 @@ export default function Header({ user, profile }: Props) {
   }
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 24)
+    const sectionMap = [
+      { href: '/#contact', id: 'contact' },
+      { href: '/#faq', id: 'faq' },
+      { href: '/#fonctionnalites', id: 'fonctionnalites' },
+      { href: '/#workflow', id: 'workflow' },
+    ]
+
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 24)
+      if (window.scrollY < 160) {
+        setActiveHref('/')
+        return
+      }
+
+      const current = sectionMap.find(({ id }) => {
+        const el = document.getElementById(id)
+        if (!el) return false
+        const rect = el.getBoundingClientRect()
+        return rect.top <= 132 && rect.bottom >= 132
+      })
+      if (current) setActiveHref(current.href)
+    }
+
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    window.addEventListener('popstate', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('popstate', onScroll)
+    }
   }, [])
 
   useEffect(() => { setIsOpen(false) }, [pathname])
@@ -103,11 +132,12 @@ export default function Header({ user, profile }: Props) {
           {/* ── NAV DESKTOP ── */}
           <nav className="hidden md:flex items-center">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href
+              const isActive = activeHref === link.href
               return (
                 <Link
                   key={link.label}
                   href={link.href}
+                  onClick={() => setActiveHref(link.href)}
                   className={`relative px-4 py-5 text-[10px] font-black uppercase tracking-widest transition-colors duration-200 group ${
                     isActive ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-900'
                   }`}
@@ -228,10 +258,15 @@ export default function Header({ user, profile }: Props) {
                 >
                   <Link
                     href={link.href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      setActiveHref(link.href)
+                      setIsOpen(false)
+                    }}
                     className="flex items-center justify-between py-4 border-b border-slate-100 group"
                   >
-                    <span className="text-4xl font-black uppercase tracking-tighter text-slate-950 group-hover:text-indigo-600 transition-colors duration-200">
+                    <span className={`text-4xl font-black uppercase tracking-tighter group-hover:text-indigo-600 transition-colors duration-200 ${
+                      activeHref === link.href ? 'text-indigo-600' : 'text-slate-950'
+                    }`}>
                       {link.label}
                     </span>
                     <ChevronRight className="w-5 h-5 text-slate-200 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all duration-200 flex-shrink-0" />
