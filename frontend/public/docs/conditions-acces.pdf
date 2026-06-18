@@ -1,40 +1,112 @@
 %PDF-1.4
 %‚„œ”
 1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
-2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
-3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >> endobj
-4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> endobj
-5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
-6 0 obj << /Length 1490 >> stream
+2 0 obj << /Type /Pages /Kids [3 0 R 4 0 R 5 0 R 6 0 R] /Count 4 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 7 0 R >> endobj
+4 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 8 0 R >> endobj
+5 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 9 0 R >> endobj
+6 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 10 0 R >> endobj
+7 0 obj << /Length 1739 >> stream
 0.10 0.13 0.20 rg 0 760 612 82 re f
 1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
 0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
 0.23 0.43 0.93 rg 48 776 180 3 re f
-0.06 0.09 0.16 rg BT /F1 20 Tf 48 720 Td (Conditions d'acces) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 48 696 Td (Regles d'acces a la plateforme SPGCR.) Tj ET
-0.06 0.09 0.16 rg BT /F1 13 Tf 48 658 Td (Acces restreint) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 640 Td (La plateforme est reservee au personnel MSD. Chaque utilisateur dispose d un role :) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 626 Td (administrateur, responsable production ou operateur usine.) Tj ET
-0.06 0.09 0.16 rg BT /F1 13 Tf 48 596 Td (Validation des comptes) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 578 Td (Les nouveaux comptes restent inactifs jusqu a validation par un administrateur. Les actions) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 564 Td (sensibles sont journalisees.) Tj ET
-0.06 0.09 0.16 rg BT /F1 13 Tf 48 534 Td (Usage autorise) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 516 Td (Le systeme doit etre utilise uniquement pour le suivi de production, les nomenclatures BOM,) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 502 Td (les stocks, les couts de revient et les rapports associes.) Tj ET
-0.94 0.96 0.99 rg 48 48 516 48 re f
-0.23 0.43 0.93 rg 48 96 516 2 re f
-0.28 0.33 0.42 rg BT /F2 8 Tf 58 74 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Conditions d'acces) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Regles d acces, roles et responsabilites des utilisateurs SPGCR.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (1. Acces restreint) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (La plateforme SPGCR est reservee au personnel autorise de la Maison Aux Sources de Dieu) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (et aux intervenants explicitement valides pour le projet.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 605 Td (L acces est conditionne par un compte nominatif, un mot de passe valide et un statut) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (actif dans la base de donnees.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 563 Td (2. Roles disponibles) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 546 Td (Le role admin_msd dispose des droits d administration, de validation des comptes et de) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (supervision globale. Le role responsable_production gere les flux de production,) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 520 Td (composants, nomenclatures et analyses. Le role operateur_usine execute les operations de) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 507 Td (production autorisees.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (1/4) Tj ET
 endstream endobj
+8 0 obj << /Length 1593 >> stream
+0.10 0.13 0.20 rg 0 760 612 82 re f
+1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
+0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
+0.23 0.43 0.93 rg 48 776 180 3 re f
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Conditions d'acces) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Regles d acces, roles et responsabilites des utilisateurs SPGCR.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (3. Creation et activation) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (Un compte peut etre cree depuis la page de connexion ou par un administrateur. Les) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (comptes crees par inscription restent inactifs jusqu a validation.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 605 Td (Le compte administrateur par defaut est cree au lancement du backend a partir des) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (informations presentes dans le fichier .env.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 563 Td (4. Authentification) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 546 Td (La connexion s effectue par le nom utilisateur configure, par exemple) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (DEFAULT_ADMIN_LOGIN, et le mot de passe associe. Les identifiants doivent rester) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 520 Td (personnels.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (2/4) Tj ET
+endstream endobj
+9 0 obj << /Length 1550 >> stream
+0.10 0.13 0.20 rg 0 760 612 82 re f
+1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
+0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
+0.23 0.43 0.93 rg 48 776 180 3 re f
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Conditions d'acces) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Regles d acces, roles et responsabilites des utilisateurs SPGCR.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (5. Utilisation autorisee) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (L utilisateur s engage a utiliser SPGCR pour les besoins de suivi industriel : lots,) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (composants, stocks, couts, rapports et nomenclatures BOM.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 605 Td (Toute modification volontairement incorrecte des stocks, recettes, couts ou utilisateurs) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (constitue une violation des conditions d acces.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 563 Td (6. Tracabilite) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 546 Td (Les actions importantes doivent pouvoir etre rattachees a un utilisateur. Les journaux d) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (activite permettent de suivre les validations, ajustements et operations sensibles.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (3/4) Tj ET
+endstream endobj
+10 0 obj << /Length 1499 >> stream
+0.10 0.13 0.20 rg 0 760 612 82 re f
+1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
+0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
+0.23 0.43 0.93 rg 48 776 180 3 re f
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Conditions d'acces) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Regles d acces, roles et responsabilites des utilisateurs SPGCR.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (7. Suspension) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (Un administrateur peut desactiver un compte en cas de depart, changement de fonction,) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (erreur d attribution, suspicion d abus ou incident de securite.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 605 Td (La suppression ou desactivation d un compte ne doit pas compromettre l historique des) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (lots et des couts deja calcules.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 563 Td (8. Support) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 546 Td (En cas d oubli de mot de passe, d erreur de role ou de blocage, l utilisateur doit) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (contacter la coordination SPGCR ou l administrateur fonctionnel.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (4/4) Tj ET
+endstream endobj
+11 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> endobj
+12 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
 xref
-0 7
+0 13
 0000000000 65535 f 
 0000000015 00000 n 
 0000000064 00000 n 
-0000000121 00000 n 
-0000000257 00000 n 
-0000000332 00000 n 
-0000000402 00000 n 
-trailer << /Size 7 /Root 1 0 R >>
+0000000139 00000 n 
+0000000277 00000 n 
+0000000415 00000 n 
+0000000553 00000 n 
+0000000692 00000 n 
+0000002483 00000 n 
+0000004128 00000 n 
+0000005730 00000 n 
+0000007282 00000 n 
+0000007358 00000 n 
+trailer << /Size 13 /Root 1 0 R >>
 startxref
-1944
+7429
 %%EOF

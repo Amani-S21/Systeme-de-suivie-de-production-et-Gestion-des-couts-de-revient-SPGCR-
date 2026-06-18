@@ -1,40 +1,115 @@
 %PDF-1.4
 %‚„œ”
 1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
-2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
-3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >> endobj
-4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> endobj
-5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
-6 0 obj << /Length 1483 >> stream
+2 0 obj << /Type /Pages /Kids [3 0 R 4 0 R 5 0 R 6 0 R] /Count 4 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 7 0 R >> endobj
+4 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 8 0 R >> endobj
+5 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 9 0 R >> endobj
+6 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 10 0 R >> endobj
+7 0 obj << /Length 1871 >> stream
 0.10 0.13 0.20 rg 0 760 612 82 re f
 1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
 0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
 0.23 0.43 0.93 rg 48 776 180 3 re f
-0.06 0.09 0.16 rg BT /F1 20 Tf 48 720 Td (Documentation) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 48 696 Td (Presentation fonctionnelle du systeme SPGCR.) Tj ET
-0.06 0.09 0.16 rg BT /F1 13 Tf 48 658 Td (Noyau de calcul BOM) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 640 Td (Le systeme suit les composants consommes par lot, calcule les couts directs, les charges) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 626 Td (indirectes et le cout unitaire theorique.) Tj ET
-0.06 0.09 0.16 rg BT /F1 13 Tf 48 596 Td (Rapports et impression) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 578 Td (Les rapports peuvent etre consultes depuis le dashboard et prepares pour impression afin de) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 564 Td (documenter les decisions de gestion.) Tj ET
-0.06 0.09 0.16 rg BT /F1 13 Tf 48 534 Td (Statut ecosysteme) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 516 Td (Les modules de production, composants, nomenclatures, analyses, utilisateurs et profil) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 502 Td (composent le flux principal de pilotage industriel.) Tj ET
-0.94 0.96 0.99 rg 48 48 516 48 re f
-0.23 0.43 0.93 rg 48 96 516 2 re f
-0.28 0.33 0.42 rg BT /F2 8 Tf 58 74 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Documentation) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Guide fonctionnel de la plateforme SPGCR FastAPI, React et PostgreSQL.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (1. Presentation generale) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (SPGCR est une plateforme de pilotage industriel destinee au suivi de la transformation) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (des matieres premieres en produits finis, au calcul du cout de revient et a la) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 613 Td (production de rapports de gestion.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (La nouvelle architecture se compose d un backend FastAPI, d un frontend React Vite et d) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 579 Td (une base PostgreSQL geree par migrations Alembic.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 550 Td (2. Demarrage backend) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (Depuis le dossier backend, executer alembic upgrade head pour appliquer les migrations,) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 520 Td (puis uvicorn app.main:app --reload pour lancer l API.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 499 Td (Au lancement, le backend verifie le compte administrateur par defaut et le cree ou le) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 486 Td (met a jour avec les informations du fichier .env.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (1/4) Tj ET
 endstream endobj
+8 0 obj << /Length 1605 >> stream
+0.10 0.13 0.20 rg 0 760 612 82 re f
+1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
+0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
+0.23 0.43 0.93 rg 48 776 180 3 re f
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Documentation) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Guide fonctionnel de la plateforme SPGCR FastAPI, React et PostgreSQL.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (3. Demarrage frontend) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (Depuis le dossier frontend, executer npm install puis npm run dev. L interface est) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (disponible sur http://localhost:5173.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 605 Td (Le frontend conserve le design issu du projet Next : landing page animee, header,) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (footer, login, dashboard, cartes KPI, tableaux, graphiques et modals.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 563 Td (4. Modules principaux) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 546 Td (Les modules incluent : tableau de bord, production, matieres premieres, catalogue et) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (recettes, calcul des couts, analyses financieres, utilisateurs, profil et sections de) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 520 Td (support.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (2/4) Tj ET
+endstream endobj
+9 0 obj << /Length 1660 >> stream
+0.10 0.13 0.20 rg 0 760 612 82 re f
+1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
+0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
+0.23 0.43 0.93 rg 48 776 180 3 re f
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Documentation) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Guide fonctionnel de la plateforme SPGCR FastAPI, React et PostgreSQL.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (5. Donnees et migrations) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (Les tables sont creees par Alembic. Les migrations definissent les utilisateurs,) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (produits, matieres, productions, consommations, couts, mouvements de stock et journaux.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 605 Td (La variable DATABASE_URL definit la source PostgreSQL. Le backend normalise) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (automatiquement postgresql:// vers postgresql+psycopg:// pour SQLAlchemy.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 563 Td (6. Calcul du cout de revient) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 546 Td (Le cout de revient combine les matieres consommees, la main d oeuvre, les charges) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (indirectes et les autres frais. Le cout unitaire est calcule par rapport a la quantite) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 520 Td (produite.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (3/4) Tj ET
+endstream endobj
+10 0 obj << /Length 1602 >> stream
+0.10 0.13 0.20 rg 0 760 612 82 re f
+1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
+0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
+0.23 0.43 0.93 rg 48 776 180 3 re f
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Documentation) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Guide fonctionnel de la plateforme SPGCR FastAPI, React et PostgreSQL.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (7. Navigation et documents) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (Le header permet de rejoindre directement les sections Fonctionnement, Fonctionnalites,) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (FAQ et Contact. Le lien actif est souligne par une ligne bleue.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 605 Td (Le footer donne acces aux documents PDF de confidentialite, conditions d acces et) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (documentation, ouverts dans un nouvel onglet.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 563 Td (8. Maintenance) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 546 Td (Verifier regulierement les sauvegardes PostgreSQL, les variables .env, les droits) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (utilisateurs, les dependances frontend et backend, ainsi que la coherence des) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 520 Td (migrations.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (4/4) Tj ET
+endstream endobj
+11 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> endobj
+12 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
 xref
-0 7
+0 13
 0000000000 65535 f 
 0000000015 00000 n 
 0000000064 00000 n 
-0000000121 00000 n 
-0000000257 00000 n 
-0000000332 00000 n 
-0000000402 00000 n 
-trailer << /Size 7 /Root 1 0 R >>
+0000000139 00000 n 
+0000000277 00000 n 
+0000000415 00000 n 
+0000000553 00000 n 
+0000000692 00000 n 
+0000002615 00000 n 
+0000004272 00000 n 
+0000005984 00000 n 
+0000007639 00000 n 
+0000007715 00000 n 
+trailer << /Size 13 /Root 1 0 R >>
 startxref
-1937
+7786
 %%EOF

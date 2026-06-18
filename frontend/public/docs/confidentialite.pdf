@@ -1,40 +1,121 @@
 %PDF-1.4
 %‚„œ”
 1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
-2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
-3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >> endobj
-4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> endobj
-5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
-6 0 obj << /Length 1556 >> stream
+2 0 obj << /Type /Pages /Kids [3 0 R 4 0 R 5 0 R 6 0 R] /Count 4 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 7 0 R >> endobj
+4 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 8 0 R >> endobj
+5 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 9 0 R >> endobj
+6 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 11 0 R /F2 12 0 R >> >> /Contents 10 0 R >> endobj
+7 0 obj << /Length 2167 >> stream
 0.10 0.13 0.20 rg 0 760 612 82 re f
 1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
 0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
 0.23 0.43 0.93 rg 48 776 180 3 re f
-0.06 0.09 0.16 rg BT /F1 20 Tf 48 720 Td (Confidentialite) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 48 696 Td (Politique de confidentialite du systeme SPGCR.) Tj ET
-0.06 0.09 0.16 rg BT /F1 13 Tf 48 658 Td (Protection des donnees) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 640 Td (Les donnees de production, de cout de revient, de stock et de comptes utilisateurs sont) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 626 Td (reservees au personnel habilite de la Maison Aux Sources de Dieu.) Tj ET
-0.06 0.09 0.16 rg BT /F1 13 Tf 48 596 Td (Chiffrement terminal) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 578 Td (Les acces applicatifs doivent etre proteges par un protocole TLS actif. Les identifiants ne) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 564 Td (doivent jamais etre partages ni stockes dans un depot Git.) Tj ET
-0.06 0.09 0.16 rg BT /F1 13 Tf 48 534 Td (Base de donnees locale) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 516 Td (La base PostgreSQL conserve les informations operationnelles necessaires au suivi) Tj ET
-0.28 0.33 0.42 rg BT /F2 10 Tf 58 502 Td (industriel. Les sauvegardes doivent etre controlees par un administrateur.) Tj ET
-0.94 0.96 0.99 rg 48 48 516 48 re f
-0.23 0.43 0.93 rg 48 96 516 2 re f
-0.28 0.33 0.42 rg BT /F2 8 Tf 58 74 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Confidentialite) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Politique de confidentialite et de protection des donnees SPGCR.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (1. Objet du document) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (SPGCR est une plateforme de pilotage industriel destinee au suivi de la transformation) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (des matieres premieres en produits finis, au calcul du cout de revient et a la) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 613 Td (production de rapports de gestion.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (Ce document precise les engagements de confidentialite applicables aux donnees saisies,) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 579 Td (calculees et consultees dans la plateforme. Il concerne les utilisateurs) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 566 Td (administrateurs, responsables de production et operateurs usine.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 537 Td (2. Donnees concernees) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 520 Td (Les donnees protegees incluent les comptes utilisateurs, les roles, les nomenclatures) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 507 Td (BOM, les mouvements de stock, les lots de production, les couts de revient, les marges) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 494 Td (estimees, les rapports et les journaux d activite.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 473 Td (Toute information permettant de reconstituer une recette, un prix de revient, un stock) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 460 Td (strategique ou une performance de production est consideree comme confidentielle.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (1/4) Tj ET
 endstream endobj
+8 0 obj << /Length 2103 >> stream
+0.10 0.13 0.20 rg 0 760 612 82 re f
+1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
+0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
+0.23 0.43 0.93 rg 48 776 180 3 re f
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Confidentialite) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Politique de confidentialite et de protection des donnees SPGCR.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (3. Principes de traitement) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (Les donnees sont utilisees uniquement pour le pilotage de la production, le controle de) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (gestion, la tracabilite industrielle et l analyse des couts.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 605 Td (Les acces sont limites selon le role attribue. Un operateur consulte et execute les) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (operations qui lui sont confiees. Un responsable supervise les flux industriels. Un) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 579 Td (administrateur gere les utilisateurs et les parametres critiques.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 550 Td (4. Securite technique) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (Les communications doivent etre protegees par TLS lorsque l application est deployee en) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 520 Td (production. Les mots de passe ne sont jamais stockes en clair et doivent etre proteges) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 507 Td (par hachage.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 486 Td (Les fichiers .env ne doivent pas etre ajoutes a Git. Ils contiennent des identifiants de) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 473 Td (base de donnees, secrets applicatifs et informations du compte administrateur par) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 460 Td (defaut.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (2/4) Tj ET
+endstream endobj
+9 0 obj << /Length 1756 >> stream
+0.10 0.13 0.20 rg 0 760 612 82 re f
+1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
+0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
+0.23 0.43 0.93 rg 48 776 180 3 re f
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Confidentialite) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Politique de confidentialite et de protection des donnees SPGCR.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (5. Conservation et sauvegardes) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (Les donnees sont conservees dans PostgreSQL selon les besoins operationnels de l unite) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (industrielle. Les sauvegardes doivent etre stockees dans un espace controle et) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 613 Td (accessibles uniquement au personnel habilite.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (Toute restauration de sauvegarde doit etre documentee afin de garantir la coherence des) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 579 Td (couts et la continuite des historiques de production.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 550 Td (6. Responsabilites) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (Chaque utilisateur est responsable de la confidentialite de son identifiant. Le partage) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 520 Td (de compte est interdit. Les changements de role ou d activation doivent etre effectues) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 507 Td (par un administrateur.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (3/4) Tj ET
+endstream endobj
+10 0 obj << /Length 1539 >> stream
+0.10 0.13 0.20 rg 0 760 612 82 re f
+1 1 1 rg BT /F1 22 Tf 48 808 Td (SPGCR) Tj ET
+0.75 0.80 0.88 rg BT /F2 8 Tf 48 792 Td (Cout de Revient - Maison Aux Sources de Dieu - Vin Ushindi) Tj ET
+0.23 0.43 0.93 rg 48 776 180 3 re f
+0.06 0.09 0.16 rg BT /F1 19 Tf 48 724 Td (Confidentialite) Tj ET
+0.28 0.33 0.42 rg BT /F2 10 Tf 48 700 Td (Politique de confidentialite et de protection des donnees SPGCR.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 656 Td (7. Incidents et signalement) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 639 Td (Tout acces suspect, erreur de donnees, perte de disponibilite ou incoherence de cout) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 626 Td (doit etre signale a l equipe de coordination SPGCR.) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 605 Td (Les incidents sont analyses selon leur impact sur la production, les stocks, les couts) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 592 Td (de revient et la fiabilite des rapports.) Tj ET
+0.06 0.09 0.16 rg BT /F1 12 Tf 48 563 Td (8. Bonnes pratiques) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 546 Td (Verrouiller sa session apres utilisation, verifier les donnees avant validation, eviter) Tj ET
+0.28 0.33 0.42 rg BT /F2 9.5 Tf 58 533 Td (les exports inutiles et limiter la diffusion des rapports aux personnes autorisees.) Tj ET
+0.94 0.96 0.99 rg 48 48 516 38 re f
+0.23 0.43 0.93 rg 48 86 516 2 re f
+0.28 0.33 0.42 rg BT /F2 8 Tf 58 66 Td (Acces restreint au personnel MSD - Systeme operationnel - Documentation SPGCR 2026) Tj ET
+0.45 0.50 0.60 rg BT /F2 8 Tf 500 66 Td (4/4) Tj ET
+endstream endobj
+11 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> endobj
+12 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
 xref
-0 7
+0 13
 0000000000 65535 f 
 0000000015 00000 n 
 0000000064 00000 n 
-0000000121 00000 n 
-0000000257 00000 n 
-0000000332 00000 n 
-0000000402 00000 n 
-trailer << /Size 7 /Root 1 0 R >>
+0000000139 00000 n 
+0000000277 00000 n 
+0000000415 00000 n 
+0000000553 00000 n 
+0000000692 00000 n 
+0000002911 00000 n 
+0000005066 00000 n 
+0000006874 00000 n 
+0000008466 00000 n 
+0000008542 00000 n 
+trailer << /Size 13 /Root 1 0 R >>
 startxref
-2010
+8613
 %%EOF
