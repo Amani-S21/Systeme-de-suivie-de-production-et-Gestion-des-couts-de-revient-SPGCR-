@@ -36,6 +36,7 @@ export const api = {
   dashboard: () => request<DashboardSummary>('/dashboard/summary'),
   users: () => request<User[]>('/users'),
   createUser: (payload: unknown) => request<User>('/users', { method: 'POST', body: JSON.stringify(payload) }),
+  updateUser: (id: string | number, payload: unknown) => request<User>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   materials: () => request<Material[]>('/materials'),
   createMaterial: (payload: unknown) => request<Material>('/materials', { method: 'POST', body: JSON.stringify(payload) }),
   products: () => request<Product[]>('/products'),
