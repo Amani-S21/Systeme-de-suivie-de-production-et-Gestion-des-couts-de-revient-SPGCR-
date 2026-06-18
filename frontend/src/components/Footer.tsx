@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Server, Lock, Cpu, BarChart2, ArrowRight, ShieldCheck, Activity } from 'lucide-react'
+import { Server, Lock, Cpu, BarChart2, ArrowRight, ShieldCheck, Activity, Mail, Phone, MapPin, Clock } from 'lucide-react'
 
 // ─────────────────────────────────────────────
 // DONNÉES
@@ -62,6 +62,33 @@ const navCols = [
       { label: 'Maison Aux Sources de Dieu', href: '#' },
       { label: 'Contact',                    href: '/#contact' },
     ],
+  },
+]
+
+const contactItems = [
+  {
+    icon: MapPin,
+    label: 'Site industriel',
+    value: 'Maison Aux Sources de Dieu - Vin Ushindi',
+    detail: 'Goma, Republique Democratique du Congo',
+  },
+  {
+    icon: Mail,
+    label: 'Support plateforme',
+    value: 'support@spgcr.local',
+    detail: 'Assistance comptes, acces et rapports',
+  },
+  {
+    icon: Phone,
+    label: 'Coordination production',
+    value: '+243 000 000 000',
+    detail: 'Suivi des lots, stocks et couts de revient',
+  },
+  {
+    icon: Clock,
+    label: 'Disponibilite',
+    value: 'Lun - Sam / 08:00 - 17:00',
+    detail: 'Traitement prioritaire des incidents critiques',
   },
 ]
 
