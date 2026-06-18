@@ -26,7 +26,7 @@ export async function adminCreateUser(data: {
   prenom: string
   password?: string
   role: AppRole
-}) {
+}): Promise<{ success?: true; error?: string }> {
   await api.createUser({
     email: data.email,
     password: data.password || 'TemporaryPassword123!',

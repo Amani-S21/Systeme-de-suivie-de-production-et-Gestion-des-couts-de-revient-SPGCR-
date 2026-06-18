@@ -18,6 +18,7 @@ import LoginPage from '@/pages/LoginPage'
 import { api } from '@/api'
 import type { DashboardSummary, Material, Product, Production, User } from '@/types'
 import type { AppRole } from '@/types/spgcr'
+import type { LotStatut } from '@/types/spgcr'
 
 function useLocationPath() {
   const [path, setPath] = useState(window.location.pathname + window.location.search)
@@ -70,7 +71,7 @@ function toLots(productions: Production[]) {
     operateurNom: 'Operateur',
     quantitePrevue: Number(p.quantity),
     dateLancement: p.created_at,
-    statut: p.status === 'terminee' ? 'termine' : p.status === 'annulee' ? 'annule' : 'en_cours',
+    statut: (p.status === 'terminee' ? 'termine' : p.status === 'annulee' ? 'annule' : 'en_cours') as LotStatut,
   }))
 }
 
@@ -111,12 +112,12 @@ function Overview({ summary, role, userId, products, materials, productions }: {
         role={role}
         currentUserId={userId}
         produitsFinis={toProduits(products)}
-        operateurs={[{ id: userId, label: 'Utilisateur connecte' }]}
+        operateurs={[{ id: userId, prenom: 'Utilisateur', nom: 'connecte' }]}
         composants={toComposants(materials).map((c) => ({ id: c.id, code: c.code, nom: c.nom, unite_mesure: c.unite_mesure }))}
         activeLot={productions.find((p) => p.status === 'en_cours') ? {
           id: String(productions.find((p) => p.status === 'en_cours')!.id),
-          numero_lot: productions.find((p) => p.status === 'en_cours')!.reference,
-          quantite_produite: Number(productions.find((p) => p.status === 'en_cours')!.quantity),
+          numeroLot: productions.find((p) => p.status === 'en_cours')!.reference,
+          quantiteProduite: Number(productions.find((p) => p.status === 'en_cours')!.quantity),
         } : null}
       />
 
@@ -241,8 +242,8 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
           userId={String(user.id)}
           lots={toLots(productions)}
           bomLinesByProduitFiniId={{}}
-          produitsFinis={toProduits(products).map((p) => ({ id: p.id, label: `${p.code} - ${p.nom}`, volume_litre: p.volume_litre }))}
-          operateurs={[{ id: String(user.id), label: `${user.first_name} ${user.last_name}` }]}
+          produitsFinis={toProduits(products)}
+          operateurs={[{ id: String(user.id), prenom: user.first_name, nom: user.last_name }]}
           kpis={{
             lotsActifs: String(productions.filter((p) => p.status === 'en_cours').length),
             volumeCuve: `${productions.reduce((sum, p) => sum + Number(p.quantity || 0), 0)} u.`,

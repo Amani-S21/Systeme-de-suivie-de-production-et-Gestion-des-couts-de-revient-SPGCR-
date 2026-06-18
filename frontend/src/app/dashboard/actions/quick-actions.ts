@@ -6,7 +6,7 @@ export async function createProductionLot(input: {
   produit_fini_id: string
   quantite_produite: number
   operateur_id: string
-}) {
+}): Promise<{ success?: true; error?: string }> {
   await api.createProduction({
     product_id: Number(input.produit_fini_id),
     quantity: input.quantite_produite,
@@ -16,7 +16,7 @@ export async function createProductionLot(input: {
   return { success: true }
 }
 
-export async function createComposant(input: NouveauComposantFormData) {
+export async function createComposant(input: NouveauComposantFormData): Promise<{ success?: true; error?: string }> {
   await api.createMaterial({
     name: input.nom,
     unit: input.unite_mesure,
@@ -27,6 +27,6 @@ export async function createComposant(input: NouveauComposantFormData) {
   return { success: true }
 }
 
-export async function createNomenclatureBom(_input: NouvelleBomFormData) {
+export async function createNomenclatureBom(_input: NouvelleBomFormData): Promise<{ success?: true; error?: string }> {
   return { success: true }
 }

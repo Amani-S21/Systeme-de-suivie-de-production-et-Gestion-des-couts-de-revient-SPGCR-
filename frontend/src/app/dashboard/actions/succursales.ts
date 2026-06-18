@@ -1,15 +1,23 @@
 export interface SuccursaleRow {
   id: string
   nom: string
-  code: string
+  code?: string
+  code_depot: string
   ville: string
+  adresse: string
+  responsable_id?: string | null
+  responsable_nom?: string | null
   actif: boolean
   created_at?: string
 }
 
 export interface BranchInventoryRow {
   id: string
+  produit_fini_id?: string
+  produit_nom?: string
+  produit_code?: string
   composant_nom: string
+  quantite?: number
   stock_actuel: number
   unite_mesure: string
 }

@@ -1,7 +1,7 @@
 import { api } from '@/api'
 import type { AdjustStockFormValues } from '@/lib/validations/composants'
 
-export async function submitAdjustStock(raw: AdjustStockFormValues) {
+export async function submitAdjustStock(raw: AdjustStockFormValues): Promise<{ success?: true; error?: string; composantId?: string }> {
   if (raw.identification.mode === 'new') {
     const created = await api.createMaterial({
       name: raw.identification.nom,
