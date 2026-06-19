@@ -33,7 +33,13 @@ export async function login(username: string, password: string) {
 
 export const api = {
   me: () => request<User>('/users/me'),
-  dashboard: () => request<DashboardSummary>('/dashboard/summary'),
+  dashboard: (dateFrom?: string, dateTo?: string) => {
+    const params = new URLSearchParams()
+    if (dateFrom) params.set('date_from', dateFrom)
+    if (dateTo) params.set('date_to', dateTo)
+    const query = params.toString()
+    return request<DashboardSummary>(`/dashboard/summary${query ? `?${query}` : ''}`)
+  },
   users: () => request<User[]>('/users'),
   createUser: (payload: unknown) => request<User>('/users', { method: 'POST', body: JSON.stringify(payload) }),
   updateUser: (id: string | number, payload: unknown) => request<User>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),

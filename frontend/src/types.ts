@@ -48,4 +48,5 @@ export interface DashboardSummary {
   cost_breakdown: { name: string; value: number }[]
   recent_productions: { id: number; reference: string; product: string; quantity: number; date: string }[]
   product_costs: { product: string; unit_cost: number; evolution: number }[]
+  production_status: { name: string; value: number }[]
 }
