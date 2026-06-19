@@ -83,6 +83,9 @@ export default function LoginPage() {
           if (res?.success) {
             setShowSuccessModal(true)
             setTimeout(() => setShouldRedirect(true), 2000)
+          } else {
+            setError(res?.error || 'Nom utilisateur ou mot de passe incorrect.')
+            setLoading(false)
           }
         } else if (mode === 'signup') {
           const res = await signup(null, formData)
@@ -90,6 +93,9 @@ export default function LoginPage() {
             setShowSuccessModal(true)
             // Laisser plus de temps pour lire le message d'activation
             setTimeout(() => setShouldRedirect(true), 4000)
+          } else {
+            setError(res?.error || "Impossible de creer le compte.")
+            setLoading(false)
           }
         } else if (mode === 'forgot') {
           setSuccess('Si ce compte est enregistré, un e-mail de réinitialisation a été transmis.')
