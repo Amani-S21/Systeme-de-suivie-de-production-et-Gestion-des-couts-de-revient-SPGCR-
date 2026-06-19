@@ -53,6 +53,7 @@ export const api = {
   replaceProductBom: (productId: string | number, payload: unknown) => request<BomItem[]>(`/products/${productId}/bom`, { method: 'PUT', body: JSON.stringify(payload) }),
   productions: () => request<Production[]>('/productions'),
   createProduction: (payload: unknown) => request<Production>('/productions', { method: 'POST', body: JSON.stringify(payload) }),
+  updateProduction: (id: string | number, payload: unknown) => request<Production>(`/productions/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   calculateCost: (productionId: number, payload: unknown) =>
     request(`/costs/production/${productionId}`, { method: 'POST', body: JSON.stringify(payload) }),
 }

@@ -12,7 +12,8 @@ export async function submitAdjustStock(raw: AdjustStockFormValues): Promise<{ s
     })
     return { success: true, composantId: String(created.id) }
   }
-  const material = (await api.materials()).find((item) => String(item.id) === raw.identification.composantId)
+  const composantId = raw.identification.composantId
+  const material = (await api.materials()).find((item) => String(item.id) === composantId)
   if (!material) return { error: 'Composant introuvable.' }
 
   const purchasedQuantity = raw.mouvement.quantiteAchetee

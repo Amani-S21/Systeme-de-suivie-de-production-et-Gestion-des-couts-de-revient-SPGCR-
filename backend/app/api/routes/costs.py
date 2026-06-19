@@ -1,13 +1,12 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.api.deps import require_roles
+from app.api.deps import get_current_user
 from app.db.session import get_db
-from app.models.enums import UserRole
 from app.schemas.cost import CostCreate, CostRead
 from app.services.cost_service import calculate_cost
 
-router = APIRouter(prefix="/costs", tags=["costs"], dependencies=[Depends(require_roles(UserRole.admin_msd, UserRole.responsable_production))])
+router = APIRouter(prefix="/costs", tags=["costs"], dependencies=[Depends(get_current_user)])
 
 
 @router.post("/production/{production_id}", response_model=CostRead)
