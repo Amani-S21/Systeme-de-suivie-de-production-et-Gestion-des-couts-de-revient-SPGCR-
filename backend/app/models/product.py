@@ -18,3 +18,4 @@ class Product(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     productions = relationship("Production", back_populates="product")
+    bom_items = relationship("BomItem", back_populates="product", cascade="all, delete-orphan")
