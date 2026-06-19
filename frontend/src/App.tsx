@@ -3,9 +3,6 @@ import { AlertCircle, BarChart2, DollarSign, PackageCheck, Receipt, TrendingUp }
 import DashboardShell from '@/components/dashboard/DashboardShell'
 import QuickActionsGrid from '@/components/dashboard/QuickActionsGrid'
 import KpiCard from '@/components/dashboard/ui/KpiCard'
-import ChartCard from '@/components/dashboard/ui/ChartCard'
-import CostEvolutionChart from '@/components/dashboard/charts/CostEvolutionChart'
-import CostBreakdownPie from '@/components/dashboard/charts/CostBreakdownPie'
 import ComposantsPageClient from '@/components/dashboard/composants/ComposantsPageClient'
 import NomenclaturesPageClient from '@/components/dashboard/nomenclatures/NomenclaturesPageClient'
 import LotsPageClient from '@/app/dashboard/lots/LotsPageClient'
@@ -100,7 +97,7 @@ function toUsers(users: User[]) {
   }))
 }
 
-function Overview({ summary, role, userId, products, materials, productions }: {
+function OperationsOverview({ summary, role, userId, products, materials, productions }: {
   summary: DashboardSummary | null
   role: AppRole
   userId: string
@@ -109,17 +106,12 @@ function Overview({ summary, role, userId, products, materials, productions }: {
   productions: Production[]
 }) {
   const kpis = summary?.kpis
-  const evolution = summary?.production_evolution?.map((p) => ({
-    numeroLot: p.month,
-    coutTotal: p.quantity,
-    margeBrute: Math.round(p.quantity * 0.18),
-  })) || []
-  const breakdown = summary?.cost_breakdown || []
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Tableau de bord</p>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">Vue d'ensemble</h1>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Pilotage de la production</p>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">Opérations industrielles</h1>
+        <p className="mt-1 text-sm text-slate-500">Approvisionnez les stocks, définissez les recettes et gérez les lots depuis un parcours unique.</p>
       </div>
 
       <QuickActionsGrid
@@ -142,22 +134,6 @@ function Overview({ summary, role, userId, products, materials, productions }: {
         <KpiCard label="Charges indirectes imputees" value={`${money(kpis?.total_production_cost || 0)} FCFA`} icon={Receipt} accent="slate" />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <ChartCard title="Evolution cout vs marge" subtitle="Donnees de production">
-          <CostEvolutionChart data={evolution.length ? evolution : [
-            { numeroLot: 'Jan', coutTotal: 9000, margeBrute: 1400 },
-            { numeroLot: 'Fev', coutTotal: 10800, margeBrute: 1800 },
-            { numeroLot: 'Mar', coutTotal: 9000, margeBrute: 1500 },
-          ]} />
-        </ChartCard>
-        <ChartCard title="Repartition des couts" subtitle="Dernier lot calcule">
-          <CostBreakdownPie data={breakdown.length ? breakdown : [
-            { name: 'Matieres premieres', value: 45 },
-            { name: "Main d'oeuvre", value: 20 },
-            { name: 'Charges indirectes', value: 25 },
-          ]} />
-        </ChartCard>
-      </div>
     </div>
   )
 }
@@ -223,6 +199,9 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
   const role = user.role as AppRole
   const page = path.split('?')[0]
   const content = useMemo(() => {
+    if (page === '/dashboard/operations') {
+      return <OperationsOverview summary={summary} role={role} userId={String(user.id)} products={products} materials={materials} productions={productions} />
+    }
     if (page === '/dashboard/composants') return <ComposantsPageClient composants={toComposants(materials)} />
     if (page === '/dashboard/nomenclatures') {
       const produitsFinis = toProduits(products)

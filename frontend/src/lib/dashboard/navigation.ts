@@ -9,6 +9,7 @@ import {
   Users,
   ScrollText,
   Settings,
+  Workflow,
 } from 'lucide-react'
 import type { AppRole } from '@/types/spgcr'
 
@@ -25,6 +26,12 @@ export const DASHBOARD_NAV: NavItem[] = [
     label: 'Tableau de bord',
     href: '/dashboard',
     icon: LayoutDashboard,
+    roles: 'all',
+  },
+  {
+    label: 'Opérations industrielles',
+    href: '/dashboard/operations',
+    icon: Workflow,
     roles: 'all',
   },
   {

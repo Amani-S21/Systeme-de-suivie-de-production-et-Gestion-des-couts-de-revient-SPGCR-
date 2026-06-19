@@ -12,5 +12,22 @@ export async function submitAdjustStock(raw: AdjustStockFormValues): Promise<{ s
     })
     return { success: true, composantId: String(created.id) }
   }
-  return { success: true, composantId: raw.identification.composantId }
+  const material = (await api.materials()).find((item) => String(item.id) === raw.identification.composantId)
+  if (!material) return { error: 'Composant introuvable.' }
+
+  const purchasedQuantity = raw.mouvement.quantiteAchetee
+  const oldQuantity = Number(material.quantity)
+  const purchaseUnitCost = purchasedQuantity > 0 ? raw.mouvement.prixAchatTotal / purchasedQuantity : 0
+  const newQuantity = oldQuantity + purchasedQuantity
+  const weightedCost = newQuantity > 0
+    ? ((oldQuantity * Number(material.unit_cost)) + (purchasedQuantity * purchaseUnitCost)) / newQuantity
+    : 0
+
+  await api.addStockMovement(material.id, {
+    movement_type: 'entree',
+    quantity: purchasedQuantity,
+    reason: 'Approvisionnement depuis les operations industrielles',
+  })
+  await api.updateMaterial(material.id, { unit_cost: weightedCost })
+  return { success: true, composantId: String(material.id) }
 }

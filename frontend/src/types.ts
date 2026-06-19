@@ -27,6 +27,13 @@ export interface Product {
   sale_price: string
 }
 
+export interface BomItem {
+  id: number
+  product_id: number
+  material_id: number
+  quantity_required: string
+}
+
 export interface Production {
   id: number
   reference: string

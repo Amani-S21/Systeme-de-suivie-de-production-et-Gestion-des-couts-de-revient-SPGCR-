@@ -1,4 +1,4 @@
-import type { DashboardSummary, Material, Product, Production, User } from './types'
+import type { BomItem, DashboardSummary, Material, Product, Production, User } from './types'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
 
@@ -45,8 +45,12 @@ export const api = {
   updateUser: (id: string | number, payload: unknown) => request<User>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   materials: () => request<Material[]>('/materials'),
   createMaterial: (payload: unknown) => request<Material>('/materials', { method: 'POST', body: JSON.stringify(payload) }),
+  updateMaterial: (id: string | number, payload: unknown) => request<Material>(`/materials/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
+  addStockMovement: (id: string | number, payload: unknown) => request<Material>(`/materials/${id}/movements`, { method: 'POST', body: JSON.stringify(payload) }),
   products: () => request<Product[]>('/products'),
   createProduct: (payload: unknown) => request<Product>('/products', { method: 'POST', body: JSON.stringify(payload) }),
+  productBom: (productId: string | number) => request<BomItem[]>(`/products/${productId}/bom`),
+  replaceProductBom: (productId: string | number, payload: unknown) => request<BomItem[]>(`/products/${productId}/bom`, { method: 'PUT', body: JSON.stringify(payload) }),
   productions: () => request<Production[]>('/productions'),
   createProduction: (payload: unknown) => request<Production>('/productions', { method: 'POST', body: JSON.stringify(payload) }),
   calculateCost: (productionId: number, payload: unknown) =>
