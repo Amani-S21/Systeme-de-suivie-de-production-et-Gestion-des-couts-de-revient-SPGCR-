@@ -4,7 +4,6 @@ import { useState } from 'react'
 import type { AppRole } from '@/types/spgcr'
 import DashboardHeader from '@/components/dashboard/DashboardHeader'
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar'
-import DashboardMiniFooter from '@/components/dashboard/DashboardMiniFooter'
 
 interface DashboardShellProps {
   role: AppRole
@@ -37,31 +36,28 @@ export default function DashboardShell({
   }
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-slate-50">
-      <DashboardHeader
-        prenom={prenom}
-        nom={nom}
+    <div className="flex h-screen overflow-hidden bg-[#f5f7fb]">
+      <DashboardSidebar
         role={role}
-        email={email}
-        sidebarCollapsed={sidebarCollapsed}
-        onSidebarToggle={handleSidebarToggle}
+        collapsed={sidebarCollapsed}
+        mobileOpen={mobileSidebarOpen}
+        onMobileClose={() => setMobileSidebarOpen(false)}
+        onToggleCollapse={handleCollapseToggle}
       />
 
-      <div className="relative flex h-full min-h-0 flex-1">
-        <DashboardSidebar
+      <div className="flex min-w-0 flex-1 flex-col">
+        <DashboardHeader
+          prenom={prenom}
+          nom={nom}
           role={role}
-          collapsed={sidebarCollapsed}
-          mobileOpen={mobileSidebarOpen}
-          onMobileClose={() => setMobileSidebarOpen(false)}
-          onToggleCollapse={handleCollapseToggle}
+          email={email}
+          sidebarCollapsed={sidebarCollapsed}
+          onSidebarToggle={handleSidebarToggle}
         />
 
-        <div className="flex min-w-0 flex-1 flex-col">
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-            <div className="mx-auto max-w-7xl">{children}</div>
-          </main>
-          <DashboardMiniFooter />
-        </div>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-5 lg:p-6">
+          <div className="mx-auto max-w-[1500px]">{children}</div>
+        </main>
       </div>
     </div>
   )
