@@ -16,3 +16,4 @@ class DashboardSummary(OrmModel):
     cost_breakdown: list[dict]
     recent_productions: list[dict]
     product_costs: list[dict]
+    production_status: list[dict]

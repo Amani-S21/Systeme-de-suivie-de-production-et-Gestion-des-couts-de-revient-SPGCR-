@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import date, datetime, time, timedelta, timezone
 from decimal import Decimal
 
 from sqlalchemy import func, select
@@ -15,19 +16,41 @@ MONTH_LABELS = {
 }
 
 
-def summary(db: Session) -> dict:
+def summary(db: Session, date_from: date | None = None, date_to: date | None = None) -> dict:
+    production_filters = [Production.status != "annulee"]
+    all_status_filters = []
+    if date_from:
+        start = datetime.combine(date_from, time.min, tzinfo=timezone.utc)
+        production_filters.append(Production.created_at >= start)
+        all_status_filters.append(Production.created_at >= start)
+    if date_to:
+        end = datetime.combine(date_to + timedelta(days=1), time.min, tzinfo=timezone.utc)
+        production_filters.append(Production.created_at < end)
+        all_status_filters.append(Production.created_at < end)
+
     produced_quantity = db.scalar(
-        select(func.coalesce(func.sum(Production.quantity), 0)).where(
-            Production.status != "annulee"
-        )
+        select(func.coalesce(func.sum(Production.quantity), 0)).where(*production_filters)
     ) or Decimal("0")
-    average_unit_cost = db.scalar(select(func.coalesce(func.avg(Cost.unit_cost), 0))) or Decimal("0")
-    total_production_cost = db.scalar(select(func.coalesce(func.sum(Cost.total_cost), 0))) or Decimal("0")
-    margin_rate = db.scalar(select(func.coalesce(func.avg(Cost.margin_rate), 0))) or Decimal("0")
+    average_unit_cost = db.scalar(
+        select(func.coalesce(func.avg(Cost.unit_cost), 0))
+        .join(Production, Production.id == Cost.production_id)
+        .where(*production_filters)
+    ) or Decimal("0")
+    total_production_cost = db.scalar(
+        select(func.coalesce(func.sum(Cost.total_cost), 0))
+        .join(Production, Production.id == Cost.production_id)
+        .where(*production_filters)
+    ) or Decimal("0")
+    margin_rate = db.scalar(
+        select(func.coalesce(func.avg(Cost.margin_rate), 0))
+        .join(Production, Production.id == Cost.production_id)
+        .where(*production_filters)
+    ) or Decimal("0")
 
     productions = (
         db.query(Production)
         .options(selectinload(Production.product), selectinload(Production.cost))
+        .filter(*production_filters)
         .order_by(Production.created_at.desc())
         .limit(5)
         .all()
@@ -37,13 +60,18 @@ def summary(db: Session) -> dict:
             func.date_trunc("month", Production.created_at).label("period"),
             func.sum(Production.quantity).label("quantity"),
         )
-        .filter(Production.status != "annulee")
+        .filter(*production_filters)
         .group_by("period")
         .order_by("period")
         .all()
     )[-6:]
 
-    costs = db.query(Cost).all()
+    costs = (
+        db.query(Cost)
+        .join(Production, Production.id == Cost.production_id)
+        .filter(*production_filters)
+        .all()
+    )
     raw = sum((c.raw_material_cost for c in costs), Decimal("0"))
     labor = sum((c.labor_cost for c in costs), Decimal("0"))
     overhead = sum((c.overhead_cost for c in costs), Decimal("0"))
@@ -52,6 +80,7 @@ def summary(db: Session) -> dict:
         db.query(Product.name, Cost.unit_cost, Cost.calculated_at)
         .join(Production, Production.product_id == Product.id)
         .join(Cost, Cost.production_id == Production.id)
+        .filter(*production_filters)
         .order_by(Product.name, Cost.calculated_at.desc())
         .all()
     )
@@ -73,6 +102,14 @@ def summary(db: Session) -> dict:
             "unit_cost": float(current),
             "evolution": evolution,
         })
+
+    status_rows = (
+        db.query(Production.status, func.count(Production.id))
+        .filter(*all_status_filters)
+        .group_by(Production.status)
+        .all()
+    )
+    status_counts = {str(status.value): int(count) for status, count in status_rows}
     return {
         "kpis": {
             "produced_quantity": produced_quantity,
@@ -104,4 +141,10 @@ def summary(db: Session) -> dict:
             for p in productions
         ],
         "product_costs": product_costs,
+        "production_status": [
+            {"name": "Planifiees", "value": status_counts.get("planifiee", 0)},
+            {"name": "En cours", "value": status_counts.get("en_cours", 0)},
+            {"name": "Terminees", "value": status_counts.get("terminee", 0)},
+            {"name": "Annulees", "value": status_counts.get("annulee", 0)},
+        ],
     }
