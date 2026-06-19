@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import {
   BarChart3,
   CalendarDays,
+  ChevronDown,
   Database,
   Factory,
   TrendingDown,
@@ -8,6 +10,8 @@ import {
   WalletCards,
 } from 'lucide-react'
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
   Cell,
   Line,
@@ -20,7 +24,10 @@ import {
   YAxis,
 } from 'recharts'
 import Link from 'next/link'
-import type { DashboardSummary } from '@/types'
+import QuickActionsGrid from '@/components/dashboard/QuickActionsGrid'
+import { api } from '@/api'
+import type { DashboardSummary, Material, Product, Production } from '@/types'
+import type { AppRole } from '@/types/spgcr'
 
 const COLORS = ['#2f6fed', '#3bb978', '#fb970f', '#8b45dd']
 
@@ -31,12 +38,52 @@ function formatNumber(value: string | number, digits = 0) {
   })
 }
 
-function periodLabel() {
+function inputDate(date: Date) {
+  return date.toISOString().slice(0, 10)
+}
+
+function initialPeriod() {
   const now = new Date()
-  const first = new Date(now.getFullYear(), now.getMonth(), 1)
-  const last = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-  const fmt = (date: Date) => date.toLocaleDateString('fr-FR')
-  return `Du ${fmt(first)} au ${fmt(last)}`
+  return {
+    from: inputDate(new Date(now.getFullYear(), now.getMonth(), 1)),
+    to: inputDate(new Date(now.getFullYear(), now.getMonth() + 1, 0)),
+  }
+}
+
+function emptySummary(): DashboardSummary {
+  return {
+    kpis: { produced_quantity: '0', average_unit_cost: '0', total_production_cost: '0', margin_rate: '0' },
+    production_evolution: [],
+    cost_breakdown: [
+      { name: 'Matières premières', value: 0 },
+      { name: "Main d'oeuvre", value: 0 },
+      { name: 'Charges indirectes', value: 0 },
+      { name: 'Autres charges', value: 0 },
+    ],
+    recent_productions: [],
+    product_costs: [],
+    production_status: [
+      { name: 'Planifiées', value: 0 },
+      { name: 'En cours', value: 0 },
+      { name: 'Terminées', value: 0 },
+      { name: 'Annulées', value: 0 },
+    ],
+  }
+}
+
+function zeroEvolution(from: string, to: string) {
+  const start = new Date(`${from}T00:00:00`)
+  const end = new Date(`${to}T00:00:00`)
+  const rows: { month: string; quantity: number }[] = []
+  const cursor = new Date(start.getFullYear(), start.getMonth(), 1)
+  while (cursor <= end && rows.length < 12) {
+    rows.push({
+      month: cursor.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', ''),
+      quantity: 0,
+    })
+    cursor.setMonth(cursor.getMonth() + 1)
+  }
+  return rows.length ? rows : [{ month: 'Période', quantity: 0 }]
 }
 
 function KpiCard({ icon: Icon, title, value, unit, color, trend }: {
@@ -66,19 +113,56 @@ function KpiCard({ icon: Icon, title, value, unit, color, trend }: {
   )
 }
 
-export default function ProductionDashboard({ summary }: { summary: DashboardSummary | null }) {
-  const data: DashboardSummary = summary || {
-    kpis: { produced_quantity: '0', average_unit_cost: '0', total_production_cost: '0', margin_rate: '0' },
-    production_evolution: [],
-    cost_breakdown: [],
-    recent_productions: [],
-    product_costs: [],
+interface Props {
+  summary: DashboardSummary | null
+  role: AppRole
+  userId: string
+  products: Product[]
+  materials: Material[]
+  productions: Production[]
+}
+
+export default function ProductionDashboard({ summary, role, userId, products, materials, productions }: Props) {
+  const initial = initialPeriod()
+  const [dateFrom, setDateFrom] = useState(initial.from)
+  const [dateTo, setDateTo] = useState(initial.to)
+  const [data, setData] = useState<DashboardSummary>(summary || emptySummary())
+  const [loading, setLoading] = useState(false)
+  const [filterError, setFilterError] = useState('')
+  const [operationsOpen, setOperationsOpen] = useState(false)
+
+  async function applyFilter() {
+    if (!dateFrom || !dateTo || dateFrom > dateTo) {
+      setFilterError('La date de début doit précéder la date de fin.')
+      return
+    }
+    setFilterError('')
+    setLoading(true)
+    try {
+      setData(await api.dashboard(dateFrom, dateTo))
+    } catch (error) {
+      setFilterError(error instanceof Error ? error.message : 'Impossible de filtrer les statistiques.')
+    } finally {
+      setLoading(false)
+    }
   }
-  const evolution = data.production_evolution
+
+  useEffect(() => {
+    void applyFilter()
+  }, [])
+
+  const evolution = data.production_evolution.length ? data.production_evolution : zeroEvolution(dateFrom, dateTo)
   const previous = evolution[evolution.length - 2]?.quantity || 0
   const current = evolution[evolution.length - 1]?.quantity || 0
   const productionTrend = previous > 0 ? ((current - previous) / previous) * 100 : null
   const totalBreakdown = data.cost_breakdown.reduce((sum, item) => sum + Number(item.value || 0), 0)
+  const statusData = data.production_status?.length ? data.production_status : emptySummary().production_status
+  const productBarData = data.product_costs.length
+    ? data.product_costs
+    : [{ product: 'Aucune donnée', unit_cost: 0, evolution: 0 }]
+  const productOptions = products.map((product) => ({ id: String(product.id), code: product.sku, nom: product.name, volume_litre: 0.75 }))
+  const materialOptions = materials.map((material) => ({ id: String(material.id), code: `CMP-${material.id}`, nom: material.name, unite_mesure: material.unit }))
+  const activeProduction = productions.find((production) => production.status === 'en_cours')
 
   return (
     <div className="space-y-4">
