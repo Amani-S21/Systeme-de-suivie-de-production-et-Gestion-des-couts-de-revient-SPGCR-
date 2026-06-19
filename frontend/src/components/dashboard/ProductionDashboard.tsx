@@ -166,16 +166,56 @@ export default function ProductionDashboard({ summary, role, userId, products, m
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-4 xl:flex-row xl:items-center">
         <div>
           <h1 className="text-[29px] font-bold leading-tight text-[#0b1e3b]">Tableau de bord</h1>
           <p className="mt-1 text-sm text-slate-600">Bienvenue dans votre système de suivi de production et de gestion des coûts de revient.</p>
         </div>
-        <div className="flex h-12 items-center gap-3 rounded-md border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm">
-          <CalendarDays className="h-5 w-5 text-slate-500" />
-          <span>{periodLabel()}</span>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+          <div className="grid grid-cols-1 gap-2 rounded-md border border-slate-200 bg-white p-2 shadow-sm sm:grid-cols-[auto_1fr_1fr_auto] sm:items-end">
+            <CalendarDays className="mb-2 hidden h-5 w-5 text-slate-500 sm:block" />
+            <label className="grid gap-1 text-[10px] font-bold uppercase text-slate-400">
+              Du
+              <input type="date" value={dateFrom} onChange={(event) => setDateFrom(event.target.value)} className="h-9 rounded-md border border-slate-200 bg-white px-2 text-xs font-medium text-slate-700 outline-none focus:border-blue-400" />
+            </label>
+            <label className="grid gap-1 text-[10px] font-bold uppercase text-slate-400">
+              Au
+              <input type="date" value={dateTo} onChange={(event) => setDateTo(event.target.value)} className="h-9 rounded-md border border-slate-200 bg-white px-2 text-xs font-medium text-slate-700 outline-none focus:border-blue-400" />
+            </label>
+            <button type="button" onClick={applyFilter} disabled={loading} className="h-9 rounded-md bg-[#102544] px-4 text-xs font-bold text-white transition-colors hover:bg-blue-700 disabled:opacity-50">
+              {loading ? 'Chargement...' : 'Appliquer'}
+            </button>
+          </div>
         </div>
       </div>
+
+      {filterError && <p className="rounded-md border border-red-100 bg-red-50 px-4 py-2 text-xs font-medium text-red-700">{filterError}</p>}
+
+      <section className="rounded-md border border-slate-200 bg-white shadow-[0_2px_8px_rgba(15,23,42,0.05)]">
+        <button type="button" onClick={() => setOperationsOpen((open) => !open)} className="flex w-full items-center justify-between px-4 py-3 text-left">
+          <div>
+            <p className="text-sm font-bold text-slate-900">Centre d’opérations</p>
+            <p className="mt-0.5 text-xs text-slate-500">Créer un lot, enregistrer un composant, définir une recette ou gérer un lot actif.</p>
+          </div>
+          <ChevronDown className={`h-5 w-5 text-slate-500 transition-transform ${operationsOpen ? 'rotate-180' : ''}`} />
+        </button>
+        {operationsOpen && (
+          <div className="border-t border-slate-100 p-4">
+            <QuickActionsGrid
+              role={role}
+              currentUserId={userId}
+              produitsFinis={productOptions}
+              operateurs={[{ id: userId, prenom: 'Utilisateur', nom: 'connecté' }]}
+              composants={materialOptions}
+              activeLot={activeProduction ? {
+                id: String(activeProduction.id),
+                numeroLot: activeProduction.reference,
+                quantiteProduite: Number(activeProduction.quantity),
+              } : null}
+            />
+          </div>
+        )}
+      </section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard icon={Factory} title="Quantité produite" value={formatNumber(data.kpis.produced_quantity)} unit="unités" color="bg-gradient-to-br from-blue-400 to-blue-600" trend={productionTrend} />
