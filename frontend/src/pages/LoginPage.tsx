@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
 import { login, signup } from './actions'
 import { Mail, Lock, User, ArrowLeft, Loader2, CheckCircle2, AlertCircle, ShieldCheck, Home, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
@@ -9,7 +8,6 @@ import Link from 'next/link'
 type AuthMode = 'login' | 'signup' | 'forgot'
 
 export default function LoginPage() {
-  const router = useRouter()
   const [isPending, startTransition] = useTransition()
   
   const [mode, setMode] = useState<AuthMode>('login')
@@ -45,10 +43,9 @@ export default function LoginPage() {
   // Redirection contrôlée et initialisée en toute sécurité après le rendu
   useEffect(() => {
     if (shouldRedirect) {
-      router.push('/dashboard')
-      router.refresh()
+      window.location.replace('/dashboard')
     }
-  }, [shouldRedirect, router])
+  }, [shouldRedirect])
 
   // Nettoyage lors des changements de mode
   const switchMode = (newMode: AuthMode) => {
@@ -82,7 +79,7 @@ export default function LoginPage() {
           const res = await login(null, formData)
           if (res?.success) {
             setShowSuccessModal(true)
-            setTimeout(() => setShouldRedirect(true), 2000)
+            setTimeout(() => setShouldRedirect(true), 3000)
           } else {
             setError(res?.error || 'Nom utilisateur ou mot de passe incorrect.')
             setLoading(false)
@@ -91,8 +88,7 @@ export default function LoginPage() {
           const res = await signup(null, formData)
           if (res?.success) {
             setShowSuccessModal(true)
-            // Laisser plus de temps pour lire le message d'activation
-            setTimeout(() => setShouldRedirect(true), 4000)
+            setTimeout(() => setShouldRedirect(true), 3000)
           } else {
             setError(res?.error || "Impossible de creer le compte.")
             setLoading(false)
