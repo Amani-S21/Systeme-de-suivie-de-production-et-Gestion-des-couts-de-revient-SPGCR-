@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { ChevronRight, LogOut, Settings, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -18,6 +18,7 @@ interface Props {
 export default function DashboardNavSidebar({ role, collapsed, mobileOpen, onMobileClose }: Props) {
   const pathname = usePathname()
   const [isSigningOut, startTransition] = useTransition()
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
   const items = getNavItemsForRole(role)
 
   const content = (compact: boolean) => (
@@ -40,6 +41,46 @@ export default function DashboardNavSidebar({ role, collapsed, mobileOpen, onMob
         {items.map((item) => {
           const active = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
           const Icon = item.icon
+          const hasChildren = Boolean(item.children?.length)
+          const expanded = openGroups[item.href] ?? active
+
+          if (hasChildren && !compact) {
+            return (
+              <div key={item.href}>
+                <button
+                  type="button"
+                  onClick={() => setOpenGroups((groups) => ({ ...groups, [item.href]: !expanded }))}
+                  className={`group flex h-[50px] w-full items-center gap-3 rounded-md px-3 text-[15px] font-medium transition-all ${
+                    active ? 'bg-white/10 text-white' : 'text-white/90 hover:bg-white/8 hover:text-white'
+                  }`}
+                >
+                  <Icon className="h-5 w-5 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                  <ChevronRight className={`ml-auto h-4 w-4 transition-transform ${expanded ? 'rotate-90' : ''}`} />
+                </button>
+                {expanded && (
+                  <div className="ml-5 mt-1 space-y-1 border-l border-white/15 pl-3">
+                    {item.children!.map((child) => {
+                      const childActive = `${window.location.pathname}${window.location.search}` === child.href
+                      return (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          onClick={onMobileClose}
+                          className={`block rounded-md px-3 py-2 text-xs font-medium transition-colors ${
+                            childActive ? 'bg-blue-500/25 text-white' : 'text-white/65 hover:bg-white/8 hover:text-white'
+                          }`}
+                        >
+                          {child.label}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            )
+          }
+
           return (
             <Link
               key={item.href}
@@ -54,7 +95,6 @@ export default function DashboardNavSidebar({ role, collapsed, mobileOpen, onMob
             >
               <Icon className="h-5 w-5 shrink-0" />
               {!compact && <span className="truncate">{item.label}</span>}
-              {!compact && item.href !== '/dashboard' && <ChevronRight className="ml-auto h-4 w-4 text-white/90" />}
             </Link>
           )
         })}

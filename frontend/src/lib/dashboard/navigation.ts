@@ -17,6 +17,7 @@ export interface NavItem {
   href: string
   icon: LucideIcon
   roles: AppRole[] | 'all'
+  children?: { label: string; href: string }[]
 }
 
 export const DASHBOARD_NAV: NavItem[] = [
@@ -31,12 +32,20 @@ export const DASHBOARD_NAV: NavItem[] = [
     href: '/dashboard/lots',
     icon: Factory,
     roles: 'all',
+    children: [
+      { label: 'Tous les lots', href: '/dashboard/lots' },
+      { label: 'Nouveau lot', href: '/dashboard/lots?action=new' },
+    ],
   },
   {
     label: 'Matières premières',
     href: '/dashboard/composants',
     icon: Package,
     roles: ['admin_msd', 'responsable_production'],
+    children: [
+      { label: 'Stocks & composants', href: '/dashboard/composants' },
+      { label: 'Ajuster le stock', href: '/dashboard/composants?action=adjust' },
+    ],
   },
   {
     label: 'Charges',
@@ -49,12 +58,20 @@ export const DASHBOARD_NAV: NavItem[] = [
     href: '/dashboard/analyses',
     icon: Calculator,
     roles: ['admin_msd', 'responsable_production'],
+    children: [
+      { label: 'Analyses financières', href: '/dashboard/analyses' },
+      { label: 'Clôturer un lot', href: '/dashboard/lots?action=close' },
+    ],
   },
   {
     label: 'Produits',
     href: '/dashboard/nomenclatures',
     icon: Layers,
     roles: ['admin_msd', 'responsable_production'],
+    children: [
+      { label: 'Catalogue & recettes', href: '/dashboard/nomenclatures' },
+      { label: 'Nouvelle recette', href: '/dashboard/nomenclatures?action=new' },
+    ],
   },
   {
     label: 'Rapports',

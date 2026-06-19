@@ -53,6 +53,10 @@ export default function NomenclaturesPageClient({ formules, produitsFinis, compo
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
   useEffect(() => {
+    if (searchParams.get('action') === 'new') setModalOpen(true)
+  }, [searchParams])
+
+  useEffect(() => {
     const s = searchParams.get('search')
     if (s) setQuery(s)
   }, [searchParams])

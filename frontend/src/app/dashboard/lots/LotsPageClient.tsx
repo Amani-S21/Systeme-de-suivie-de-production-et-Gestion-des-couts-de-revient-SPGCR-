@@ -153,6 +153,15 @@ export default function LotsPageClient({
   const [consulterLotId, setConsulterLotId] = useState<string | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
+  useEffect(() => {
+    const action = searchParams.get('action')
+    if (action === 'new' && role !== 'operateur_usine') setNewLotOpen(true)
+    if (action === 'close') {
+      const active = lots.find((lot) => lot.statut === 'en_cours')
+      if (active) setClotureLotId(active.id)
+    }
+  }, [searchParams, role, lots])
+
   function toggleSort(key: SortKey) {
     if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
     else { setSortKey(key); setSortDir('asc') }

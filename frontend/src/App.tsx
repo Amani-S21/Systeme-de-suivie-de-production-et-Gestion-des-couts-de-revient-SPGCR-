@@ -300,7 +300,16 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
     if (page === '/dashboard/rapports') return <DashboardSectionPlaceholder title="Rapports" description="Consultation et export des rapports de production et de coûts de revient." icon={BarChart2} />
     if (page === '/dashboard/historique') return <DashboardSectionPlaceholder title="Historique & Logs" description="Journal des actions et audits de production." icon={BarChart2} />
     if (page === '/dashboard/succursales') return <DashboardSectionPlaceholder title="Gestion des Succursales" description="Gestion des sites, depots et points de production." icon={PackageCheck} />
-    return <ProductionDashboard summary={summary} />
+    return (
+      <ProductionDashboard
+        summary={summary}
+        role={role}
+        userId={String(user.id)}
+        products={products}
+        materials={materials}
+        productions={productions}
+      />
+    )
   }, [page, materials, products, productions, summary, users, user])
 
   return (

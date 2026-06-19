@@ -58,6 +58,10 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
   const [editTarget, setEditTarget] = useState<ComposantRow | null>(null)
 
   useEffect(() => {
+    if (searchParams.get('action') === 'adjust') setModalOpen(true)
+  }, [searchParams])
+
+  useEffect(() => {
     const s = searchParams.get('search')
     if (s) setQuery(s)
   }, [searchParams])

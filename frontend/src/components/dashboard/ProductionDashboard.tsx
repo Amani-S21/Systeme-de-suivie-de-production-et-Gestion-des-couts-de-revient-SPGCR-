@@ -228,17 +228,15 @@ export default function ProductionDashboard({ summary, role, userId, products, m
         <article className="rounded-md border border-slate-200/80 bg-white p-4 shadow-[0_2px_8px_rgba(15,23,42,0.05)]">
           <h2 className="text-lg font-bold text-slate-900">Évolution de la production</h2>
           <div className="mt-4 h-[245px]">
-            {evolution.length ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={evolution} margin={{ top: 8, right: 18, left: 4, bottom: 0 }}>
-                  <CartesianGrid stroke="#e5e7eb" vertical={false} />
-                  <XAxis dataKey="month" tick={{ fill: '#475569', fontSize: 12 }} tickLine={false} axisLine={{ stroke: '#dbe2ea' }} />
-                  <YAxis tick={{ fill: '#475569', fontSize: 12 }} tickLine={false} axisLine={false} />
-                  <Tooltip formatter={(value) => [`${formatNumber(Number(value))} unités`, 'Quantité produite']} />
-                  <Line type="monotone" dataKey="quantity" stroke="#2f6fed" strokeWidth={2.5} dot={{ r: 4, fill: '#2f6fed' }} activeDot={{ r: 6 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : <div className="flex h-full items-center justify-center text-sm text-slate-400">Aucune production enregistrée.</div>}
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={evolution} margin={{ top: 8, right: 18, left: 4, bottom: 0 }}>
+                <CartesianGrid stroke="#e5e7eb" vertical={false} />
+                <XAxis dataKey="month" tick={{ fill: '#475569', fontSize: 12 }} tickLine={false} axisLine={{ stroke: '#dbe2ea' }} />
+                <YAxis domain={[0, 'auto']} tick={{ fill: '#475569', fontSize: 12 }} tickLine={false} axisLine={false} />
+                <Tooltip formatter={(value) => [`${formatNumber(Number(value))} unités`, 'Quantité produite']} />
+                <Line type="monotone" dataKey="quantity" stroke="#2f6fed" strokeWidth={2.5} dot={{ r: 4, fill: '#2f6fed' }} activeDot={{ r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </article>
 
@@ -267,7 +265,59 @@ export default function ProductionDashboard({ summary, role, userId, products, m
                   ))}
                 </div>
               </>
-            ) : <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">Aucun coût calculé.</div>}
+            ) : (
+              <>
+                <div className="relative h-[220px] w-full sm:w-1/2">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={[{ name: 'Aucune donnée', value: 1 }]} dataKey="value" innerRadius={52} outerRadius={94} fill="#e2e8f0" stroke="#fff" strokeWidth={2} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <span className="absolute inset-0 flex items-center justify-center text-xl font-bold text-slate-500">0</span>
+                </div>
+                <div className="grid w-full gap-4 sm:w-1/2">
+                  {emptySummary().cost_breakdown.map((item, index) => (
+                    <div key={item.name} className="grid grid-cols-[12px_1fr_auto] items-center gap-3 text-sm">
+                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: COLORS[index] }} />
+                      <span className="text-slate-700">{item.name}</span>
+                      <span className="font-medium text-slate-500">0%</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </article>
+      </section>
+
+      <section className="grid gap-4 xl:grid-cols-2">
+        <article className="rounded-md border border-slate-200/80 bg-white p-4 shadow-[0_2px_8px_rgba(15,23,42,0.05)]">
+          <h2 className="text-lg font-bold text-slate-900">Productions par statut</h2>
+          <div className="mt-4 h-[245px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={statusData} margin={{ top: 8, right: 18, left: 0, bottom: 0 }}>
+                <CartesianGrid stroke="#e5e7eb" vertical={false} />
+                <XAxis dataKey="name" tick={{ fill: '#475569', fontSize: 11 }} tickLine={false} />
+                <YAxis domain={[0, 'auto']} allowDecimals={false} tick={{ fill: '#475569', fontSize: 12 }} tickLine={false} axisLine={false} />
+                <Tooltip formatter={(value) => [`${formatNumber(Number(value))}`, 'Productions']} />
+                <Bar dataKey="value" fill="#2f6fed" radius={[4, 4, 0, 0]} maxBarSize={58} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </article>
+
+        <article className="rounded-md border border-slate-200/80 bg-white p-4 shadow-[0_2px_8px_rgba(15,23,42,0.05)]">
+          <h2 className="text-lg font-bold text-slate-900">Coût unitaire par produit</h2>
+          <div className="mt-4 h-[245px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={productBarData} layout="vertical" margin={{ top: 8, right: 20, left: 20, bottom: 0 }}>
+                <CartesianGrid stroke="#e5e7eb" horizontal={false} />
+                <XAxis type="number" domain={[0, 'auto']} tick={{ fill: '#475569', fontSize: 11 }} tickLine={false} />
+                <YAxis type="category" dataKey="product" width={105} tick={{ fill: '#475569', fontSize: 11 }} tickLine={false} axisLine={false} />
+                <Tooltip formatter={(value) => [`${formatNumber(Number(value))} FCFA`, 'Coût unitaire']} />
+                <Bar dataKey="unit_cost" fill="#3bb978" radius={[0, 4, 4, 0]} maxBarSize={38} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </article>
       </section>
