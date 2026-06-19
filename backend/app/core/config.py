@@ -1,7 +1,12 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+BACKEND_DIR = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = BACKEND_DIR.parent
 
 
 class Settings(BaseSettings):
@@ -17,7 +22,10 @@ class Settings(BaseSettings):
     default_admin_first_name: str = Field("Admin", alias="DEFAULT_ADMIN_FIRST_NAME")
     default_admin_last_name: str = Field("SPCR", alias="DEFAULT_ADMIN_LAST_NAME")
 
-    model_config = SettingsConfigDict(env_file=(".env", "../.env"), extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=(PROJECT_ROOT / ".env", BACKEND_DIR / ".env"),
+        extra="ignore",
+    )
 
     @property
     def cors_origins(self) -> list[str]:
