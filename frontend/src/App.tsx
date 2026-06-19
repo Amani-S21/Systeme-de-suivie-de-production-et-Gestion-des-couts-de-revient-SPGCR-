@@ -13,6 +13,7 @@ import AnalysesFinancieresClient from '@/components/dashboard/analyses/AnalysesF
 import UtilisateursPageClient from '@/components/dashboard/utilisateurs/UtilisateursPageClient'
 import ProfilPageClient from '@/components/dashboard/profil/ProfilPageClient'
 import DashboardSectionPlaceholder from '@/components/dashboard/DashboardSectionPlaceholder'
+import ProductionDashboard from '@/components/dashboard/ProductionDashboard'
 import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/LoginPage'
 import Header from '@/components/Header'
@@ -295,9 +296,11 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
         created_at: new Date().toISOString(),
       }} email={user.email} />
     }
+    if (page === '/dashboard/charges') return <DashboardSectionPlaceholder title="Charges" description="Gestion des charges directes, indirectes et autres frais de production." icon={DollarSign} />
+    if (page === '/dashboard/rapports') return <DashboardSectionPlaceholder title="Rapports" description="Consultation et export des rapports de production et de coûts de revient." icon={BarChart2} />
     if (page === '/dashboard/historique') return <DashboardSectionPlaceholder title="Historique & Logs" description="Journal des actions et audits de production." icon={BarChart2} />
     if (page === '/dashboard/succursales') return <DashboardSectionPlaceholder title="Gestion des Succursales" description="Gestion des sites, depots et points de production." icon={PackageCheck} />
-    return <Overview summary={summary} role={role} userId={String(user.id)} products={products} materials={materials} productions={productions} />
+    return <ProductionDashboard summary={summary} />
   }, [page, materials, products, productions, summary, users, user])
 
   return (

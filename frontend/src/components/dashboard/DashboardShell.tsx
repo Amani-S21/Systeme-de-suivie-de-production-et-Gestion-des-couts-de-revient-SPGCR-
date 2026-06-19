@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import type { AppRole } from '@/types/spgcr'
-import DashboardHeader from '@/components/dashboard/DashboardHeader'
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar'
+import DashboardTopbar from '@/components/dashboard/DashboardTopbar'
+import DashboardNavSidebar from '@/components/dashboard/DashboardNavSidebar'
 
 interface DashboardShellProps {
   role: AppRole
@@ -31,27 +31,21 @@ export default function DashboardShell({
     }
   }
 
-  function handleCollapseToggle() {
-    setSidebarCollapsed((c) => !c)
-  }
-
   return (
     <div className="flex h-screen overflow-hidden bg-[#f5f7fb]">
-      <DashboardSidebar
+      <DashboardNavSidebar
         role={role}
         collapsed={sidebarCollapsed}
         mobileOpen={mobileSidebarOpen}
         onMobileClose={() => setMobileSidebarOpen(false)}
-        onToggleCollapse={handleCollapseToggle}
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <DashboardHeader
+        <DashboardTopbar
           prenom={prenom}
           nom={nom}
           role={role}
           email={email}
-          sidebarCollapsed={sidebarCollapsed}
           onSidebarToggle={handleSidebarToggle}
         />
 
