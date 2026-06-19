@@ -1,14 +1,14 @@
 import type { LucideIcon } from 'lucide-react'
 import {
+  Calculator,
+  ClipboardList,
+  Factory,
   LayoutDashboard,
   Package,
-  Wine,
   Layers,
-  DollarSign,
   Users,
   ScrollText,
-  Lock,
-  Building2,
+  Settings,
 } from 'lucide-react'
 import type { AppRole } from '@/types/spgcr'
 
@@ -21,7 +21,7 @@ export interface NavItem {
 
 export const DASHBOARD_NAV: NavItem[] = [
   {
-    label: "Vue d'ensemble",
+    label: 'Tableau de bord',
     href: '/dashboard',
     icon: LayoutDashboard,
     roles: 'all',

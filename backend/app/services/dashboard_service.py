@@ -1,3 +1,4 @@
+from collections import defaultdict
 from decimal import Decimal
 
 from sqlalchemy import func, select
@@ -8,8 +9,18 @@ from app.models.production import Production
 from app.models.product import Product
 
 
+MONTH_LABELS = {
+    1: "Jan", 2: "Fev", 3: "Mar", 4: "Avr", 5: "Mai", 6: "Juin",
+    7: "Juil", 8: "Aout", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec",
+}
+
+
 def summary(db: Session) -> dict:
-    produced_quantity = db.scalar(select(func.coalesce(func.sum(Production.quantity), 0))) or Decimal("0")
+    produced_quantity = db.scalar(
+        select(func.coalesce(func.sum(Production.quantity), 0)).where(
+            Production.status != "annulee"
+        )
+    ) or Decimal("0")
     average_unit_cost = db.scalar(select(func.coalesce(func.avg(Cost.unit_cost), 0))) or Decimal("0")
     total_production_cost = db.scalar(select(func.coalesce(func.sum(Cost.total_cost), 0))) or Decimal("0")
     margin_rate = db.scalar(select(func.coalesce(func.avg(Cost.margin_rate), 0))) or Decimal("0")
@@ -21,19 +32,47 @@ def summary(db: Session) -> dict:
         .limit(5)
         .all()
     )
+    monthly_rows = (
+        db.query(
+            func.date_trunc("month", Production.created_at).label("period"),
+            func.sum(Production.quantity).label("quantity"),
+        )
+        .filter(Production.status != "annulee")
+        .group_by("period")
+        .order_by("period")
+        .all()
+    )[-6:]
+
     costs = db.query(Cost).all()
     raw = sum((c.raw_material_cost for c in costs), Decimal("0"))
     labor = sum((c.labor_cost for c in costs), Decimal("0"))
     overhead = sum((c.overhead_cost for c in costs), Decimal("0"))
     other = sum((c.other_cost for c in costs), Decimal("0"))
-    product_costs = (
-        db.query(Product.name, func.coalesce(func.avg(Cost.unit_cost), 0))
+    product_cost_rows = (
+        db.query(Product.name, Cost.unit_cost, Cost.calculated_at)
         .join(Production, Production.product_id == Product.id)
         .join(Cost, Cost.production_id == Production.id)
-        .group_by(Product.name)
-        .limit(6)
+        .order_by(Product.name, Cost.calculated_at.desc())
         .all()
     )
+    costs_by_product: dict[str, list[Decimal]] = defaultdict(list)
+    for name, unit_cost, _ in product_cost_rows:
+        costs_by_product[name].append(Decimal(unit_cost or 0))
+
+    product_costs = []
+    for name, values in list(costs_by_product.items())[:6]:
+        current = values[0]
+        previous = values[1] if len(values) > 1 else None
+        evolution = (
+            float(((current - previous) / previous) * 100)
+            if previous and previous != 0
+            else 0.0
+        )
+        product_costs.append({
+            "product": name,
+            "unit_cost": float(current),
+            "evolution": evolution,
+        })
     return {
         "kpis": {
             "produced_quantity": produced_quantity,
@@ -42,17 +81,17 @@ def summary(db: Session) -> dict:
             "margin_rate": margin_rate,
         },
         "production_evolution": [
-            {"month": "Jan", "quantity": 9000},
-            {"month": "Fev", "quantity": 10800},
-            {"month": "Mar", "quantity": 9000},
-            {"month": "Avr", "quantity": 10750},
-            {"month": "Mai", "quantity": float(produced_quantity or 12560)},
+            {
+                "month": MONTH_LABELS.get(period.month, str(period.month)),
+                "quantity": float(quantity or 0),
+            }
+            for period, quantity in monthly_rows
         ],
         "cost_breakdown": [
-            {"name": "Matieres premieres", "value": float(raw or 45)},
-            {"name": "Main d'oeuvre", "value": float(labor or 20)},
-            {"name": "Charges indirectes", "value": float(overhead or 25)},
-            {"name": "Autres charges", "value": float(other or 10)},
+            {"name": "Matieres premieres", "value": float(raw)},
+            {"name": "Main d'oeuvre", "value": float(labor)},
+            {"name": "Charges indirectes", "value": float(overhead)},
+            {"name": "Autres charges", "value": float(other)},
         ],
         "recent_productions": [
             {
@@ -64,8 +103,5 @@ def summary(db: Session) -> dict:
             }
             for p in productions
         ],
-        "product_costs": [
-            {"product": name, "unit_cost": float(unit_cost), "evolution": -2.1}
-            for name, unit_cost in product_costs
-        ],
+        "product_costs": product_costs,
     }
