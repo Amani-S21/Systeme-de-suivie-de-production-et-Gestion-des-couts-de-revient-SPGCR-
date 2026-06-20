@@ -11,13 +11,11 @@ import type { AppRole } from '@/types/spgcr'
 interface Props {
   role: AppRole
   collapsed: boolean
-  desktopOpen: boolean
-  onDesktopClose: () => void
   mobileOpen: boolean
   onMobileClose: () => void
 }
 
-export default function DashboardNavSidebar({ role, collapsed, desktopOpen, onDesktopClose, mobileOpen, onMobileClose }: Props) {
+export default function DashboardNavSidebar({ role, collapsed, mobileOpen, onMobileClose }: Props) {
   const pathname = usePathname()
   const [isSigningOut, startTransition] = useTransition()
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
@@ -39,7 +37,7 @@ export default function DashboardNavSidebar({ role, collapsed, desktopOpen, onDe
         )}
       </div>
 
-      <nav className="flex-1 space-y-2 overflow-y-auto px-2.5 py-5">
+      <nav className="dashboard-sidebar-scroll flex-1 space-y-2 overflow-y-auto px-2.5 py-5">
         {items.map((item) => {
           const active = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
           const Icon = item.icon
@@ -119,10 +117,7 @@ export default function DashboardNavSidebar({ role, collapsed, desktopOpen, onDe
 
   return (
     <>
-      <aside
-        onMouseLeave={onDesktopClose}
-        className={`fixed inset-y-0 left-0 z-50 hidden h-screen w-[270px] flex-col bg-gradient-to-b from-[#082044] to-[#061a35] shadow-2xl transition-transform duration-300 lg:flex ${desktopOpen ? 'translate-x-0' : '-translate-x-full'}`}
-      >
+      <aside className={`hidden h-screen shrink-0 flex-col bg-gradient-to-b from-[#082044] to-[#061a35] transition-[width] duration-300 lg:flex ${collapsed ? 'w-[76px]' : 'w-[270px]'}`}>
         {content(collapsed)}
       </aside>
 

@@ -26,6 +26,8 @@ button, input, select { font: inherit; }
 .sidebar-nav button, .logout { border: 0; width: 100%; color: #fff; background: transparent; display: flex; align-items: center; gap: 12px; padding: 13px 13px; border-radius: 6px; cursor: pointer; font-size: 16px; text-align: left; }
 .sidebar-nav button.active { background: linear-gradient(135deg, #3655e9, #4759ef); box-shadow: 0 6px 14px rgba(47, 111, 237, .28); }
 .sidebar-nav button:hover, .logout:hover { background: rgba(255,255,255,.08); }
+.dashboard-sidebar-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+.dashboard-sidebar-scroll::-webkit-scrollbar { display: none; }
 .nav-arrow { margin-left: auto; }
 .logout { margin-top: auto; border-top: 1px solid rgba(255,255,255,.12); border-radius: 0; padding-top: 20px; }
 
