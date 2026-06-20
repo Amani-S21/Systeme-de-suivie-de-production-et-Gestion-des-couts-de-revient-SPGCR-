@@ -162,8 +162,8 @@ export default function ProductionDashboard({ summary, role, userId, products, m
     <div className="space-y-4">
       <div className="flex flex-col justify-between gap-4 xl:flex-row xl:items-center">
         <div>
-          <h1 className="text-[29px] font-bold leading-tight text-[#0b1e3b]">Tableau de bord</h1>
-          <p className="mt-1 text-sm text-slate-600">Bienvenue dans votre système de suivi de production et de gestion des coûts de revient.</p>
+          <h1 className="text-[29px] font-bold leading-tight text-[#0b1e3b]">{role === 'admin_msd' ? 'Tableau de bord administrateur' : 'Pilotage de la production'}</h1>
+          <p className="mt-1 text-sm text-slate-600">{role === 'admin_msd' ? 'Vue consolidée du système de production, des coûts et des marges.' : 'Suivi opérationnel des productions, stocks, charges et coûts de revient.'}</p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
           <div className="grid grid-cols-1 gap-2 rounded-md border border-slate-200 bg-white p-2 shadow-sm sm:grid-cols-[auto_1fr_1fr_auto] sm:items-end">
