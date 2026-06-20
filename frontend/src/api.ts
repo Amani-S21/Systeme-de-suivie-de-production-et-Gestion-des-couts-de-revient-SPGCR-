@@ -1,4 +1,4 @@
-import type { BomItem, DashboardSummary, Material, Product, Production, User } from './types'
+import type { BomItem, Charge, DashboardSummary, Material, Product, Production, User } from './types'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
 
@@ -60,4 +60,15 @@ export const api = {
   deleteProduction: (id: string | number) => request<{ success: boolean }>(`/productions/${id}`, { method: 'DELETE' }),
   calculateCost: (productionId: number, payload: unknown) =>
     request(`/costs/production/${productionId}`, { method: 'POST', body: JSON.stringify(payload) }),
+  charges: (filters?: { search?: string; category?: string; dateFrom?: string; dateTo?: string }) => {
+    const params = new URLSearchParams()
+    if (filters?.search) params.set('search', filters.search)
+    if (filters?.category) params.set('category', filters.category)
+    if (filters?.dateFrom) params.set('date_from', filters.dateFrom)
+    if (filters?.dateTo) params.set('date_to', filters.dateTo)
+    return request<Charge[]>(`/charges${params.toString() ? `?${params}` : ''}`)
+  },
+  createCharge: (payload: unknown) => request<Charge>('/charges', { method: 'POST', body: JSON.stringify(payload) }),
+  updateCharge: (id: string | number, payload: unknown) => request<Charge>(`/charges/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
+  deleteCharge: (id: string | number) => request<{ success: boolean }>(`/charges/${id}`, { method: 'DELETE' }),
 }

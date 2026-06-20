@@ -35,6 +35,17 @@ export interface BomItem {
   quantity_required: string
 }
 
+export interface Charge {
+  id: number
+  label: string
+  category: string
+  amount: string
+  charge_date: string
+  description?: string | null
+  created_by_id?: number | null
+  created_at: string
+}
+
 export interface Production {
   id: number
   reference: string
