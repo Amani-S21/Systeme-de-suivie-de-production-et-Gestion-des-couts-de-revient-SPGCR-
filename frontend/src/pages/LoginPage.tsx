@@ -79,7 +79,7 @@ export default function LoginPage() {
           const res = await login(null, formData)
           if (res?.success) {
             setShowSuccessModal(true)
-            setTimeout(() => setShouldRedirect(true), 3000)
+            setTimeout(() => setShouldRedirect(true), 1500)
           } else {
             setError(res?.error || 'Nom utilisateur ou mot de passe incorrect.')
             setLoading(false)
@@ -88,7 +88,7 @@ export default function LoginPage() {
           const res = await signup(null, formData)
           if (res?.success) {
             setShowSuccessModal(true)
-            setTimeout(() => setShouldRedirect(true), 3000)
+            setTimeout(() => setShouldRedirect(true), 1500)
           } else {
             setError(res?.error || "Impossible de creer le compte.")
             setLoading(false)

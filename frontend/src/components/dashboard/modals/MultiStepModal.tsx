@@ -83,7 +83,7 @@ export default function MultiStepModal({
           </div>
           <button
             type="button"
-            onClick={requestClose}
+            onClick={onClose}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-100 text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-800"
             aria-label="Fermer"
           >

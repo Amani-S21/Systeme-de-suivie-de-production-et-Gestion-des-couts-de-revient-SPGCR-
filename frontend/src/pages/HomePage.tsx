@@ -253,41 +253,6 @@ export default function HomePage() {
                 Numérisation des flux physiques, automatisation des marges brutes, traçabilité totale.
               </motion.p>
 
-              {/* Diagnostic Système */}
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.62, duration: 0.8 }}
-                className="max-w-md mx-auto mb-10 bg-slate-950 rounded-md border border-slate-700 text-left overflow-hidden shadow-lg"
-              >
-                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
-                  <span className="ml-2 text-[9px] font-mono text-slate-500 uppercase tracking-widest">
-                    SPGCR · Diagnostic Système
-                  </span>
-                </div>
-                <div className="px-4 py-3 space-y-1.5 font-mono-ibm text-[11px]">
-                  {[
-                    { label: 'MODULE BOM',        status: 'ACTIF',        ok: true },
-                    { label: 'CALCUL COÛT',       status: 'OPÉRATIONNEL', ok: true },
-                    { label: 'SYNC PRODUCTION',   status: 'EN LIGNE',     ok: true },
-                    { label: 'AUDIT TRAÇABILITÉ', status: 'VALIDÉ',       ok: true },
-                  ].map((row) => (
-                    <div key={row.label} className="flex items-center justify-between">
-                      <span className="text-slate-400">› {row.label}</span>
-                      <span className={`font-bold flex items-center gap-1 ${row.ok ? 'text-green-400' : 'text-red-400'}`}>
-                        {row.ok
-                          ? <CheckCircle className="w-3 h-3" />
-                          : <AlertCircle className="w-3 h-3" />}
-                        {row.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
               {/* CTA Boutons */}
               <motion.div
                 initial={{ opacity: 0, y: 16 }}

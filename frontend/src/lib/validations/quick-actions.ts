@@ -25,11 +25,11 @@ export const nouveauComposantSchema = nouveauComposantStep1Schema.merge(
 )
 
 export const nouvelleBomStep1Schema = z.object({
-  produit_fini_id: z.string().uuid('Sélectionnez un produit fini valide.'),
+  produit_fini_id: z.string().min(1, 'Sélectionnez un produit fini valide.'),
 })
 
 export const nouvelleBomStep2Schema = z.object({
-  composant_id: z.string().uuid('Sélectionnez un composant valide.'),
+  composant_id: z.string().min(1, 'Sélectionnez un composant valide.'),
   quantite_requise: z
     .number({ error: 'Saisissez une quantité valide.' })
     .positive('La quantité requise doit être strictement positive.'),
@@ -38,7 +38,7 @@ export const nouvelleBomStep2Schema = z.object({
 export const nouvelleBomSchema = nouvelleBomStep1Schema.merge(nouvelleBomStep2Schema)
 
 export const nouveauLotStep1Schema = z.object({
-  produitFiniId: z.string().uuid('Sélectionnez un produit fini valide.'),
+  produitFiniId: z.string().min(1, 'Sélectionnez un produit fini valide.'),
   quantite: z
     .number({ error: 'Saisissez une quantité valide.' })
     .int('La quantité doit être un nombre entier.')
@@ -47,7 +47,7 @@ export const nouveauLotStep1Schema = z.object({
 
 export const nouveauLotStep2Schema = z.object({
   numeroLot: z.string().min(3, 'Le numéro de lot est obligatoire.'),
-  operateurId: z.string().uuid('Assignez un opérateur valide.'),
+  operateurId: z.string().min(1, 'Assignez un opérateur valide.'),
 })
 
 export const clotureLotCostsSchema = z.object({

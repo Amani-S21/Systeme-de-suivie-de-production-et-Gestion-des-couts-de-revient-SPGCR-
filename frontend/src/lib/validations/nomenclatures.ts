@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const bomLineSchema = z.object({
-  composant_id: z.string().uuid('Composant invalide.'),
+  composant_id: z.string().min(1, 'Composant invalide.'),
   quantite_requise: z
     .number({ error: 'Quantité invalide.' })
     .positive('La quantité doit être strictement positive.'),
@@ -24,7 +24,7 @@ export const formuleCatalogueNewSchema = z.object({
 /** Étape 1 — rattachement à un produit déjà présent au catalogue */
 export const formuleCatalogueExistingSchema = z.object({
   mode: z.literal('existing'),
-  produit_fini_id: z.string().uuid('Sélectionnez un produit du catalogue.'),
+  produit_fini_id: z.string().min(1, 'Sélectionnez un produit du catalogue.'),
 })
 
 export const formuleCatalogueEtape1Schema = z.discriminatedUnion('mode', [
@@ -38,7 +38,7 @@ export type FormuleCatalogueEtape1 = z.infer<typeof formuleCatalogueEtape1Schema
 export const persistCataloguePayloadSchema = z.discriminatedUnion('mode', [
   formuleCatalogueExistingSchema,
   formuleCatalogueNewSchema.extend({
-    draft_produit_fini_id: z.string().uuid().optional(),
+    draft_produit_fini_id: z.string().min(1).optional(),
   }),
 ])
 
@@ -56,7 +56,7 @@ export const formuleValidationSchema = z.object({
 
 /** Soumission finale : uniquement BOM + validation (produit déjà défini à l’étape 1) */
 export const soumissionBomSeuleSchema = z.object({
-  produit_fini_id: z.string().uuid('Identifiant produit invalide.'),
+  produit_fini_id: z.string().min(1, 'Identifiant produit invalide.'),
   lignes: formuleLignesSchema.shape.lignes,
   validation: formuleValidationSchema,
 })
