@@ -9,6 +9,7 @@ export async function createProductionLot(input: {
 }): Promise<{ success?: true; error?: string }> {
   await api.createProduction({
     product_id: Number(input.produit_fini_id),
+    operator_id: Number(input.operateur_id),
     quantity: input.quantite_produite,
     status: 'en_cours',
     materials: [],

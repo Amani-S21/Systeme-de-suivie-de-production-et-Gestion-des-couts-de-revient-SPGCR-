@@ -13,8 +13,8 @@ router = APIRouter(prefix="/productions", tags=["productions"])
 
 
 @router.get("", response_model=list[ProductionRead])
-def index(db: Session = Depends(get_db), _: User = Depends(get_current_user)):
-    return list_productions(db)
+def index(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    return list_productions(db, user)
 
 
 @router.post("", response_model=ProductionRead)
@@ -28,6 +28,9 @@ def create(payload: ProductionCreate, db: Session = Depends(get_db), user: User 
 @router.patch("/{production_id}", response_model=ProductionRead)
 def update(production_id: int, payload: ProductionUpdate, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     if user.role == UserRole.operateur_usine:
+        production = db.get(Production, production_id)
+        if not production or user.id not in {production.operator_id, production.created_by_id}:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Ce lot ne vous est pas affecte")
         changes = payload.model_dump(exclude_unset=True)
         if changes != {"status": ProductionStatus.terminee}:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Un operateur peut uniquement cloturer un lot")

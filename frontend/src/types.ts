@@ -50,6 +50,7 @@ export interface Production {
   id: number
   reference: string
   product_id: number
+  operator_id?: number | null
   product?: Product
   quantity: string
   status: 'planifiee' | 'en_cours' | 'terminee' | 'annulee'

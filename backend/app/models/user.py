@@ -21,4 +21,5 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    productions = relationship("Production", back_populates="created_by")
+    productions = relationship("Production", back_populates="created_by", foreign_keys="Production.created_by_id")
+    assigned_productions = relationship("Production", back_populates="operator", foreign_keys="Production.operator_id")

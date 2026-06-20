@@ -13,8 +13,8 @@ from app.services.material_service import add_stock_movement, create_material, l
 router = APIRouter(prefix="/materials", tags=["materials"])
 
 
-@router.get("", response_model=list[MaterialRead])
-def index(db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+@router.get("", response_model=list[MaterialRead], dependencies=[Depends(require_roles(UserRole.admin_msd, UserRole.responsable_production))])
+def index(db: Session = Depends(get_db)):
     return list_materials(db)
 
 

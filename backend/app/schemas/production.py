@@ -13,6 +13,7 @@ class ProductionMaterialIn(OrmModel):
 
 class ProductionCreate(OrmModel):
     product_id: int
+    operator_id: int | None = None
     quantity: Decimal
     status: ProductionStatus = ProductionStatus.planifiee
     materials: list[ProductionMaterialIn] = []
@@ -27,6 +28,7 @@ class ProductionRead(OrmModel):
     id: int
     reference: str
     product_id: int
+    operator_id: int | None = None
     quantity: Decimal
     status: ProductionStatus
     created_at: datetime

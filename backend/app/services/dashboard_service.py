@@ -2,12 +2,14 @@ from collections import defaultdict
 from datetime import date, datetime, time, timedelta, timezone
 from decimal import Decimal
 
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session, selectinload
 
 from app.models.cost import Cost
 from app.models.production import Production
 from app.models.product import Product
+from app.models.enums import UserRole
+from app.models.user import User
 
 
 MONTH_LABELS = {
@@ -16,9 +18,13 @@ MONTH_LABELS = {
 }
 
 
-def summary(db: Session, date_from: date | None = None, date_to: date | None = None) -> dict:
+def summary(db: Session, user: User, date_from: date | None = None, date_to: date | None = None) -> dict:
     production_filters = [Production.status != "annulee"]
     all_status_filters = []
+    if user.role == UserRole.operateur_usine:
+        scope = or_(Production.operator_id == user.id, Production.created_by_id == user.id)
+        production_filters.append(scope)
+        all_status_filters.append(scope)
     if date_from:
         start = datetime.combine(date_from, time.min, tzinfo=timezone.utc)
         production_filters.append(Production.created_at >= start)
@@ -110,7 +116,7 @@ def summary(db: Session, date_from: date | None = None, date_to: date | None = N
         .all()
     )
     status_counts = {str(status.value): int(count) for status, count in status_rows}
-    return {
+    result = {
         "kpis": {
             "produced_quantity": produced_quantity,
             "average_unit_cost": average_unit_cost,
@@ -148,3 +154,10 @@ def summary(db: Session, date_from: date | None = None, date_to: date | None = N
             {"name": "Annulees", "value": status_counts.get("annulee", 0)},
         ],
     }
+    if user.role == UserRole.operateur_usine:
+        result["kpis"]["average_unit_cost"] = Decimal("0")
+        result["kpis"]["total_production_cost"] = Decimal("0")
+        result["kpis"]["margin_rate"] = Decimal("0")
+        result["cost_breakdown"] = []
+        result["product_costs"] = []
+    return result

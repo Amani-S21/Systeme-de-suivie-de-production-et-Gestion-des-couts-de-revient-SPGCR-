@@ -19,10 +19,12 @@ class Production(Base):
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_by_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    operator_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     product = relationship("Product", back_populates="productions")
-    created_by = relationship("User", back_populates="productions")
+    created_by = relationship("User", back_populates="productions", foreign_keys=[created_by_id])
+    operator = relationship("User", back_populates="assigned_productions", foreign_keys=[operator_id])
     materials = relationship("ProductionMaterial", back_populates="production", cascade="all, delete-orphan")
     cost = relationship("Cost", back_populates="production", uselist=False, cascade="all, delete-orphan")
 
