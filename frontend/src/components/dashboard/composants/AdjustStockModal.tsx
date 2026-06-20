@@ -266,6 +266,9 @@ export default function AdjustStockModal({
                   className={formInputClass(!!formState.errors.identification)}
                   value={identification.code}
                   readOnly
+                  tabIndex={-1}
+                  onFocus={(event) => event.currentTarget.blur()}
+                  className={`${formInputClass(!!formState.errors.identification)} pointer-events-none cursor-not-allowed bg-slate-100`}
                   placeholder="Ex. JUS-RAISIN-01"
                 />
               </FormField>

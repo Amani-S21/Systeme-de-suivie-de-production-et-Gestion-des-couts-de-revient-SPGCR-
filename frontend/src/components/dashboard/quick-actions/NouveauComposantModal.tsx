@@ -157,7 +157,9 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
               id="code"
               value={data.code}
               readOnly
-              className={formInputClass(!!fieldErrors.code)}
+              tabIndex={-1}
+              onFocus={(event) => event.currentTarget.blur()}
+              className={`${formInputClass(!!fieldErrors.code)} pointer-events-none cursor-not-allowed bg-slate-100`}
               placeholder="Ex. JUS-RAISIN-01"
             />
           </FormField>

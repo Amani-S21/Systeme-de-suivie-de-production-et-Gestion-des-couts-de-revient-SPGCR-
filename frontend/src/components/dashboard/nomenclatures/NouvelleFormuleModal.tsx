@@ -69,6 +69,7 @@ export default function NouvelleFormuleModal({
   const [serverError, setServerError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [isAdvancing, setIsAdvancing] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [produitFiniId, setProduitFiniId] = useState<string | null>(null)
   const [produitResume, setProduitResume] = useState<{
     nom: string
@@ -202,7 +203,6 @@ export default function NouvelleFormuleModal({
       setStep(2)
       return
     }
-    if (!validateStepLocal(3)) return
     if (!produitFiniId) {
       setServerError('Produit catalogue non défini. Revenez à l’étape 1.')
       setStep(1)
@@ -210,6 +210,7 @@ export default function NouvelleFormuleModal({
     }
 
     setServerError(null)
+    setIsSubmitting(true)
     const values = form.getValues()
     const result = await submitNomenclatureBomOnly({
       produit_fini_id: produitFiniId,
@@ -217,6 +218,7 @@ export default function NouvelleFormuleModal({
       validation: values.validation,
     })
 
+    setIsSubmitting(false)
     if (result.error) {
       setServerError(result.error)
       return
@@ -250,7 +252,7 @@ export default function NouvelleFormuleModal({
           }}
           onNext={handleNext}
           onSubmit={handleSubmit}
-          isSubmitting={formState.isSubmitting || isAdvancing}
+          isSubmitting={isSubmitting || isAdvancing}
           submitLabel="Valider la recette"
         />
       }
@@ -368,7 +370,9 @@ export default function NouvelleFormuleModal({
                 <input
                   id="code"
                   readOnly
-                  className={`${formInputClass(!!catalogueFieldError('code'))} font-mono uppercase`}
+                  tabIndex={-1}
+                  onFocus={(event) => event.currentTarget.blur()}
+                  className={`${formInputClass(!!catalogueFieldError('code'))} pointer-events-none cursor-not-allowed bg-slate-100 font-mono uppercase`}
                   placeholder="Ex. VU-ROUGE-750"
                   {...form.register('catalogue.code')}
                 />
@@ -557,13 +561,7 @@ export default function NouvelleFormuleModal({
               production Vin Ushindi.
             </span>
           </label>
-          {(fieldErrors['validation.signatureConfirmee'] ||
-            formState.errors.validation?.signatureConfirmee) && (
-            <p className="text-xs text-rose-600">
-              {fieldErrors['validation.signatureConfirmee'] ??
-                formState.errors.validation?.signatureConfirmee?.message}
-            </p>
-          )}
+          <p className="text-xs text-slate-500">Le clic sur « Valider la recette » confirme et enregistre définitivement cette composition.</p>
         </div>
       )}
     </MultiStepModal>

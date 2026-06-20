@@ -39,20 +39,12 @@ export const DASHBOARD_NAV: NavItem[] = [
     href: '/dashboard/lots',
     icon: Factory,
     roles: 'all',
-    children: [
-      { label: 'Tous les lots', href: '/dashboard/lots' },
-      { label: 'Nouveau lot', href: '/dashboard/lots?action=new' },
-    ],
   },
   {
     label: 'Matières premières',
     href: '/dashboard/composants',
     icon: Package,
     roles: ['admin_msd', 'responsable_production'],
-    children: [
-      { label: 'Stocks & composants', href: '/dashboard/composants' },
-      { label: 'Ajuster le stock', href: '/dashboard/composants?action=adjust' },
-    ],
   },
   {
     label: 'Charges',
