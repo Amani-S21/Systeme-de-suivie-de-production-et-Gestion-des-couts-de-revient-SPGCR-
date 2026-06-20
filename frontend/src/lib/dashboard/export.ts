@@ -8,18 +8,19 @@ import autoTable from 'jspdf-autotable'
  */
 
 export function exportToCsv(filename: string, rows: Record<string, unknown>[]) {
-  if (rows.length === 0) return
-
-  const headers = Object.keys(rows[0])
+  const normalizedRows = rows.length ? rows : [{ Information: 'Aucune donnée disponible pour la sélection actuelle.' }]
+  const headers = Object.keys(normalizedRows[0])
   const escape = (v: unknown) => {
-    const s = v == null ? '' : String(v).replace(/"/g, '""')
+    let s = v == null ? '' : String(v)
+    if (/^[=+\-@]/.test(s)) s = `'${s}`
+    s = s.replace(/"/g, '""')
     return /[";\n\r]/.test(s) ? `"${s}"` : s
   }
 
   const csv = [
     'sep=;',
     headers.map(escape).join(';'),
-    ...rows.map((r) => headers.map((h) => escape(r[h])).join(';')),
+    ...normalizedRows.map((r) => headers.map((h) => escape(r[h])).join(';')),
   ].join('\r\n')
 
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
