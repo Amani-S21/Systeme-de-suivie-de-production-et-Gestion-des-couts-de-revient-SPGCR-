@@ -51,7 +51,6 @@ const navCols = [
     title: 'Accès',
     links: [
       { label: 'Connexion',         href: '/login' },
-      { label: 'Créer un compte',   href: '/login' },
       { label: 'Mot de passe oublié', href: '/login' },
     ],
   },
