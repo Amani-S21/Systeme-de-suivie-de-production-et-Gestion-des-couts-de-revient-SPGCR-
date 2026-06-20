@@ -3,6 +3,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.security import get_password_hash, verify_password
+from app.core.config import settings
+from app.models.enums import UserRole
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
 
@@ -46,6 +48,9 @@ def update_user(db: Session, user: User, payload: UserUpdate) -> User:
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Utilisateur introuvable")
     data = payload.model_dump(exclude_unset=True)
+    if user.login == settings.default_admin_login.lower():
+        data["role"] = UserRole.admin_msd
+        data["is_active"] = True
     password = data.pop("password", None)
     for key, value in data.items():
         setattr(user, key, value)
