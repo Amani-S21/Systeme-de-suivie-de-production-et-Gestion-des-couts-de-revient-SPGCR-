@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_roles
 from app.db.session import get_db
 from app.models.enums import ProductionStatus, UserRole
+from app.models.production import Production
 from app.models.user import User
 from app.schemas.production import ProductionCreate, ProductionRead, ProductionUpdate
 from app.services.production_service import create_production, list_productions, update_production
@@ -34,3 +35,13 @@ def update(production_id: int, payload: ProductionUpdate, db: Session = Depends(
     db.commit()
     db.refresh(production)
     return production
+
+
+@router.delete("/{production_id}", dependencies=[Depends(require_roles(UserRole.admin_msd))])
+def delete(production_id: int, db: Session = Depends(get_db)):
+    production = db.get(Production, production_id)
+    if not production:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Production introuvable")
+    db.delete(production)
+    db.commit()
+    return {"success": True}

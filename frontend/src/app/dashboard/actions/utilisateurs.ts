@@ -16,7 +16,8 @@ export async function updateUserRole(userId: string, role: string) {
   return { success: true }
 }
 
-export async function deleteUserAccount(_userId: string) {
+export async function deleteUserAccount(userId: string) {
+  await api.deleteUser(userId)
   return { success: true }
 }
 

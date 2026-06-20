@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -36,3 +37,19 @@ def update(user_id: int, payload: UserUpdate, db: Session = Depends(get_db)) -> 
     db.commit()
     db.refresh(user)
     return user
+
+
+@router.delete("/{user_id}", dependencies=[Depends(require_roles(UserRole.admin_msd))])
+def delete(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    if user_id == current_user.id:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Vous ne pouvez pas supprimer votre propre compte")
+    user = db.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Utilisateur introuvable")
+    try:
+        db.delete(user)
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Cet utilisateur est lie a des operations existantes") from exc
+    return {"success": True}

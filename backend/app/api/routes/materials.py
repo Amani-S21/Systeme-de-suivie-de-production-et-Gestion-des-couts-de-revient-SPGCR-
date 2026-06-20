@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user, require_roles
 from app.db.session import get_db
 from app.models.enums import UserRole
+from app.models.material import Material
 from app.models.user import User
 from app.schemas.material import MaterialCreate, MaterialRead, MaterialUpdate, StockMovementCreate
 from app.services.material_service import add_stock_movement, create_material, list_materials, update_material
@@ -38,3 +40,17 @@ def movement(material_id: int, payload: StockMovementCreate, db: Session = Depen
     db.commit()
     db.refresh(material)
     return material
+
+
+@router.delete("/{material_id}", dependencies=[Depends(require_roles(UserRole.admin_msd))])
+def delete(material_id: int, db: Session = Depends(get_db)):
+    material = db.get(Material, material_id)
+    if not material:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Matiere introuvable")
+    try:
+        db.delete(material)
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Cette matiere est utilisee par une recette ou une production") from exc
+    return {"success": True}
