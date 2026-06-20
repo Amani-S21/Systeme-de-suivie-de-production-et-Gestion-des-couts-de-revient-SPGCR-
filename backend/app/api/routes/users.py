@@ -23,6 +23,11 @@ def list_users(db: Session = Depends(get_db)) -> list[User]:
     return list(db.scalars(select(User).order_by(User.created_at.desc())))
 
 
+@router.get("/operators", response_model=list[UserRead], dependencies=[Depends(require_roles(UserRole.admin_msd, UserRole.responsable_production))])
+def list_operators(db: Session = Depends(get_db)) -> list[User]:
+    return list(db.scalars(select(User).where(User.role == UserRole.operateur_usine, User.is_active.is_(True)).order_by(User.first_name, User.last_name)))
+
+
 @router.post("", response_model=UserRead, dependencies=[Depends(require_roles(UserRole.admin_msd))])
 def create(payload: UserCreate, db: Session = Depends(get_db)) -> User:
     user = create_user(db, payload)

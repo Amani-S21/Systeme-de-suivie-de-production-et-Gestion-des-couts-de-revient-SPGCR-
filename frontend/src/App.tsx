@@ -123,13 +123,14 @@ function canAccessPage(page: string, role: AppRole) {
   return permission === 'all' || permission.includes(role)
 }
 
-function OperationsOverview({ summary, role, userId, products, materials, productions }: {
+function OperationsOverview({ summary, role, userId, products, materials, productions, operators }: {
   summary: DashboardSummary | null
   role: AppRole
   userId: string
   products: Product[]
   materials: Material[]
   productions: Production[]
+  operators: User[]
 }) {
   const kpis = summary?.kpis
   return (
@@ -144,7 +145,7 @@ function OperationsOverview({ summary, role, userId, products, materials, produc
         role={role}
         currentUserId={userId}
         produitsFinis={toProduits(products)}
-        operateurs={[{ id: userId, prenom: 'Utilisateur', nom: 'connecte' }]}
+        operateurs={operators.length ? operators.map(item => ({ id: String(item.id), prenom: item.first_name, nom: item.last_name })) : [{ id: userId, prenom: 'Utilisateur', nom: 'connecte' }]}
         composants={toComposants(materials).map((c) => ({ id: c.id, code: c.code, nom: c.nom, unite_mesure: c.unite_mesure }))}
         activeLot={productions.find((p) => p.status === 'en_cours') ? {
           id: String(productions.find((p) => p.status === 'en_cours')!.id),
@@ -195,6 +196,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
   const [productions, setProductions] = useState<Production[]>([])
   const [boms, setBoms] = useState<Record<number, BomItem[]>>({})
   const [users, setUsers] = useState<User[]>([])
+  const [operators, setOperators] = useState<User[]>([])
 
   async function load() {
     const [nextSummary, nextMaterials, nextProducts, nextProductions] = await Promise.all([
@@ -213,7 +215,13 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
     ] as const))
     setBoms(Object.fromEntries(bomEntries))
     if (user.role === 'admin_msd') {
-      setUsers(await api.users().catch(() => []))
+      const nextUsers = await api.users().catch(() => [])
+      setUsers(nextUsers)
+      setOperators(nextUsers.filter(item => item.role === 'operateur_usine' && item.is_active))
+    } else if (user.role === 'responsable_production') {
+      setOperators(await api.operators().catch(() => []))
+    } else {
+      setOperators([user])
     }
   }
 
@@ -233,7 +241,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
     if (!canAccessPage(page, role)) return <AccessDenied />
     if (page === '/dashboard/produits') return <ProductCatalogPage products={products} />
     if (page === '/dashboard/operations') {
-      return <OperationsOverview summary={summary} role={role} userId={String(user.id)} products={products} materials={materials} productions={productions} />
+      return <OperationsOverview summary={summary} role={role} userId={String(user.id)} products={products} materials={materials} productions={productions} operators={operators} />
     }
     if (page === '/dashboard/composants') return <ComposantsPageClient composants={toComposants(materials)} />
     if (page === '/dashboard/nomenclatures') {
@@ -284,7 +292,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
             }),
           ]))}
           produitsFinis={toProduits(products)}
-          operateurs={[{ id: String(user.id), prenom: user.first_name, nom: user.last_name }]}
+          operateurs={operators.length ? operators.map(item => ({ id: String(item.id), prenom: item.first_name, nom: item.last_name })) : [{ id: String(user.id), prenom: user.first_name, nom: user.last_name }]}
           kpis={{
             lotsActifs: String(productions.filter((p) => p.status === 'en_cours').length),
             volumeCuve: `${productions.reduce((sum, p) => sum + Number(p.quantity || 0), 0)} u.`,
@@ -340,7 +348,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
         productions={productions}
       />
     )
-  }, [page, materials, products, productions, boms, summary, users, user])
+  }, [page, materials, products, productions, boms, summary, users, operators, user])
 
   return (
     <DashboardShell role={role} prenom={user.first_name} nom={user.last_name} email={user.email}>

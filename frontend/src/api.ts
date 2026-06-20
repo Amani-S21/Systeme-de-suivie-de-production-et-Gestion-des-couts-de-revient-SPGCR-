@@ -41,6 +41,7 @@ export const api = {
     return request<DashboardSummary>(`/dashboard/summary${query ? `?${query}` : ''}`)
   },
   users: () => request<User[]>('/users'),
+  operators: () => request<User[]>('/users/operators'),
   createUser: (payload: unknown) => request<User>('/users', { method: 'POST', body: JSON.stringify(payload) }),
   updateUser: (id: string | number, payload: unknown) => request<User>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   deleteUser: (id: string | number) => request<{ success: boolean }>(`/users/${id}`, { method: 'DELETE' }),
