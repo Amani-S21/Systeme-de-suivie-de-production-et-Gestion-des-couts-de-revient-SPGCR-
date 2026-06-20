@@ -12,6 +12,7 @@ export interface User {
 
 export interface Material {
   id: number
+  code: string
   name: string
   unit: string
   quantity: string

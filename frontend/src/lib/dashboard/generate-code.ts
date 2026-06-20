@@ -10,6 +10,6 @@ export function generateCode(label: string, fallback = 'ITEM'): string {
     .slice(0, 2)
 
   const base = words.join('-') || fallback
-  const suffix = String(Math.floor(Math.random() * 90) + 10)
+  const suffix = String(Date.now()).slice(-6)
   return `${base}-${suffix}`
 }

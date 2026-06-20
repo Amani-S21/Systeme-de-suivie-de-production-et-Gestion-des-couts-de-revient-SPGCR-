@@ -11,6 +11,7 @@ class Material(Base):
     __tablename__ = "materials"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    code: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
     name: Mapped[str] = mapped_column(String(160), unique=True, nullable=False)
     unit: Mapped[str] = mapped_column(String(30), default="kg", nullable=False)
     quantity: Mapped[Decimal] = mapped_column(Numeric(14, 3), default=0, nullable=False)

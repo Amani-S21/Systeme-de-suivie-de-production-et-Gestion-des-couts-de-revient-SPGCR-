@@ -52,7 +52,7 @@ function money(value: string | number) {
 function toComposants(materials: Material[]) {
   return materials.map((m) => ({
     id: String(m.id),
-    code: `CMP-${String(m.id).padStart(4, '0')}`,
+    code: m.code,
     nom: m.name,
     categorie: 'matiere_premiere',
     unite_mesure: m.unit,

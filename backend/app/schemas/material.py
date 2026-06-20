@@ -7,6 +7,7 @@ from app.schemas.common import OrmModel
 
 
 class MaterialBase(OrmModel):
+    code: str = Field(min_length=2, max_length=80)
     name: str = Field(min_length=1, max_length=160)
     unit: str = "kg"
     quantity: Decimal = Decimal("0")
@@ -19,6 +20,7 @@ class MaterialCreate(MaterialBase):
 
 
 class MaterialUpdate(OrmModel):
+    code: str | None = None
     name: str | None = None
     unit: str | None = None
     quantity: Decimal | None = None

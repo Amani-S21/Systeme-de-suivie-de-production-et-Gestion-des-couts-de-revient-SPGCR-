@@ -18,6 +18,7 @@ export async function createProductionLot(input: {
 
 export async function createComposant(input: NouveauComposantFormData): Promise<{ success?: true; error?: string }> {
   await api.createMaterial({
+    code: input.code,
     name: input.nom,
     unit: input.unite_mesure,
     quantity: input.stock_actuel,
