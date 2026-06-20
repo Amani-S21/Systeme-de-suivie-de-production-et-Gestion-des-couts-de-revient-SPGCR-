@@ -208,6 +208,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
   const role = user.role as AppRole
   const page = path.split('?')[0]
   const content = useMemo(() => {
+    if (page === '/dashboard/produits') return <ProductCatalogPage products={products} />
     if (page === '/dashboard/operations') {
       return <OperationsOverview summary={summary} role={role} userId={String(user.id)} products={products} materials={materials} productions={productions} />
     }
@@ -357,4 +358,3 @@ export default function App() {
   if (!user.is_active) return <PendingValidation user={user} />
   return <DashboardApp path={path} user={user} reloadUser={reloadUser} />
 }
-    if (page === '/dashboard/produits') return <ProductCatalogPage products={products} />
