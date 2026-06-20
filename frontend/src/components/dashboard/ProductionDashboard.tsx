@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import {
   BarChart3,
   CalendarDays,
-  ChevronDown,
   Database,
   Factory,
   TrendingDown,
@@ -24,7 +23,6 @@ import {
   YAxis,
 } from 'recharts'
 import Link from 'next/link'
-import QuickActionsGrid from '@/components/dashboard/QuickActionsGrid'
 import { api } from '@/api'
 import type { DashboardSummary, Material, Product, Production } from '@/types'
 import type { AppRole } from '@/types/spgcr'
@@ -129,7 +127,6 @@ export default function ProductionDashboard({ summary, role, userId, products, m
   const [data, setData] = useState<DashboardSummary>(summary || emptySummary())
   const [loading, setLoading] = useState(false)
   const [filterError, setFilterError] = useState('')
-  const [operationsOpen, setOperationsOpen] = useState(false)
 
   async function applyFilter() {
     if (!dateFrom || !dateTo || dateFrom > dateTo) {
@@ -160,9 +157,6 @@ export default function ProductionDashboard({ summary, role, userId, products, m
   const productBarData = data.product_costs.length
     ? data.product_costs
     : [{ product: 'Aucune donnée', unit_cost: 0, evolution: 0 }]
-  const productOptions = products.map((product) => ({ id: String(product.id), code: product.sku, nom: product.name, volume_litre: 0.75 }))
-  const materialOptions = materials.map((material) => ({ id: String(material.id), code: `CMP-${material.id}`, nom: material.name, unite_mesure: material.unit }))
-  const activeProduction = productions.find((production) => production.status === 'en_cours')
 
   return (
     <div className="space-y-4">
@@ -190,32 +184,6 @@ export default function ProductionDashboard({ summary, role, userId, products, m
       </div>
 
       {filterError && <p className="rounded-md border border-red-100 bg-red-50 px-4 py-2 text-xs font-medium text-red-700">{filterError}</p>}
-
-      <section className="rounded-md border border-slate-200 bg-white shadow-[0_2px_8px_rgba(15,23,42,0.05)]">
-        <button type="button" onClick={() => setOperationsOpen((open) => !open)} className="flex w-full items-center justify-between px-4 py-3 text-left">
-          <div>
-            <p className="text-sm font-bold text-slate-900">Centre d’opérations</p>
-            <p className="mt-0.5 text-xs text-slate-500">Créer un lot, enregistrer un composant, définir une recette ou gérer un lot actif.</p>
-          </div>
-          <ChevronDown className={`h-5 w-5 text-slate-500 transition-transform ${operationsOpen ? 'rotate-180' : ''}`} />
-        </button>
-        {operationsOpen && (
-          <div className="border-t border-slate-100 p-4">
-            <QuickActionsGrid
-              role={role}
-              currentUserId={userId}
-              produitsFinis={productOptions}
-              operateurs={[{ id: userId, prenom: 'Utilisateur', nom: 'connecté' }]}
-              composants={materialOptions}
-              activeLot={activeProduction ? {
-                id: String(activeProduction.id),
-                numeroLot: activeProduction.reference,
-                quantiteProduite: Number(activeProduction.quantity),
-              } : null}
-            />
-          </div>
-        )}
-      </section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard icon={Factory} title="Quantité produite" value={formatNumber(data.kpis.produced_quantity)} unit="unités" color="bg-gradient-to-br from-blue-400 to-blue-600" trend={productionTrend} />

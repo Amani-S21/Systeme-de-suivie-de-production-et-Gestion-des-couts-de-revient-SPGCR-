@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useTransition } from 'react'
-import { Bell, ChevronDown, LogOut, Menu, User2 } from 'lucide-react'
+import { ChevronDown, LogOut, Menu, User2 } from 'lucide-react'
 import Link from 'next/link'
 import { signOut } from '@/app/dashboard/actions'
 import type { AppRole } from '@/types/spgcr'
@@ -41,13 +41,6 @@ export default function DashboardTopbar({ prenom, nom, role, email, onSidebarTog
       </button>
 
       <div className="flex items-center gap-5">
-        <button type="button" className="relative text-slate-500 transition-colors hover:text-slate-900" aria-label="Notifications">
-          <Bell className="h-5 w-5" />
-          <span className="absolute -right-2 -top-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-            3
-          </span>
-        </button>
-
         <div ref={ref} className="relative">
           <button
             type="button"

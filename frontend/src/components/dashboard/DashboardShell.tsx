@@ -20,22 +20,29 @@ export default function DashboardShell({
   email,
   children,
 }: DashboardShellProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(false)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
   function handleSidebarToggle() {
     if (typeof window !== 'undefined' && window.innerWidth < 1024) {
       setMobileSidebarOpen((o) => !o)
     } else {
-      setSidebarCollapsed((c) => !c)
+      setDesktopSidebarOpen((open) => !open)
     }
   }
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#f5f7fb]">
+      <div
+        className="fixed inset-y-0 left-0 z-40 hidden w-3 cursor-pointer bg-[#082044] lg:block"
+        onMouseEnter={() => setDesktopSidebarOpen(true)}
+        aria-hidden
+      />
       <DashboardNavSidebar
         role={role}
-        collapsed={sidebarCollapsed}
+        collapsed={false}
+        desktopOpen={desktopSidebarOpen}
+        onDesktopClose={() => setDesktopSidebarOpen(false)}
         mobileOpen={mobileSidebarOpen}
         onMobileClose={() => setMobileSidebarOpen(false)}
       />
