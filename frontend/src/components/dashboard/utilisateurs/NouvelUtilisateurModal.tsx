@@ -51,7 +51,7 @@ export default function NouvelUtilisateurModal({ open, onClose }: NouvelUtilisat
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fadeIn" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md animate-scaleIn rounded-xl border border-slate-200 bg-white shadow-2xl overflow-hidden">
+      <div className="relative max-h-[90vh] w-full max-w-md animate-scaleIn overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 px-6 py-4">
           <div className="flex items-center gap-2">
@@ -129,6 +129,7 @@ export default function NouvelUtilisateurModal({ open, onClose }: NouvelUtilisat
               <Shield className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
               <select name="role" required
                 className="h-9 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-xs outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 appearance-none">
+                <option value="">Sélectionner un rôle</option>
                 {ROLES.map((r) => (
                   <option key={r} value={r}>{ROLE_LABELS[r]}</option>
                 ))}
