@@ -14,6 +14,8 @@ import { formatCurrency, formatNumber } from '@/lib/dashboard/format'
 import { exportToCsv, exportToPrint } from '@/lib/dashboard/export'
 import type { ComposantRow } from '@/lib/dashboard/queries/composants-page'
 import AdjustStockModal from '@/components/dashboard/composants/AdjustStockModal'
+import DetailModal from '@/components/dashboard/ui/DetailModal'
+import { api } from '@/api'
 
 interface ComposantsPageClientProps {
   composants: ComposantRow[]
@@ -109,7 +111,9 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
   }
 
   async function handleConfirmDelete() {
+    if (deleteId) await api.deleteMaterial(deleteId)
     setDeleteId(null)
+    window.dispatchEvent(new CustomEvent('spcr:refresh'))
   }
 
   return (
@@ -229,8 +233,8 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
         </div>
       </div>
 
-      {viewTarget && (
-        <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-5 text-sm text-slate-700">
+      <DetailModal open={!!viewTarget} title="Détail du composant" onClose={() => setViewId(null)}>
+        {viewTarget && <div className="text-sm text-slate-700">
           <p className="font-bold text-slate-900">{viewTarget.nom} <span className="font-mono text-xs text-slate-500">({viewTarget.code})</span></p>
           <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3">
             {[
@@ -244,14 +248,14 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
               </div>
             ))}
           </dl>
-          <button onClick={() => setViewId(null)} className="mt-4 text-xs text-slate-500 underline hover:text-slate-700">Fermer</button>
-        </div>
-      )}
+        </div>}
+      </DetailModal>
 
       <AdjustStockModal
         open={modalOpen}
         onClose={() => { setModalOpen(false); setEditTarget(null) }}
         composants={composants}
+        initialComposantId={editTarget?.id}
       />
 
       <ConfirmDeleteModal

@@ -27,12 +27,14 @@ interface AdjustStockModalProps {
   open: boolean
   onClose: () => void
   composants: ComposantRow[]
+  initialComposantId?: string
 }
 
 export default function AdjustStockModal({
   open,
   onClose,
   composants,
+  initialComposantId,
 }: AdjustStockModalProps) {
   const router = useRouter()
   const [step, setStep] = useState(1)
@@ -49,11 +51,13 @@ export default function AdjustStockModal({
 
   useEffect(() => {
     if (open) {
-      reset(defaultValues)
+      reset(initialComposantId
+        ? { identification: { mode: 'existing', composantId: initialComposantId }, mouvement: { quantiteAchetee: 0, prixAchatTotal: 0 } }
+        : defaultValues)
       setStep(1)
       setServerError(null)
     }
-  }, [open, reset])
+  }, [open, reset, initialComposantId])
 
   const selectedComposant = useMemo(() => {
     if (identification.mode !== 'existing') return null

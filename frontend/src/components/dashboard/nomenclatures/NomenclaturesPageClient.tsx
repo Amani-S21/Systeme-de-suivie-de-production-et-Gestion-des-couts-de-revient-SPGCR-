@@ -13,6 +13,8 @@ import { cardBase } from '@/lib/dashboard/design'
 import { exportToCsv, exportToPrint } from '@/lib/dashboard/export'
 import type { FormuleRow } from '@/lib/dashboard/queries/nomenclatures-page'
 import NouvelleFormuleModal from '@/components/dashboard/nomenclatures/NouvelleFormuleModal'
+import DetailModal from '@/components/dashboard/ui/DetailModal'
+import { api } from '@/api'
 
 const UNITE_LABELS: Record<string, string> = {
   bouteille: 'Bouteille',
@@ -91,7 +93,11 @@ export default function NomenclaturesPageClient({ formules, produitsFinis, compo
     })))
   }
   function handleExportPdf() { exportToPrint('Catalogue & Recettes — SPGCR') }
-  async function handleConfirmDelete() { setDeleteId(null) }
+  async function handleConfirmDelete() {
+    if (deleteId) await api.deleteProduct(deleteId)
+    setDeleteId(null)
+    window.dispatchEvent(new CustomEvent('spcr:refresh'))
+  }
 
   return (
     <>
@@ -162,8 +168,8 @@ export default function NomenclaturesPageClient({ formules, produitsFinis, compo
         </div>
       </div>
 
-      {viewTarget && (
-        <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-6 animate-fadeIn">
+      <DetailModal open={!!viewTarget} title="Détail de la recette BOM" onClose={() => setViewId(null)}>
+        {viewTarget && <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-blue-100 p-2 rounded-lg text-blue-600"><Layers className="h-5 w-5" /></div>
             <div>
@@ -179,9 +185,8 @@ export default function NomenclaturesPageClient({ formules, produitsFinis, compo
               </div>
             ))}
           </div>
-          <button onClick={() => setViewId(null)} className="mt-6 text-xs font-bold text-slate-400 hover:text-slate-600 underline uppercase tracking-wider">Fermer la vue détaillée</button>
-        </div>
-      )}
+        </div>}
+      </DetailModal>
 
       <NouvelleFormuleModal
         open={modalOpen}

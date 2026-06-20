@@ -20,6 +20,8 @@ import type {
 } from '@/components/dashboard/quick-actions/types'
 import { formatDate, formatNumber } from '@/lib/dashboard/format'
 import { exportToCsv, exportToPrint } from '@/lib/dashboard/export'
+import DetailModal from '@/components/dashboard/ui/DetailModal'
+import { api } from '@/api'
 
 export interface LotRow {
   id: string
@@ -321,7 +323,7 @@ export default function LotsPageClient({
                             <CheckCircle2 className="h-4 w-4" />
                           </button>
                         )}
-                        {(role as string) === 'admin' && (
+                        {role === 'admin_msd' && (
                           <button
                             onClick={() => setDeleteId(lot.id)}
                             title="Supprimer"
@@ -340,20 +342,16 @@ export default function LotsPageClient({
         </div>
       </div>
 
-      {consulterLotId && (
-        <div className="mt-8 animate-fadeIn">
+      <DetailModal open={!!consulterLotId} title="Détail du lot de production" onClose={() => setConsulterLotId(null)}>
+        {consulterLotId && (
+        <div>
           <BomConsumptionPanel
             lot={lots.find(l => l.id === consulterLotId)!}
             bomLines={bomLinesByProduitFiniId[lots.find(l => l.id === consulterLotId)!.produitFiniId] || []}
           />
-          <button
-            onClick={() => setConsulterLotId(null)}
-            className="mt-4 text-xs font-bold text-slate-400 hover:text-slate-600 underline uppercase tracking-widest"
-          >
-            Masquer la fiche de production
-          </button>
         </div>
-      )}
+        )}
+      </DetailModal>
 
       {/* Modals */}
       <NouveauLotModal
@@ -365,20 +363,26 @@ export default function LotsPageClient({
         operateurs={operateurs}
       />
 
-      {lotToCloturer && (
-        <ClotureLotForm
-          lotId={lotToCloturer.id}
-          numeroLot={lotToCloturer.numeroLot}
-          quantiteProduite={lotToCloturer.quantitePrevue}
-          onSuccess={() => { setClotureLotId(null); router.refresh() }}
-        />
-      )}
+      <DetailModal open={!!lotToCloturer} title="Clôturer le lot" onClose={() => setClotureLotId(null)}>
+        {lotToCloturer && (
+          <ClotureLotForm
+            lotId={lotToCloturer.id}
+            numeroLot={lotToCloturer.numeroLot}
+            quantiteProduite={lotToCloturer.quantitePrevue}
+            onSuccess={() => { setClotureLotId(null); router.refresh() }}
+          />
+        )}
+      </DetailModal>
 
       <ConfirmDeleteModal
         open={!!deleteId}
         title="Supprimer le lot ?"
         description="Cette action supprimera également les calculs de prix de revient associés."
-        onConfirm={() => setDeleteId(null)}
+        onConfirm={async () => {
+          if (deleteId) await api.deleteProduction(deleteId)
+          setDeleteId(null)
+          window.dispatchEvent(new CustomEvent('spcr:refresh'))
+        }}
         onCancel={() => setDeleteId(null)}
       />
     </>
