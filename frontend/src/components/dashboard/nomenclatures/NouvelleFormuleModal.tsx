@@ -14,7 +14,6 @@ import {
 import {
   formuleCatalogueEtape1Schema,
   formuleLignesSchema,
-  formuleValidationSchema,
   type FormuleCatalogueEtape1,
 } from '@/lib/validations/nomenclatures'
 import { generateCode } from '@/lib/dashboard/generate-code'
@@ -124,13 +123,6 @@ export default function NouvelleFormuleModal({
     }
     if (s === 2) {
       const parsed = formuleLignesSchema.safeParse(values.lignes)
-      if (!parsed.success) {
-        applyZodErrors(parsed.error.issues)
-        return false
-      }
-    }
-    if (s === 3) {
-      const parsed = formuleValidationSchema.safeParse(values.validation)
       if (!parsed.success) {
         applyZodErrors(parsed.error.issues)
         return false

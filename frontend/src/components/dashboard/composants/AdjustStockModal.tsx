@@ -263,7 +263,6 @@ export default function AdjustStockModal({
               >
                 <input
                   id="code"
-                  className={formInputClass(!!formState.errors.identification)}
                   value={identification.code}
                   readOnly
                   tabIndex={-1}
