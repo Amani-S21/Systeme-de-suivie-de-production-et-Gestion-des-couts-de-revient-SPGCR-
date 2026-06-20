@@ -16,7 +16,7 @@ import LoginPage from '@/pages/LoginPage'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { api } from '@/api'
-import type { DashboardSummary, Material, Product, Production, User } from '@/types'
+import type { BomItem, DashboardSummary, Material, Product, Production, User } from '@/types'
 import type { AppRole } from '@/types/spgcr'
 import type { LotStatut } from '@/types/spgcr'
 
@@ -168,6 +168,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
   const [materials, setMaterials] = useState<Material[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [productions, setProductions] = useState<Production[]>([])
+  const [boms, setBoms] = useState<Record<number, BomItem[]>>({})
   const [users, setUsers] = useState<User[]>([])
 
   async function load() {
@@ -181,6 +182,11 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
     setMaterials(nextMaterials)
     setProducts(nextProducts)
     setProductions(nextProductions)
+    const bomEntries = await Promise.all(nextProducts.map(async (product) => [
+      product.id,
+      await api.productBom(product.id).catch(() => []),
+    ] as const))
+    setBoms(Object.fromEntries(bomEntries))
     if (user.role === 'admin_msd') {
       setUsers(await api.users().catch(() => []))
     }
@@ -214,14 +220,17 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
             produit_nom: p.nom,
             volume_litre: p.volume_litre,
             unite_commerciale: p.unite_commerciale,
-            lignes: composants.slice(0, 2).map((c) => ({
-              id: `${p.id}-${c.id}`,
-              composant_id: c.id,
-              composant_nom: c.nom,
-              composant_code: c.code,
-              quantite_requise: 1,
-              unite_mesure: c.unite_mesure,
-            })),
+            lignes: (boms[Number(p.id)] || []).map((line) => {
+              const composant = composants.find((item) => Number(item.id) === line.material_id)
+              return {
+                id: String(line.id),
+                composant_id: String(line.material_id),
+                composant_nom: composant?.nom || `Composant ${line.material_id}`,
+                composant_code: composant?.code || `CMP-${line.material_id}`,
+                quantite_requise: Number(line.quantity_required),
+                unite_mesure: composant?.unite_mesure || 'unite',
+              }
+            }),
           }))}
           produitsFinis={produitsFinis}
           composants={composants}
@@ -234,7 +243,19 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
           role={role}
           userId={String(user.id)}
           lots={toLots(productions)}
-          bomLinesByProduitFiniId={{}}
+          bomLinesByProduitFiniId={Object.fromEntries(Object.entries(boms).map(([productId, lines]) => [
+            String(productId),
+            lines.map((line) => {
+              const material = materials.find((item) => item.id === line.material_id)
+              return {
+                composantId: String(line.material_id),
+                composantCode: `CMP-${String(line.material_id).padStart(4, '0')}`,
+                composantNom: material?.name || `Composant ${line.material_id}`,
+                uniteMesure: material?.unit || 'unite',
+                quantiteRequiseParLitre: Number(line.quantity_required),
+              }
+            }),
+          ]))}
           produitsFinis={toProduits(products)}
           operateurs={[{ id: String(user.id), prenom: user.first_name, nom: user.last_name }]}
           kpis={{
@@ -289,7 +310,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
         productions={productions}
       />
     )
-  }, [page, materials, products, productions, summary, users, user])
+  }, [page, materials, products, productions, boms, summary, users, user])
 
   return (
     <DashboardShell role={role} prenom={user.first_name} nom={user.last_name} email={user.email}>
