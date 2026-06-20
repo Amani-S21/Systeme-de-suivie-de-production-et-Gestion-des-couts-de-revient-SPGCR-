@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const composantIdentificationExistingSchema = z.object({
   mode: z.literal('existing'),
-  composantId: z.string().uuid('Sélectionnez un composant valide.'),
+  composantId: z.string().min(1, 'Sélectionnez un composant valide.'),
 })
 
 export const composantIdentificationNewSchema = z.object({

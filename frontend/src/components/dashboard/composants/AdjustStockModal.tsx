@@ -14,6 +14,7 @@ import {
   type AdjustStockFormValues,
 } from '@/lib/validations/composants'
 import type { ComposantRow } from '@/lib/dashboard/queries/composants-page'
+import { generateCode } from '@/lib/dashboard/generate-code'
 
 const STEPS = ['Identification', 'Mouvement de stock', 'Récapitulatif']
 
@@ -246,7 +247,7 @@ export default function AdjustStockModal({
           ) : (
             <div className="space-y-4">
               <FormField
-                label="Code"
+                label="Code (automatique)"
                 htmlFor="code"
                 required
                 error={
@@ -260,13 +261,8 @@ export default function AdjustStockModal({
                   id="code"
                   className={formInputClass(!!formState.errors.identification)}
                   value={identification.code}
-                  onChange={(e) =>
-                    setValue(
-                      'identification',
-                      { ...identification, code: e.target.value.toUpperCase() },
-                      { shouldValidate: true, shouldDirty: true }
-                    )
-                  }
+                  readOnly
+                  placeholder="Ex. JUS-RAISIN-01"
                 />
               </FormField>
               <FormField
@@ -287,7 +283,7 @@ export default function AdjustStockModal({
                   onChange={(e) =>
                     setValue(
                       'identification',
-                      { ...identification, nom: e.target.value },
+                      { ...identification, nom: e.target.value, code: generateCode(e.target.value, 'MATIERE') },
                       { shouldValidate: true, shouldDirty: true }
                     )
                   }

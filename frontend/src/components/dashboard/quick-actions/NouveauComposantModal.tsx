@@ -11,6 +11,7 @@ import {
   nouveauComposantStep2Schema,
 } from '@/lib/validations/quick-actions'
 import type { NouveauComposantFormData } from '@/components/dashboard/quick-actions/types'
+import { generateCode } from '@/lib/dashboard/generate-code'
 
 const STEPS = ['Identification', 'Stocks & coûts', 'Récapitulatif']
 
@@ -151,13 +152,11 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
 
       {step === 1 && (
         <div className="space-y-4">
-          <FormField label="Code unique" htmlFor="code" required error={fieldErrors.code}>
+          <FormField label="Code unique (automatique)" htmlFor="code" required error={fieldErrors.code}>
             <input
               id="code"
               value={data.code}
-              onChange={(e) =>
-                setData((d) => ({ ...d, code: e.target.value.toUpperCase() }))
-              }
+              readOnly
               className={formInputClass(!!fieldErrors.code)}
               placeholder="Ex. JUS-RAISIN-01"
             />
@@ -166,7 +165,7 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
             <input
               id="nom"
               value={data.nom}
-              onChange={(e) => setData((d) => ({ ...d, nom: e.target.value }))}
+              onChange={(e) => setData((d) => ({ ...d, nom: e.target.value, code: generateCode(e.target.value, 'MATIERE') }))}
               className={formInputClass(!!fieldErrors.nom)}
               placeholder="Ex. Jus de raisin concentré"
             />

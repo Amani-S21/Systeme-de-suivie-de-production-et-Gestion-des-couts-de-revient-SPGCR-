@@ -17,6 +17,7 @@ import {
   formuleValidationSchema,
   type FormuleCatalogueEtape1,
 } from '@/lib/validations/nomenclatures'
+import { generateCode } from '@/lib/dashboard/generate-code'
 
 const STEPS = ['Catalogue produit', 'Composition BOM', 'Validation']
 
@@ -353,24 +354,23 @@ export default function NouvelleFormuleModal({
                   id="nom"
                   className={formInputClass(!!catalogueFieldError('nom'))}
                   placeholder="Ex. Vin Ushindi Rouge 750 ml"
-                  {...form.register('catalogue.nom')}
+                  {...form.register('catalogue.nom', {
+                    onChange: (event) => setValue('catalogue.code', generateCode(event.target.value, 'PRODUIT'), { shouldDirty: true }),
+                  })}
                 />
               </FormField>
               <FormField
-                label="Code SKU unique"
+                label="Code SKU unique (automatique)"
                 htmlFor="code"
                 required
                 error={catalogueFieldError('code')}
               >
                 <input
                   id="code"
+                  readOnly
                   className={`${formInputClass(!!catalogueFieldError('code'))} font-mono uppercase`}
                   placeholder="Ex. VU-ROUGE-750"
-                  {...form.register('catalogue.code', {
-                    onChange: (e) => {
-                      e.target.value = e.target.value.toUpperCase()
-                    },
-                  })}
+                  {...form.register('catalogue.code')}
                 />
               </FormField>
               <FormField
