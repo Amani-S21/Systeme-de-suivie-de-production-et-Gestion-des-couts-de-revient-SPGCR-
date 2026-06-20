@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { X, UserPlus, Shield, Mail, User, Lock as LockIcon } from 'lucide-react'
+import { AtSign, Eye, EyeOff, X, UserPlus, Shield, Mail, User, Lock as LockIcon } from 'lucide-react'
 import PrimaryButton from '@/components/dashboard/ui/PrimaryButton'
 import { adminCreateUser } from '@/app/dashboard/actions/utilisateurs'
 import type { AppRole } from '@/types/spgcr'
@@ -17,6 +17,7 @@ const ROLES: AppRole[] = ['admin_msd', 'responsable_production', 'operateur_usin
 export default function NouvelUtilisateurModal({ open, onClose }: NouvelUtilisateurModalProps) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
   
   if (!open) return null
 
@@ -29,6 +30,7 @@ export default function NouvelUtilisateurModal({ open, onClose }: NouvelUtilisat
       nom: formData.get('nom') as string,
       prenom: formData.get('prenom') as string,
       email: formData.get('email') as string,
+      login: formData.get('login') as string,
       password: formData.get('password') as string,
       role: formData.get('role') as AppRole,
     }
@@ -76,7 +78,7 @@ export default function NouvelUtilisateurModal({ open, onClose }: NouvelUtilisat
               <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Prénom</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-                <input name="prenom" required type="text" placeholder="Jean"
+                <input name="prenom" required type="text" autoComplete="off" placeholder="Prénom"
                   className="h-9 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-xs outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100" />
               </div>
             </div>
@@ -84,17 +86,27 @@ export default function NouvelUtilisateurModal({ open, onClose }: NouvelUtilisat
               <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Nom</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-                <input name="nom" required type="text" placeholder="Dupont"
+                <input name="nom" required type="text" autoComplete="off" placeholder="Nom"
                   className="h-9 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-xs outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100" />
               </div>
             </div>
           </div>
 
           <div>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Nom d'utilisateur</label>
+            <div className="relative">
+              <AtSign className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+              <input name="login" required minLength={3} type="text" autoComplete="off" placeholder="Nom d'utilisateur"
+                className="h-9 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-xs outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100" />
+            </div>
+            <p className="mt-1 text-[10px] text-slate-400">Identifiant utilisé avec le mot de passe pour se connecter.</p>
+          </div>
+
+          <div>
             <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Email Professionnel</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-              <input name="email" required type="email" placeholder="nom@source-dieu.com"
+              <input name="email" required type="email" autoComplete="off" placeholder="Adresse email"
                 className="h-9 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-xs outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100" />
             </div>
           </div>
@@ -103,8 +115,11 @@ export default function NouvelUtilisateurModal({ open, onClose }: NouvelUtilisat
             <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Mot de passe temporaire</label>
             <div className="relative">
               <LockIcon className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-              <input name="password" required type="password" placeholder="••••••••"
-                className="h-9 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-xs outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100" />
+              <input name="password" required minLength={8} type={showPassword ? 'text' : 'password'} autoComplete="new-password" placeholder="Mot de passe"
+                className="h-9 w-full rounded-md border border-slate-200 bg-white pl-9 pr-10 text-xs outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100" />
+              <button type="button" onClick={() => setShowPassword((visible) => !visible)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700" aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}>
+                {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+              </button>
             </div>
           </div>
 

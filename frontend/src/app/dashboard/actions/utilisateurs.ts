@@ -23,19 +23,24 @@ export async function deleteUserAccount(userId: string) {
 
 export async function adminCreateUser(data: {
   email: string
+  login: string
   nom: string
   prenom: string
-  password?: string
+  password: string
   role: AppRole
 }): Promise<{ success?: true; error?: string }> {
-  await api.createUser({
-    email: data.email,
-    login: data.email.split('@')[0],
-    password: data.password || 'TemporaryPassword123!',
-    first_name: data.prenom,
-    last_name: data.nom,
-    role: data.role,
-    is_active: true,
-  })
-  return { success: true }
+  try {
+    await api.createUser({
+      email: data.email.trim(),
+      login: data.login.trim(),
+      password: data.password,
+      first_name: data.prenom.trim(),
+      last_name: data.nom.trim(),
+      role: data.role,
+      is_active: true,
+    })
+    return { success: true }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Création de l'utilisateur impossible." }
+  }
 }

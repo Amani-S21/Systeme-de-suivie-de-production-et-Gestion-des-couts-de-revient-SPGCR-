@@ -268,8 +268,6 @@ export default function LoginPage() {
                 </span>
               ) : mode === 'login' ? (
                 'Connexion'
-              ) : mode === 'signup' ? (
-                'Créer mon compte'
               ) : (
                 'Réinitialiser le mot de passe'
               )}
@@ -312,12 +310,10 @@ export default function LoginPage() {
               <CheckCircle2 className="h-8 w-8 text-emerald-600" />
             </div>
             <h3 className="text-xl font-bold text-slate-900">
-              {mode === 'signup' ? 'Inscription réussie !' : 'Connexion réussie !'}
+              Connexion réussie !
             </h3>
             <p className="text-sm text-slate-500 leading-relaxed">
-              {mode === 'signup' 
-                ? 'Votre compte sera activé sous peu, puis vous serez connecté automatiquement.'
-                : 'Vous allez être redirigé vers votre tableau de bord...'}
+              Vous allez être redirigé vers votre tableau de bord...
             </p>
             <div className="pt-4 flex justify-center">
               <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
