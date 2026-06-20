@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useEffect, useTransition } from 'react'
-import { login, signup } from './actions'
+import { login } from './actions'
 import { Mail, Lock, User, ArrowLeft, Loader2, CheckCircle2, AlertCircle, ShieldCheck, Home, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 
-type AuthMode = 'login' | 'signup' | 'forgot'
+type AuthMode = 'login' | 'forgot'
 
 export default function LoginPage() {
   const [isPending, startTransition] = useTransition()
@@ -22,8 +22,6 @@ export default function LoginPage() {
   // États pour les champs contrôlés (Validation en temps réel)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
   // États de validation locale
@@ -84,15 +82,6 @@ export default function LoginPage() {
             setError(res?.error || 'Nom utilisateur ou mot de passe incorrect.')
             setLoading(false)
           }
-        } else if (mode === 'signup') {
-          const res = await signup(null, formData)
-          if (res?.success) {
-            setShowSuccessModal(true)
-            setTimeout(() => setShouldRedirect(true), 1000)
-          } else {
-            setError(res?.error || "Impossible de creer le compte.")
-            setLoading(false)
-          }
         } else if (mode === 'forgot') {
           setSuccess('Si ce compte est enregistré, un e-mail de réinitialisation a été transmis.')
           setLoading(false)
@@ -145,34 +134,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Sélecteur d'onglets asymétriques */}
-        {mode !== 'forgot' && (
-          <div className="grid grid-cols-2 gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200/60">
-            <button
-              type="button"
-              onClick={() => switchMode('login')}
-              className={`rounded-lg py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
-                mode === 'login'
-                  ? 'bg-white text-slate-950 shadow-sm border border-slate-200/20'
-                  : 'text-slate-500 hover:text-slate-900'
-              }`}
-            >
-              Se connecter
-            </button>
-            <button
-              type="button"
-              onClick={() => switchMode('signup')}
-              className={`rounded-lg py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
-                mode === 'signup'
-                  ? 'bg-white text-slate-950 shadow-sm border border-slate-200/20'
-                  : 'text-slate-500 hover:text-slate-900'
-              }`}
-            >
-              Créer un compte
-            </button>
-          </div>
-        )}
-
         {/* Notification d'États */}
         {error && (
           <div className="flex items-start gap-2.5 rounded-xl bg-rose-50 p-3.5 text-xs font-semibold text-rose-700 border border-rose-100">
@@ -190,46 +151,6 @@ export default function LoginPage() {
         {/* Corps du Formulaire */}
         <form onSubmit={handleAuth} className="space-y-4">
           
-          {/* Section Identité (Inscription uniquement) */}
-          {mode === 'signup' && (
-            <div className="grid grid-cols-2 gap-3 animate-fadeIn">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">Prénom</label>
-                <div className="relative mt-1.5">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center">
-                    <User className="h-4 w-4 text-slate-400" />
-                  </div>
-                  <input
-                    name="firstName"
-                    type="text"
-                    required
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    className="block w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-12 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-slate-950 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-950"
-                    placeholder="Prénom"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">Nom</label>
-                <div className="relative mt-1.5">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center">
-                    <User className="h-4 w-4 text-slate-400" />
-                  </div>
-                  <input
-                    name="lastName"
-                    type="text"
-                    required
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    className="block w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-12 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-slate-950 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-950"
-                    placeholder="Nom"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Saisie login ou adresse email selon le mode */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
