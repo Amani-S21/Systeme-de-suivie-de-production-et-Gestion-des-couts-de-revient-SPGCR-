@@ -6,7 +6,7 @@ import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
 import ModalFooterNav from '@/components/dashboard/modals/ModalFooterNav'
 import { FormField, formInputClass } from '@/components/dashboard/ui/FormField'
 import { clotureLotCostsSchema } from '@/lib/validations/quick-actions'
-import { createClient } from '@/utils/supabase/client'
+import { api } from '@/api'
 
 const STEPS = ['Lot en cours', 'Coûts de clôture', 'Récapitulatif']
 
@@ -73,17 +73,13 @@ export default function ClotureLotModal({
     }
     setIsSubmitting(true)
     setServerError(null)
-    const supabase = createClient()
     try {
-      const { data, error } = await supabase.functions.invoke('calculate-production-cost', {
-        body: {
-          lot_id: lotId,
-          cout_direct_main_oeuvre: coutMainOeuvre,
-          charges_indirectes_fixes: chargesIndirectes,
-        },
+      await api.calculateCost(Number(lotId), {
+        labor_cost: coutMainOeuvre,
+        overhead_cost: chargesIndirectes,
+        other_cost: 0,
       })
-      if (error) throw new Error(error.message)
-      if (data?.error) throw new Error(data.error)
+      await api.updateProduction(lotId, { status: 'terminee' })
       onClose()
       router.refresh()
     } catch (err) {

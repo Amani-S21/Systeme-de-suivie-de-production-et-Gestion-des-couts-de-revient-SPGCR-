@@ -12,6 +12,7 @@ import ProfilPageClient from '@/components/dashboard/profil/ProfilPageClient'
 import DashboardSectionPlaceholder from '@/components/dashboard/DashboardSectionPlaceholder'
 import ProductionDashboard from '@/components/dashboard/ProductionDashboard'
 import ChargesPageClient from '@/components/dashboard/charges/ChargesPageClient'
+import ReportsPageClient from '@/components/dashboard/reports/ReportsPageClient'
 import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/LoginPage'
 import Header from '@/components/Header'
@@ -298,7 +299,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
       }} email={user.email} />
     }
     if (page === '/dashboard/charges') return <ChargesPageClient />
-    if (page === '/dashboard/rapports') return <DashboardSectionPlaceholder title="Rapports" description="Consultation et export des rapports de production et de coûts de revient." icon={BarChart2} />
+    if (page === '/dashboard/rapports') return <ReportsPageClient />
     if (page === '/dashboard/historique') return <DashboardSectionPlaceholder title="Historique & Logs" description="Journal des actions et audits de production." icon={BarChart2} />
     if (page === '/dashboard/succursales') return <DashboardSectionPlaceholder title="Gestion des Succursales" description="Gestion des sites, depots et points de production." icon={PackageCheck} />
     return (

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { DollarSign, Loader2, AlertCircle, CheckCircle, Lock } from 'lucide-react';
-import { createClient } from '@/utils/supabase/client';
+import { api } from '@/api';
 
 interface ClotureLotFormProps {
   lotId: string;
@@ -18,9 +18,6 @@ export default function ClotureLotForm({ lotId, numeroLot, quantiteProduite, onS
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  // Instanciation du client Supabase
-  const supabase = createClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,25 +36,15 @@ export default function ClotureLotForm({ lotId, numeroLot, quantiteProduite, onS
     }
 
     try {
-      // Invocation de l'Edge Function Supabase
-      const { data, error: invokeError } = await supabase.functions.invoke('calculate-production-cost', {
-        body: {
-          lot_id: lotId,
-          cout_direct_main_oeuvre: mainOeuvreVal,
-          charges_indirectes_fixes: chargesIndVal
-        }
+      const data = await api.calculateCost(Number(lotId), {
+        labor_cost: mainOeuvreVal,
+        overhead_cost: chargesIndVal,
+        other_cost: 0,
       });
-
-      if (invokeError) {
-        throw new Error(invokeError.message || "Erreur de connexion avec le serveur.");
-      }
-
-      if (data?.error) {
-        throw new Error(data.error);
-      }
+      await api.updateProduction(lotId, { status: 'terminee' });
 
       // Traitement du succès
-      setSuccess(data?.message || "Lot clôturé et calculs enregistrés avec succès.");
+      setSuccess("Lot clôturé et calculs enregistrés avec succès.");
       if (onSuccess) {
         onSuccess(data);
       }
