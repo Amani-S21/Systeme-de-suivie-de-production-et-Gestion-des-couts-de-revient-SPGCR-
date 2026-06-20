@@ -64,12 +64,12 @@ export const DASHBOARD_NAV: NavItem[] = [
   },
   {
     label: 'Produits',
-    href: '/dashboard/nomenclatures',
+    href: '/dashboard/produits',
     icon: Layers,
     roles: ['admin_msd', 'responsable_production'],
     children: [
-      { label: 'Catalogue & recettes', href: '/dashboard/nomenclatures' },
-      { label: 'Nouvelle recette', href: '/dashboard/nomenclatures?action=new' },
+      { label: 'Catalogue produits', href: '/dashboard/produits' },
+      { label: 'Recettes BOM', href: '/dashboard/nomenclatures' },
     ],
   },
   {

@@ -51,6 +51,7 @@ export const api = {
   deleteMaterial: (id: string | number) => request<{ success: boolean }>(`/materials/${id}`, { method: 'DELETE' }),
   products: () => request<Product[]>('/products'),
   createProduct: (payload: unknown) => request<Product>('/products', { method: 'POST', body: JSON.stringify(payload) }),
+  updateProduct: (id: string | number, payload: unknown) => request<Product>(`/products/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   productBom: (productId: string | number) => request<BomItem[]>(`/products/${productId}/bom`),
   replaceProductBom: (productId: string | number, payload: unknown) => request<BomItem[]>(`/products/${productId}/bom`, { method: 'PUT', body: JSON.stringify(payload) }),
   deleteProduct: (id: string | number) => request<{ success: boolean }>(`/products/${id}`, { method: 'DELETE' }),

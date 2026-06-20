@@ -13,6 +13,7 @@ import DashboardSectionPlaceholder from '@/components/dashboard/DashboardSection
 import ProductionDashboard from '@/components/dashboard/ProductionDashboard'
 import ChargesPageClient from '@/components/dashboard/charges/ChargesPageClient'
 import ReportsPageClient from '@/components/dashboard/reports/ReportsPageClient'
+import ProductCatalogPage from '@/components/dashboard/products/ProductCatalogPage'
 import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/LoginPage'
 import Header from '@/components/Header'
@@ -356,3 +357,4 @@ export default function App() {
   if (!user.is_active) return <PendingValidation user={user} />
   return <DashboardApp path={path} user={user} reloadUser={reloadUser} />
 }
+    if (page === '/dashboard/produits') return <ProductCatalogPage products={products} />
