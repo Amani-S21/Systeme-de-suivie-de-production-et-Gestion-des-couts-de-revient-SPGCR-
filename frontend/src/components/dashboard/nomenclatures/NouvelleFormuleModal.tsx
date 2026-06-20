@@ -537,23 +537,9 @@ export default function NouvelleFormuleModal({
               })}
             </ul>
           </div>
-          <label className="flex cursor-pointer items-start gap-3 rounded-md border border-slate-200 p-4">
-            <input
-              type="checkbox"
-              className="mt-1 rounded border-slate-300"
-              checked={watch('validation.signatureConfirmee')}
-              onChange={(e) =>
-                setValue('validation.signatureConfirmee', e.target.checked, {
-                  shouldDirty: true,
-                })
-              }
-            />
-            <span className="text-sm text-slate-700">
-              Je valide cette fiche produit et la recette technique standardisée pour la
-              production Vin Ushindi.
-            </span>
-          </label>
-          <p className="text-xs text-slate-500">Le clic sur « Valider la recette » confirme et enregistre définitivement cette composition.</p>
+          <div className="rounded-md border border-blue-100 bg-blue-50 p-4 text-sm text-slate-700">
+            Le bouton « Valider la recette » confirme et enregistre définitivement cette composition dans PostgreSQL.
+          </div>
         </div>
       )}
     </MultiStepModal>
