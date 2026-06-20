@@ -73,10 +73,15 @@ export default function UtilisateursPageClient({ pending, active }: Props) {
     setError(null)
     setActionId(userId)
     startTransition(async () => {
-      const result = await fn()
-      setActionId(null)
-      if (result.error) { setError(result.error); return }
-      router.refresh()
+      try {
+        const result = await fn()
+        if (result.error) { setError(result.error); return }
+        router.refresh()
+      } catch (actionError) {
+        setError(actionError instanceof Error ? actionError.message : "L'action a échoué.")
+      } finally {
+        setActionId(null)
+      }
     })
   }
 
