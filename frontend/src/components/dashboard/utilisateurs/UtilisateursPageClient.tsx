@@ -9,6 +9,7 @@ import PageHeader from '@/components/dashboard/ui/PageHeader'
 import PrimaryButton from '@/components/dashboard/ui/PrimaryButton'
 import ExportButtons from '@/components/dashboard/ui/ExportButtons'
 import ConfirmDeleteModal from '@/components/dashboard/ui/ConfirmDeleteModal'
+import DetailModal from '@/components/dashboard/ui/DetailModal'
 import NouvelUtilisateurModal from '@/components/dashboard/utilisateurs/NouvelUtilisateurModal'
 import { cardBase } from '@/lib/dashboard/design'
 import { ROLE_LABELS } from '@/lib/dashboard/navigation'
@@ -264,9 +265,8 @@ export default function UtilisateursPageClient({ pending, active }: Props) {
         </div>
       </div>
 
-      {/* Fiche détail */}
-      {viewTarget && (
-        <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-5 text-sm">
+      <DetailModal open={!!viewTarget} title="Détail de l'utilisateur" onClose={() => setViewId(null)}>
+        {viewTarget && <div className="text-sm">
           <p className="font-bold text-slate-900">{viewTarget.prenom} {viewTarget.nom}</p>
           <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3">
             {[
@@ -280,9 +280,8 @@ export default function UtilisateursPageClient({ pending, active }: Props) {
               </div>
             ))}
           </dl>
-          <button onClick={() => setViewId(null)} className="mt-4 text-xs text-slate-500 underline hover:text-slate-700">Fermer</button>
-        </div>
-      )}
+        </div>}
+      </DetailModal>
 
       <NouvelUtilisateurModal
         open={isAddModalOpen}

@@ -17,10 +17,12 @@ export function usePathname() {
 }
 
 export function useSearchParams() {
-  return new URLSearchParams(window.location.search)
+  const search = window.location.search
+  return useMemo(() => new URLSearchParams(search), [search])
 }
 
 export function redirect(href: string): never {
   window.location.href = href
   throw new Error(`Redirected to ${href}`)
 }
+import { useMemo } from 'react'
