@@ -37,7 +37,7 @@ export async function adminCreateUser(data: {
       first_name: data.prenom.trim(),
       last_name: data.nom.trim(),
       role: data.role,
-      is_active: true,
+      is_active: false,
     })
     return { success: true }
   } catch (error) {

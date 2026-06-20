@@ -40,6 +40,7 @@ export default function NouvelUtilisateurModal({ open, onClose }: NouvelUtilisat
       if (result.error) {
         setError(result.error)
       } else {
+        window.dispatchEvent(new CustomEvent('spcr:refresh'))
         onClose()
       }
     })

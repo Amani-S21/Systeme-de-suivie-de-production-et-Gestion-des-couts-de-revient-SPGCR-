@@ -83,6 +83,10 @@ export const DASHBOARD_NAV: NavItem[] = [
     href: '/dashboard/utilisateurs',
     icon: Users,
     roles: ['admin_msd'],
+    children: [
+      { label: 'Gestion des utilisateurs', href: '/dashboard/utilisateurs' },
+      { label: 'Créer un utilisateur', href: '/dashboard/utilisateurs?action=new' },
+    ],
   },
   {
     label: 'Paramètres',

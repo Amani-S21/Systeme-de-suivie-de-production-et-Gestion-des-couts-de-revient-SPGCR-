@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState, useTransition } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   CheckCircle, XCircle, Eye, Trash2, Search, ArrowUpDown, UserCheck, UserX, UserPlus,
 } from 'lucide-react'
@@ -53,6 +53,7 @@ function SortBtn({ col, active, dir, onClick }: {
 
 export default function UtilisateursPageClient({ pending, active }: Props) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [tab, setTab] = useState<'pending' | 'active'>('pending')
   const [isPending, startTransition] = useTransition()
   const [actionId, setActionId] = useState<string | null>(null)
@@ -63,6 +64,10 @@ export default function UtilisateursPageClient({ pending, active }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [viewId, setViewId] = useState<string | null>(null)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+
+  useEffect(() => {
+    if (searchParams.get('action') === 'new') setIsAddModalOpen(true)
+  }, [searchParams])
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
@@ -290,7 +295,13 @@ export default function UtilisateursPageClient({ pending, active }: Props) {
 
       <NouvelUtilisateurModal
         open={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={() => {
+          setIsAddModalOpen(false)
+          if (window.location.search) {
+            window.history.replaceState({}, '', '/dashboard/utilisateurs')
+            window.dispatchEvent(new PopStateEvent('popstate'))
+          }
+        }}
       />
 
       <ConfirmDeleteModal
