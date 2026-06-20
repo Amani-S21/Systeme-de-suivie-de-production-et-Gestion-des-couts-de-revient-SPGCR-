@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { AlertCircle, BarChart2, DollarSign, PackageCheck, Receipt, TrendingUp } from 'lucide-react'
+import { AlertCircle, BarChart2, Clock3, DollarSign, Factory, PackageCheck, Receipt, TrendingUp } from 'lucide-react'
 import DashboardShell from '@/components/dashboard/DashboardShell'
 import QuickActionsGrid from '@/components/dashboard/QuickActionsGrid'
 import KpiCard from '@/components/dashboard/ui/KpiCard'
@@ -14,6 +14,8 @@ import ProductionDashboard from '@/components/dashboard/ProductionDashboard'
 import ChargesPageClient from '@/components/dashboard/charges/ChargesPageClient'
 import ReportsPageClient from '@/components/dashboard/reports/ReportsPageClient'
 import ProductCatalogPage from '@/components/dashboard/products/ProductCatalogPage'
+import OperatorDashboard from '@/components/dashboard/OperatorDashboard'
+import AccessDenied from '@/components/dashboard/AccessDenied'
 import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/LoginPage'
 import Header from '@/components/Header'
@@ -100,6 +102,27 @@ function toUsers(users: User[]) {
   }))
 }
 
+const PAGE_PERMISSIONS: Record<string, AppRole[] | 'all'> = {
+  '/dashboard': 'all',
+  '/dashboard/operations': 'all',
+  '/dashboard/lots': 'all',
+  '/dashboard/profil': 'all',
+  '/dashboard/composants': ['admin_msd', 'responsable_production'],
+  '/dashboard/charges': ['admin_msd', 'responsable_production'],
+  '/dashboard/analyses': ['admin_msd', 'responsable_production'],
+  '/dashboard/produits': ['admin_msd', 'responsable_production'],
+  '/dashboard/nomenclatures': ['admin_msd', 'responsable_production'],
+  '/dashboard/rapports': ['admin_msd', 'responsable_production'],
+  '/dashboard/utilisateurs': ['admin_msd'],
+  '/dashboard/historique': ['admin_msd'],
+  '/dashboard/succursales': ['admin_msd'],
+}
+
+function canAccessPage(page: string, role: AppRole) {
+  const permission = PAGE_PERMISSIONS[page] ?? 'all'
+  return permission === 'all' || permission.includes(role)
+}
+
 function OperationsOverview({ summary, role, userId, products, materials, productions }: {
   summary: DashboardSummary | null
   role: AppRole
@@ -114,7 +137,7 @@ function OperationsOverview({ summary, role, userId, products, materials, produc
       <div>
         <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Pilotage de la production</p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">Opérations industrielles</h1>
-        <p className="mt-1 text-sm text-slate-500">Approvisionnez les stocks, définissez les recettes et gérez les lots depuis un parcours unique.</p>
+        <p className="mt-1 text-sm text-slate-500">{role === 'operateur_usine' ? 'Lancez, consultez et clôturez les lots qui vous sont affectés.' : 'Approvisionnez les stocks, définissez les recettes et gérez les lots depuis un parcours unique.'}</p>
       </div>
 
       <QuickActionsGrid
@@ -130,12 +153,11 @@ function OperationsOverview({ summary, role, userId, products, materials, produc
         } : null}
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Cout de revient moyen / bouteille" value={`${money(kpis?.average_unit_cost || 0)} FCFA`} icon={DollarSign} accent="indigo" />
-        <KpiCard label="Marge brute totale estimee" value={`${Number(kpis?.margin_rate || 0).toFixed(1)} %`} icon={TrendingUp} accent="emerald" />
-        <KpiCard label="Lots clotures" value={String(productions.filter((p) => p.status === 'terminee').length)} icon={PackageCheck} accent="amber" />
-        <KpiCard label="Charges indirectes imputees" value={`${money(kpis?.total_production_cost || 0)} FCFA`} icon={Receipt} accent="slate" />
-      </div>
+      {role === 'operateur_usine' ? (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><KpiCard label="Lots en cours" value={String(productions.filter(p => p.status === 'en_cours').length)} icon={Factory} accent="amber" /><KpiCard label="Quantité affectée" value={`${productions.reduce((sum,p) => sum + Number(p.quantity), 0).toLocaleString('fr-FR')} unités`} icon={PackageCheck} accent="indigo" /><KpiCard label="Lots clôturés" value={String(productions.filter(p => p.status === 'terminee').length)} icon={PackageCheck} accent="emerald" /><KpiCard label="Lots planifiés" value={String(productions.filter(p => p.status === 'planifiee').length)} icon={Clock3} accent="slate" /></div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><KpiCard label="Cout de revient moyen / bouteille" value={`${money(kpis?.average_unit_cost || 0)} FCFA`} icon={DollarSign} accent="indigo" /><KpiCard label="Marge brute totale estimee" value={`${Number(kpis?.margin_rate || 0).toFixed(1)} %`} icon={TrendingUp} accent="emerald" /><KpiCard label="Lots clotures" value={String(productions.filter((p) => p.status === 'terminee').length)} icon={PackageCheck} accent="amber" /><KpiCard label="Charges indirectes imputees" value={`${money(kpis?.total_production_cost || 0)} FCFA`} icon={Receipt} accent="slate" /></div>
+      )}
 
     </div>
   )
@@ -208,6 +230,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
   const role = user.role as AppRole
   const page = path.split('?')[0]
   const content = useMemo(() => {
+    if (!canAccessPage(page, role)) return <AccessDenied />
     if (page === '/dashboard/produits') return <ProductCatalogPage products={products} />
     if (page === '/dashboard/operations') {
       return <OperationsOverview summary={summary} role={role} userId={String(user.id)} products={products} materials={materials} productions={productions} />
@@ -304,6 +327,9 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
     if (page === '/dashboard/rapports') return <ReportsPageClient />
     if (page === '/dashboard/historique') return <DashboardSectionPlaceholder title="Historique & Logs" description="Journal des actions et audits de production." icon={BarChart2} />
     if (page === '/dashboard/succursales') return <DashboardSectionPlaceholder title="Gestion des Succursales" description="Gestion des sites, depots et points de production." icon={PackageCheck} />
+    if (role === 'operateur_usine') {
+      return <OperatorDashboard summary={summary} productions={productions} firstName={user.first_name} />
+    }
     return (
       <ProductionDashboard
         summary={summary}
