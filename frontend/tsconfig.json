@@ -14,9 +14,7 @@
     "moduleResolution": "Node",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "next/link": ["src/shims/next-link.tsx"],
-      "next/navigation": ["src/shims/next-navigation.ts"]
+      "@/*": ["src/*"]
     },
     "resolveJsonModule": true,
     "isolatedModules": true,
