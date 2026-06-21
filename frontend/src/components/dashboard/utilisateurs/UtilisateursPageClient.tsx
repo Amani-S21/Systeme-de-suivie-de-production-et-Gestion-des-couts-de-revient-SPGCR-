@@ -19,7 +19,7 @@ import {
   deactivateUserAccount,
   updateUserRole,
   deleteUserAccount,
-} from '@/app/dashboard/actions/utilisateurs'
+} from '@/services/actions/utilisateurs'
 import type { UserProfileRow } from '@/types/dashboard-ui'
 import type { AppRole } from '@/types/spgcr'
 

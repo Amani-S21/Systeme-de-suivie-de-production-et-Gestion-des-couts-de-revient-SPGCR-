@@ -10,7 +10,7 @@ import { FormField, formInputClass } from '@/components/dashboard/ui/FormField'
 import {
   persistProduitFiniCatalogue,
   submitNomenclatureBomOnly,
-} from '@/app/dashboard/actions/nomenclatures'
+} from '@/services/actions/nomenclatures'
 import {
   formuleCatalogueEtape1Schema,
   formuleLignesSchema,

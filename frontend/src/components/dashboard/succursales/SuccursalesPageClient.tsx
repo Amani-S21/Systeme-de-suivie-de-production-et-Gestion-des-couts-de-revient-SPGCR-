@@ -11,7 +11,7 @@ import ExportButtons from '@/components/dashboard/ui/ExportButtons'
 import ConfirmDeleteModal from '@/components/dashboard/ui/ConfirmDeleteModal'
 import { cardBase } from '@/lib/dashboard/design'
 import { exportToCsv, exportToPrint } from '@/lib/dashboard/export'
-import { SuccursaleRow, toggleSuccursale, deleteSuccursale } from '@/app/dashboard/actions/succursales'
+import { SuccursaleRow, toggleSuccursale, deleteSuccursale } from '@/services/actions/succursales'
 import SuccursaleModal from './SuccursaleModal'
 import InventoryViewModal from './InventoryViewModal'
 

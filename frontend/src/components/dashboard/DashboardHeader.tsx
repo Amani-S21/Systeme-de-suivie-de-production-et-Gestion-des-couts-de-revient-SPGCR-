@@ -3,8 +3,8 @@
 import Link from '@/router'
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { ChevronDown, LogOut, Search, User2, ArrowRight, Package } from 'lucide-react'
-import { signOut } from '@/app/dashboard/actions'
-import { globalSearch, type SearchResult } from '@/app/dashboard/actions/search'
+import { signOut } from '@/services/session'
+import { globalSearch, type SearchResult } from '@/services/actions/search'
 import type { AppRole } from '@/types/spgcr'
 import { ROLE_LABELS } from '@/lib/dashboard/navigation'
 

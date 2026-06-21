@@ -5,7 +5,7 @@ import { User2, Mail, Shield, Calendar, BadgeCheck, Pencil, X, Save, CheckCircle
 import { ROLE_LABELS } from '@/lib/dashboard/navigation'
 import { cardBase, cardPadding } from '@/lib/dashboard/design'
 import type { AppRole } from '@/types/spgcr'
-import { updateProfile } from '@/app/dashboard/actions/profil'
+import { updateProfile } from '@/services/actions/profil'
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('fr-FR', {

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { ChevronDown, LogOut, Menu, User2 } from 'lucide-react'
 import Link from '@/router'
-import { signOut } from '@/app/dashboard/actions'
+import { signOut } from '@/services/session'
 import type { AppRole } from '@/types/spgcr'
 import { ROLE_LABELS } from '@/lib/dashboard/navigation'
 

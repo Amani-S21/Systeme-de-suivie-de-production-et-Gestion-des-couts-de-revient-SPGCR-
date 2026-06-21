@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
-import { fetchBranchInventory, BranchInventoryRow } from '@/app/dashboard/actions/succursales'
+import { fetchBranchInventory, BranchInventoryRow } from '@/services/actions/succursales'
 import { Package, RefreshCw } from 'lucide-react'
 import { formatNumber } from '@/lib/dashboard/format'
 

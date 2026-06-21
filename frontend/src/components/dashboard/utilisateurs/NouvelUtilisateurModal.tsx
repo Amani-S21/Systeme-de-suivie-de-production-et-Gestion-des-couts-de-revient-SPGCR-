@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { AtSign, Eye, EyeOff, X, UserPlus, Shield, Mail, User, Lock as LockIcon } from 'lucide-react'
 import PrimaryButton from '@/components/dashboard/ui/PrimaryButton'
-import { adminCreateUser } from '@/app/dashboard/actions/utilisateurs'
+import { adminCreateUser } from '@/services/actions/utilisateurs'
 import type { AppRole } from '@/types/spgcr'
 import { ROLE_LABELS } from '@/lib/dashboard/navigation'
 

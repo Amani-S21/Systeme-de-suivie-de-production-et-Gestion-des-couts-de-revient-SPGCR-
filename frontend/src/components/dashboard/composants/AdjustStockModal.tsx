@@ -7,7 +7,7 @@ import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
 import ModalFooterNav from '@/components/dashboard/modals/ModalFooterNav'
 import { FormField, formInputClass } from '@/components/dashboard/ui/FormField'
 import { computeNewCump } from '@/lib/inventory/cump'
-import { submitAdjustStock } from '@/app/dashboard/actions/composants'
+import { submitAdjustStock } from '@/services/actions/composants'
 import {
   composantIdentificationSchema,
   composantMouvementSchema,

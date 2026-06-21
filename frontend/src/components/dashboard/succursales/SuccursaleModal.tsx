@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
 import { FormField, formInputClass } from '@/components/dashboard/ui/FormField'
-import { SuccursaleRow, upsertSuccursale } from '@/app/dashboard/actions/succursales'
+import { SuccursaleRow, upsertSuccursale } from '@/services/actions/succursales'
 
 interface Props {
   open: boolean

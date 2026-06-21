@@ -3,7 +3,7 @@
 import Link, { usePathname } from '@/router'
 import { useTransition } from 'react'
 import { ChevronLeft, ChevronRight, LogOut, X } from 'lucide-react'
-import { signOut } from '@/app/dashboard/actions'
+import { signOut } from '@/services/session'
 import type { AppRole } from '@/types/spgcr'
 import { getNavItemsForRole } from '@/lib/dashboard/navigation'
 

@@ -6,7 +6,7 @@ import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
 import ModalFooterNav from '@/components/dashboard/modals/ModalFooterNav'
 import { FormField, formInputClass } from '@/components/dashboard/ui/FormField'
 import { generateNumeroLot } from '@/lib/dashboard/generate-numero-lot'
-import { createProductionLot } from '@/app/dashboard/actions/quick-actions'
+import { createProductionLot } from '@/services/actions/quick-actions'
 import {
   nouveauLotStep1Schema,
   nouveauLotStep2Schema,

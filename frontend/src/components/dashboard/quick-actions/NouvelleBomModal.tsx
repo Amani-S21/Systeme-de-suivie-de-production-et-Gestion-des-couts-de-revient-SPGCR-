@@ -5,7 +5,7 @@ import { useRouter } from '@/router'
 import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
 import ModalFooterNav from '@/components/dashboard/modals/ModalFooterNav'
 import { FormField, formInputClass } from '@/components/dashboard/ui/FormField'
-import { createNomenclatureBom } from '@/app/dashboard/actions/quick-actions'
+import { createNomenclatureBom } from '@/services/actions/quick-actions'
 import {
   nouvelleBomStep1Schema,
   nouvelleBomStep2Schema,
