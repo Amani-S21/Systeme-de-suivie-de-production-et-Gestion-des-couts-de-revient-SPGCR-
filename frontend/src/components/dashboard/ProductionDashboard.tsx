@@ -298,6 +298,39 @@ export default function ProductionDashboard({ summary, role, userId, products, m
         </article>
       </section>
 
+      {role === 'admin_msd' && (
+        <section>
+          <article className="rounded-md border border-slate-200/80 bg-white p-4 shadow-[0_2px_8px_rgba(15,23,42,0.05)]">
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+              <div>
+                <h2 className="flex items-center gap-2 text-lg font-bold text-slate-900">
+                  <UsersRound className="h-5 w-5 text-blue-600" />
+                  État des comptes utilisateurs
+                </h2>
+                <p className="mt-1 text-xs text-slate-500">Comptes validés et comptes en attente de validation administrative.</p>
+              </div>
+              <div className="flex flex-wrap gap-4 text-sm">
+                <span className="font-semibold text-emerald-700">{activeUsers} actif{activeUsers > 1 ? 's' : ''}</span>
+                <span className="font-semibold text-amber-700">{pendingUsers} en attente</span>
+              </div>
+            </div>
+            <div className="mt-4 h-[255px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={userStatusData} margin={{ top: 12, right: 24, left: 0, bottom: 0 }}>
+                  <CartesianGrid stroke="#e5e7eb" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fill: '#475569', fontSize: 12 }} tickLine={false} axisLine={{ stroke: '#dbe2ea' }} />
+                  <YAxis domain={[0, 'auto']} allowDecimals={false} tick={{ fill: '#475569', fontSize: 12 }} tickLine={false} axisLine={false} />
+                  <Tooltip formatter={(value) => [`${formatNumber(Number(value))}`, 'Utilisateurs']} />
+                  <Bar dataKey="value" radius={[5, 5, 0, 0]} maxBarSize={110}>
+                    {userStatusData.map((item) => <Cell key={item.name} fill={item.color} />)}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </article>
+        </section>
+      )}
+
       <section className="grid gap-4 xl:grid-cols-2">
         <article className="rounded-md border border-slate-200/80 bg-white p-4 shadow-[0_2px_8px_rgba(15,23,42,0.05)]">
           <h2 className="mb-4 text-lg font-bold text-slate-900">Dernières productions enregistrées</h2>
