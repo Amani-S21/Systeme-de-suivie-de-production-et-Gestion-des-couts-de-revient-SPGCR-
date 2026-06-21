@@ -7,7 +7,7 @@ import {
 import PageHeader from '@/components/dashboard/ui/PageHeader'
 import ExportButtons from '@/components/dashboard/ui/ExportButtons'
 import { exportToCsv, exportToPrint } from '@/lib/dashboard/export'
-import type { CoutRevientRow, AnalysesStats } from '@/lib/dashboard/queries/analyses-page'
+import type { AnalysesStats, CoutRevientRow } from '@/types/dashboard-ui'
 
 interface Props {
   rows: CoutRevientRow[]

@@ -7,8 +7,7 @@ import {
 import PageHeader from '@/components/dashboard/ui/PageHeader'
 import ExportButtons from '@/components/dashboard/ui/ExportButtons'
 import { exportToCsv, exportToPrint } from '@/lib/dashboard/export'
-import type { LogRow } from '@/lib/dashboard/queries/historique-page'
-import type { ActionType } from '@/lib/audit'
+import type { ActionType, LogRow } from '@/types/dashboard-ui'
 
 interface Props {
   logs: LogRow[]

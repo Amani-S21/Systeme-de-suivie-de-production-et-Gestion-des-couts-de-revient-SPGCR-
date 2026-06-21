@@ -13,7 +13,7 @@ import {
   composantMouvementSchema,
   type AdjustStockFormValues,
 } from '@/lib/validations/composants'
-import type { ComposantRow } from '@/lib/dashboard/queries/composants-page'
+import type { ComposantRow } from '@/types/dashboard-ui'
 import { generateCode } from '@/lib/dashboard/generate-code'
 
 const STEPS = ['Identification', 'Mouvement de stock', 'Récapitulatif']

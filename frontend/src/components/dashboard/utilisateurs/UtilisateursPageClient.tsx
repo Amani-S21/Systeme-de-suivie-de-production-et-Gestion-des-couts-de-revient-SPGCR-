@@ -20,7 +20,7 @@ import {
   updateUserRole,
   deleteUserAccount,
 } from '@/app/dashboard/actions/utilisateurs'
-import type { UserProfileRow } from '@/lib/dashboard/queries/utilisateurs-page'
+import type { UserProfileRow } from '@/types/dashboard-ui'
 import type { AppRole } from '@/types/spgcr'
 
 interface Props {
