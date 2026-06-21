@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/router'
 import { Server, Lock, Cpu, BarChart2, ArrowRight, ShieldCheck, Activity, Mail, Phone, MapPin, Clock } from 'lucide-react'
 
 // ─────────────────────────────────────────────

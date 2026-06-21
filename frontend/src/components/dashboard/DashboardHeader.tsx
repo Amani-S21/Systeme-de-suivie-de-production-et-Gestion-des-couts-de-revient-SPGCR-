@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/router'
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { ChevronDown, LogOut, Search, User2, ArrowRight, Package } from 'lucide-react'
 import { signOut } from '@/app/dashboard/actions'

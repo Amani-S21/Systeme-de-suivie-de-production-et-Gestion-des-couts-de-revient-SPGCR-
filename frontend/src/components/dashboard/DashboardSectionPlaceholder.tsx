@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import Link from 'next/link'
+import Link from '@/router'
 import { ArrowLeft } from 'lucide-react'
 import { cardBase, cardPadding } from '@/lib/dashboard/design'
 

@@ -3,7 +3,7 @@
 import { useState, useEffect, useTransition } from 'react'
 import { login } from './actions'
 import { Mail, Lock, User, ArrowLeft, Loader2, CheckCircle2, AlertCircle, ShieldCheck, Home, Eye, EyeOff } from 'lucide-react'
-import Link from 'next/link'
+import Link from '@/router'
 
 type AuthMode = 'login' | 'forgot'
 

@@ -2,8 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { ChevronRight, LogOut, Settings, X } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link, { usePathname } from '@/router'
 import { signOut } from '@/app/dashboard/actions'
 import { getNavItemsForRole } from '@/lib/dashboard/navigation'
 import type { AppRole } from '@/types/spgcr'

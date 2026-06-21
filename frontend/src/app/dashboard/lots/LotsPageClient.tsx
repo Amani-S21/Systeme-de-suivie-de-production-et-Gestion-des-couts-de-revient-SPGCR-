@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from '@/router'
 import type { LucideIcon } from 'lucide-react'
 import {
   ArrowRight, Search, Package, CheckCircle2, Clock, XCircle,

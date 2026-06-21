@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/router'
 import { useForm, Controller } from 'react-hook-form'
 import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
 import ModalFooterNav from '@/components/dashboard/modals/ModalFooterNav'

@@ -1,7 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link, { usePathname } from '@/router'
 import { useTransition } from 'react'
 import { ChevronLeft, ChevronRight, LogOut, X } from 'lucide-react'
 import { signOut } from '@/app/dashboard/actions'

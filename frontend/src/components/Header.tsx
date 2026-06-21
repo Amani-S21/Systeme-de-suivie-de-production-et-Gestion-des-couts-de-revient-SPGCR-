@@ -1,9 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { usePathname } from 'next/navigation'
+import Link, { usePathname, useRouter } from '@/router'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ArrowRight, ShieldCheck, BarChart2, ChevronRight, LogOut, User2 } from 'lucide-react'
 

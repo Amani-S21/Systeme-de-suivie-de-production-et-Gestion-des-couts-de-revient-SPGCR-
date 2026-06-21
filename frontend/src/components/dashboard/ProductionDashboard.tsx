@@ -22,7 +22,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import Link from 'next/link'
+import Link from '@/router'
 import { api } from '@/api'
 import type { DashboardSummary, Material, Product, Production } from '@/types'
 import type { AppRole } from '@/types/spgcr'

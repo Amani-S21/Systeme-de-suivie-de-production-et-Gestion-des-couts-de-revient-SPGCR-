@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from '@/router'
 import {
   Plus, Search, ArrowUpDown, Eye, Pencil, Trash2,
 } from 'lucide-react'

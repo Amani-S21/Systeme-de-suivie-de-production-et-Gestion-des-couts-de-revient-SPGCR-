@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/router'
 import { PlusCircle, Lock, Wine } from 'lucide-react'
 import ClotureLotForm from '@/components/ClotureLotForm'
 import { cardBase, cardPadding } from '@/lib/dashboard/design'

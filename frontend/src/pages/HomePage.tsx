@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import Link from 'next/link'
+import Link from '@/router'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight, ChevronRight, ShieldCheck,

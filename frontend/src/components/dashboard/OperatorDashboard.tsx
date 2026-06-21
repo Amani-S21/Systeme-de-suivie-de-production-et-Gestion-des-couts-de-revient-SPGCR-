@@ -1,5 +1,5 @@
 import { CheckCircle2, Clock3, Factory, PackageCheck } from 'lucide-react'
-import Link from 'next/link'
+import Link from '@/router'
 import type { DashboardSummary, Production } from '@/types'
 import KpiCard from '@/components/dashboard/ui/KpiCard'
 import { cardBase } from '@/lib/dashboard/design'

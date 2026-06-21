@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/router'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { Plus, Trash2, Package, CheckCircle2 } from 'lucide-react'
 import MultiStepModal from '@/components/dashboard/modals/MultiStepModal'
