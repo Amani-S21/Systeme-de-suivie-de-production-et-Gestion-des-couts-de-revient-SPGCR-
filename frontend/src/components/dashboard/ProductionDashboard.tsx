@@ -6,6 +6,7 @@ import {
   Factory,
   TrendingDown,
   TrendingUp,
+  UsersRound,
   WalletCards,
 } from 'lucide-react'
 import {
@@ -24,7 +25,7 @@ import {
 } from 'recharts'
 import Link from '@/router'
 import { api } from '@/api'
-import type { DashboardSummary, Material, Product, Production } from '@/types'
+import type { DashboardSummary, Material, Product, Production, User } from '@/types'
 import type { AppRole } from '@/types/spgcr'
 
 const COLORS = ['#2f6fed', '#3bb978', '#fb970f', '#8b45dd']
@@ -118,9 +119,10 @@ interface Props {
   products: Product[]
   materials: Material[]
   productions: Production[]
+  users: User[]
 }
 
-export default function ProductionDashboard({ summary, role, userId, products, materials, productions }: Props) {
+export default function ProductionDashboard({ summary, role, userId, products, materials, productions, users }: Props) {
   const initial = initialPeriod()
   const [dateFrom, setDateFrom] = useState(initial.from)
   const [dateTo, setDateTo] = useState(initial.to)
@@ -157,6 +159,12 @@ export default function ProductionDashboard({ summary, role, userId, products, m
   const productBarData = data.product_costs.length
     ? data.product_costs
     : [{ product: 'Aucune donnée', unit_cost: 0, evolution: 0 }]
+  const activeUsers = users.filter((item) => item.is_active).length
+  const pendingUsers = users.length - activeUsers
+  const userStatusData = [
+    { name: 'Actifs', value: activeUsers, color: '#22a66f' },
+    { name: 'En attente', value: pendingUsers, color: '#f59e0b' },
+  ]
 
   return (
     <div className="space-y-4">

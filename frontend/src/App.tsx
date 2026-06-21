@@ -346,6 +346,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
         products={products}
         materials={materials}
         productions={productions}
+        users={users}
       />
     )
   }, [page, materials, products, productions, boms, summary, users, operators, user])
