@@ -34,7 +34,7 @@ alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
-Au demarrage, FastAPI cree automatiquement l'admin par defaut si son email n'existe pas encore.
+Au demarrage, FastAPI cree automatiquement l'admin par defaut si son identifiant n'existe pas encore.
 
 API locale : `http://localhost:8000`
 

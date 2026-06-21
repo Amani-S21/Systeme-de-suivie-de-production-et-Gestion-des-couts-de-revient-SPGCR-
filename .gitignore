@@ -13,10 +13,6 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
 /build
 
@@ -44,8 +40,6 @@ frontend/.env.local
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
-
 # python
 __pycache__/
 *.py[cod]
