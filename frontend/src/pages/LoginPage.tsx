@@ -89,7 +89,7 @@ export default function LoginPage() {
       } catch (err: any) {
         // LA FIX PRINCIPALE : Relayer l'erreur "NEXT_REDIRECT" que déclenche Server Actions
         if (err?.message === 'NEXT_REDIRECT' || err?.digest?.includes('NEXT_REDIRECT')) {
-          setShouldRedirect(false) // Optionnel, on laisse Next.js faire son travail
+          setShouldRedirect(false)
           throw err
         }
         
