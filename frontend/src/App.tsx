@@ -145,7 +145,7 @@ function OperationsOverview({ summary, role, userId, products, materials, produc
         role={role}
         currentUserId={userId}
         produitsFinis={toProduits(products)}
-        operateurs={operators.length ? operators.map(item => ({ id: String(item.id), prenom: item.first_name, nom: item.last_name })) : [{ id: userId, prenom: 'Utilisateur', nom: 'connecte' }]}
+        operateurs={operators.length ? operators.map(item => ({ id: String(item.id), prenom: item.first_name, nom: item.last_name })) : role === 'operateur_usine' ? [{ id: userId, prenom: 'Utilisateur', nom: 'connecte' }] : []}
         composants={toComposants(materials).map((c) => ({ id: c.id, code: c.code, nom: c.nom, unite_mesure: c.unite_mesure }))}
         activeLot={productions.find((p) => p.status === 'en_cours') ? {
           id: String(productions.find((p) => p.status === 'en_cours')!.id),
@@ -292,7 +292,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
             }),
           ]))}
           produitsFinis={toProduits(products)}
-          operateurs={operators.length ? operators.map(item => ({ id: String(item.id), prenom: item.first_name, nom: item.last_name })) : [{ id: String(user.id), prenom: user.first_name, nom: user.last_name }]}
+          operateurs={operators.length ? operators.map(item => ({ id: String(item.id), prenom: item.first_name, nom: item.last_name })) : role === 'operateur_usine' ? [{ id: String(user.id), prenom: user.first_name, nom: user.last_name }] : []}
           kpis={{
             lotsActifs: String(productions.filter((p) => p.status === 'en_cours').length),
             volumeCuve: `${productions.reduce((sum, p) => sum + Number(p.quantity || 0), 0)} u.`,
