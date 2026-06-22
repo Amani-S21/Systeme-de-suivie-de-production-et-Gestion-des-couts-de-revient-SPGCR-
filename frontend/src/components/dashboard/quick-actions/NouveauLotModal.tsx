@@ -29,10 +29,10 @@ interface NouveauLotModalProps {
   operateurs: OperateurOption[]
 }
 
-const initialData = (userId: string): NouveauLotFormData => ({
+const initialData = (userId: string, operatorId = userId): NouveauLotFormData => ({
   produitFiniId: '',
   quantite: 0,
-  operateurId: userId,
+  operateurId: operatorId,
   numeroLot: generateNumeroLot(),
   numeroLotManuel: false,
 })
@@ -61,11 +61,13 @@ export default function NouveauLotModal({
   useEffect(() => {
     if (open) {
       setStep(1)
-      setData(initialData(currentUserId))
+      const operatorId = role === 'operateur_usine' ? currentUserId : operateurs[0]?.id || ''
+      setData(initialData(currentUserId, operatorId))
       setFieldErrors({})
       setServerError(null)
+      setIsSubmitting(false)
     }
-  }, [open, currentUserId])
+  }, [open, currentUserId, role, operateurs])
 
   function applyZodErrors(issues: { path: PropertyKey[]; message: string }[]) {
     const errs: Record<string, string> = {}
@@ -123,19 +125,24 @@ export default function NouveauLotModal({
     }
     setIsSubmitting(true)
     setServerError(null)
-    const result = await createProductionLot({
-      numero_lot: data.numeroLot,
-      produit_fini_id: data.produitFiniId,
-      quantite_produite: data.quantite,
-      operateur_id: data.operateurId,
-    })
-    setIsSubmitting(false)
-    if (result.error) {
-      setServerError(result.error)
-      return
+    try {
+      const result = await createProductionLot({
+        numero_lot: data.numeroLot,
+        produit_fini_id: data.produitFiniId,
+        quantite_produite: data.quantite,
+        operateur_id: data.operateurId,
+      })
+      if (result.error) {
+        setServerError(result.error)
+        return
+      }
+      onClose()
+      router.refresh()
+    } catch (error) {
+      setServerError(error instanceof Error ? error.message : 'Impossible d’ouvrir le lot de production.')
+    } finally {
+      setIsSubmitting(false)
     }
-    onClose()
-    router.refresh()
   }
 
   const selectedProduit = produitsFinis.find((p) => p.id === data.produitFiniId)

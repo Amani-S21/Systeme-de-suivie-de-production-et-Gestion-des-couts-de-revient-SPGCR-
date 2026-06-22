@@ -1,4 +1,5 @@
 import type { BomItem, Charge, DashboardSummary, Material, Product, Production, User } from './types'
+import { notify } from './lib/notifications'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
 
@@ -15,9 +16,32 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, { ...options, headers })
   if (!response.ok) {
     const error = await response.json().catch(() => ({}))
-    throw new Error(error.detail || 'Erreur API')
+    const detail = Array.isArray(error.detail)
+      ? error.detail.map((item: { msg?: string }) => item.msg || 'Donnée invalide').join(', ')
+      : error.detail || 'Erreur API'
+    notify('error', detail)
+    throw new Error(detail)
   }
-  return response.json()
+  const result = await response.json()
+  const method = (options.method || 'GET').toUpperCase()
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+    notify('success', mutationMessage(path, method))
+  }
+  return result
+}
+
+function mutationMessage(path: string, method: string) {
+  if (path === '/productions' && method === 'POST') return 'Le lot de production a été ouvert avec succès.'
+  if (path.includes('/productions/') && method === 'DELETE') return 'Le lot de production a été supprimé.'
+  if (path.includes('/productions/')) return 'Le lot de production a été mis à jour.'
+  if (path === '/users' && method === 'POST') return 'Le compte utilisateur a été créé et attend sa validation.'
+  if (path.includes('/users/') && method === 'DELETE') return 'Le compte utilisateur a été supprimé.'
+  if (path.includes('/users/')) return 'Le compte utilisateur a été mis à jour.'
+  if (path.includes('/materials')) return 'Les informations du stock ont été enregistrées.'
+  if (path.includes('/products')) return 'Les informations du produit ont été enregistrées.'
+  if (path.includes('/charges')) return 'La charge a été enregistrée.'
+  if (path.includes('/costs/')) return 'Le calcul du coût de revient a été enregistré.'
+  return 'L’action a été enregistrée avec succès.'
 }
 
 export async function login(username: string, password: string) {
