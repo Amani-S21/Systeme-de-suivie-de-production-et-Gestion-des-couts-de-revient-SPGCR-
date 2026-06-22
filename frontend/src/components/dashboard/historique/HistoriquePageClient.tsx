@@ -111,7 +111,14 @@ export default function HistoriquePageClient({ logs }: Props) {
       Description: l.description,
     })))
   }
-  function handleExportPdf() { exportToPrint('Historique des Activités — SPGCR') }
+  function handleExportPdf() {
+    exportToPrint('Historique des Activités — SPGCR', filtered.map((l) => ({
+      'Date & Heure': fmtDateTime(l.created_at),
+      Utilisateur: l.profil_prenom ? `${l.profil_prenom} ${l.profil_nom}` : 'Système',
+      'Type d’action': l.action_type,
+      Description: l.description,
+    })))
+  }
 
   return (
     <>

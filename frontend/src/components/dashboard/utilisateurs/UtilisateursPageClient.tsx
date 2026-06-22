@@ -113,7 +113,15 @@ export default function UtilisateursPageClient({ pending, active }: Props) {
       "Inscrit le": formatDate(u.created_at),
     })))
   }
-  function handleExportPdf() { exportToPrint('Gestion des Utilisateurs — SPGCR') }
+  function handleExportPdf() {
+    exportToPrint('Gestion des Utilisateurs — SPGCR', filtered.map((u) => ({
+      Prénom: u.prenom,
+      Nom: u.nom,
+      Rôle: ROLE_LABELS[u.role],
+      Statut: u.actif ? 'Actif' : 'Inactif',
+      'Inscrit le': formatDate(u.created_at),
+    })))
+  }
 
   return (
     <>

@@ -92,7 +92,16 @@ export default function NomenclaturesPageClient({ formules, produitsFinis, compo
       Recette: f.lignes.map((l) => `${l.composant_nom} ×${l.quantite_requise}${l.unite_mesure}`).join(' | '),
     })))
   }
-  function handleExportPdf() { exportToPrint('Catalogue & Recettes — SPGCR') }
+  function handleExportPdf() {
+    exportToPrint('Catalogue & Recettes — SPGCR', filtered.map((f) => ({
+      SKU: f.produit_code,
+      Produit: f.produit_nom,
+      Format: f.unite_commerciale ? (UNITE_LABELS[f.unite_commerciale] ?? f.unite_commerciale) : '—',
+      'Volume (L)': f.volume_litre ?? '—',
+      'Nb intrants': f.lignes.length,
+      Recette: f.lignes.map((l) => `${l.composant_nom} ×${l.quantite_requise}${l.unite_mesure}`).join(' | '),
+    })))
+  }
   async function handleConfirmDelete() {
     if (deleteId) await api.deleteProduct(deleteId)
     setDeleteId(null)

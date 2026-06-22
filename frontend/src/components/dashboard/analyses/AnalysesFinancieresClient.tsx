@@ -79,7 +79,15 @@ export default function AnalysesFinancieresClient({ rows, stats }: Props) {
       'Date clôture': fmtDate(r.calcule_at),
     })))
   }
-  function handleExportPdf() { exportToPrint('Analyses Financières — SPGCR') }
+  function handleExportPdf() {
+    exportToPrint('Analyses Financières — SPGCR', filtered.map((r) => ({
+      'N° Lot': r.numero_lot,
+      Produit: r.produit_nom,
+      'Coût matières ($)': r.cout_direct_matieres,
+      'Coût unitaire ($/btl)': r.cout_unitaire_theorique,
+      'Date clôture': fmtDate(r.calcule_at),
+    })))
+  }
 
   return (
     <>
