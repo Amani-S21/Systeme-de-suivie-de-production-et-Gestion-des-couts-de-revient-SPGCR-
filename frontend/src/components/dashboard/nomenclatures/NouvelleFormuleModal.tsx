@@ -169,21 +169,25 @@ export default function NouvelleFormuleModal({
             }
           : { mode: 'existing' as const, produit_fini_id: cat.produit_fini_id }
 
-      const result = await persistProduitFiniCatalogue(payload)
-      setIsAdvancing(false)
+      try {
+        const result = await persistProduitFiniCatalogue(payload)
+        if (result.error) {
+          setServerError(result.error)
+          return
+        }
+        if (!result.id) {
+          setServerError('Impossible de récupérer le produit catalogue.')
+          return
+        }
 
-      if (result.error) {
-        setServerError(result.error)
-        return
+        setProduitFiniId(result.id)
+        setProduitResume(buildProduitResume(result.id))
+        setStep(2)
+      } catch (error) {
+        setServerError(error instanceof Error ? error.message : 'Impossible d’enregistrer le produit catalogue.')
+      } finally {
+        setIsAdvancing(false)
       }
-      if (!result.id) {
-        setServerError('Impossible de récupérer le produit catalogue.')
-        return
-      }
-
-      setProduitFiniId(result.id)
-      setProduitResume(buildProduitResume(result.id))
-      setStep(2)
       return
     }
 
@@ -203,20 +207,24 @@ export default function NouvelleFormuleModal({
 
     setServerError(null)
     setIsSubmitting(true)
-    const values = form.getValues()
-    const result = await submitNomenclatureBomOnly({
-      produit_fini_id: produitFiniId,
-      lignes: values.lignes.lignes,
-      validation: values.validation,
-    })
-
-    setIsSubmitting(false)
-    if (result.error) {
-      setServerError(result.error)
-      return
+    try {
+      const values = form.getValues()
+      const result = await submitNomenclatureBomOnly({
+        produit_fini_id: produitFiniId,
+        lignes: values.lignes.lignes,
+        validation: values.validation,
+      })
+      if (result.error) {
+        setServerError(result.error)
+        return
+      }
+      onClose()
+      router.refresh()
+    } catch (error) {
+      setServerError(error instanceof Error ? error.message : 'Impossible de valider la recette.')
+    } finally {
+      setIsSubmitting(false)
     }
-    onClose()
-    router.refresh()
   }
 
   const catalogueFieldError = (field: string) => {

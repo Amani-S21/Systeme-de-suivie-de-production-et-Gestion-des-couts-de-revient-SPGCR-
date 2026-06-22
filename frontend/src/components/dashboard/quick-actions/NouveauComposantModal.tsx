@@ -107,14 +107,20 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
       return
     }
     setIsSubmitting(true)
-    const result = await createComposant(data)
-    setIsSubmitting(false)
-    if (result.error) {
-      setServerError(result.error)
-      return
+    setServerError(null)
+    try {
+      const result = await createComposant(data)
+      if (result.error) {
+        setServerError(result.error)
+        return
+      }
+      onClose()
+      router.refresh()
+    } catch (error) {
+      setServerError(error instanceof Error ? error.message : 'Impossible d’enregistrer le composant.')
+    } finally {
+      setIsSubmitting(false)
     }
-    onClose()
-    router.refresh()
   }
 
   const catLabel = CATEGORIES.find((c) => c.value === data.categorie)?.label

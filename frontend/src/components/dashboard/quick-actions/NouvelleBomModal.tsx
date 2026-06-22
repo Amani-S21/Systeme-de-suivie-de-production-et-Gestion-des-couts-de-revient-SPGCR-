@@ -101,14 +101,20 @@ export default function NouvelleBomModal({
       return
     }
     setIsSubmitting(true)
-    const result = await createNomenclatureBom(data)
-    setIsSubmitting(false)
-    if (result.error) {
-      setServerError(result.error)
-      return
+    setServerError(null)
+    try {
+      const result = await createNomenclatureBom(data)
+      if (result.error) {
+        setServerError(result.error)
+        return
+      }
+      onClose()
+      router.refresh()
+    } catch (error) {
+      setServerError(error instanceof Error ? error.message : 'Impossible d’enregistrer la nomenclature.')
+    } finally {
+      setIsSubmitting(false)
     }
-    onClose()
-    router.refresh()
   }
 
   const produit = produitsFinis.find((p) => p.id === data.produit_fini_id)
