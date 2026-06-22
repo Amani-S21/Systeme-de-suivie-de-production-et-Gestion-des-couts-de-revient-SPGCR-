@@ -51,7 +51,7 @@ function ChargeModal({ open, charge, onClose, onSaved }: { open: boolean; charge
   const inputClass = 'h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100'
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
-      <button className="absolute inset-0 bg-slate-950/40" onClick={onClose} aria-label="Fermer" />
+      <button type="button" className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" onClick={onClose} aria-label="Fermer" />
       <form onSubmit={submit} className="relative w-full max-w-lg rounded-lg bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b px-5 py-4"><h2 className="font-bold">{charge ? 'Modifier la charge' : 'Nouvelle charge'}</h2><button type="button" onClick={onClose}><X className="h-4 w-4" /></button></div>
         <div className="grid gap-4 p-5 sm:grid-cols-2">
