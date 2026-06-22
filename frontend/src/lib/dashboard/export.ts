@@ -66,7 +66,7 @@ export function exportToPrint(title: string, suppliedRows?: Record<string, unkno
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7.5)
     doc.text('Système de Pilotage et de Gestion du Coût de Revient', 28, 17)
-    doc.text('Maison Aux Sources de Dieu · Unité industrielle Vin Ushindi', 28, 21.5)
+    doc.text('Unité industrielle Vin Ushindi · Gestion de production', 28, 21.5)
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(7)
     doc.text('RAPPORT OFFICIEL', pageWidth - 14, 12, { align: 'right' })
@@ -127,11 +127,11 @@ export function exportToPrint(title: string, suppliedRows?: Record<string, unkno
     doc.setTextColor(100, 116, 139)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7)
-    doc.text('Document confidentiel · Usage interne MSD · Généré automatiquement par SPGCR', 14, pageHeight - 8)
+    doc.text('Document confidentiel · Usage interne autorisé · Généré automatiquement par SPGCR', 14, pageHeight - 8)
     doc.text(`Page ${page} / ${totalPages}`, pageWidth - 14, pageHeight - 8, { align: 'right' })
   }
 
-  doc.setProperties({ title: cleanReportTitle(title), subject: 'Rapport SPGCR', author: 'SPGCR - Maison Aux Sources de Dieu', creator: 'SPGCR' })
+  doc.setProperties({ title: cleanReportTitle(title), subject: 'Rapport SPGCR', author: 'SPGCR - Vin Ushindi', creator: 'SPGCR' })
   doc.save(`${slugify(title) || 'rapport-spgcr'}.pdf`)
 }
 

@@ -85,7 +85,7 @@ export default function AnalysesFinancieresClient({ rows, stats }: Props) {
     <>
       <PageHeader
         title="Analyses Financières"
-        description="Tableau de bord des coûts de revient et marges — Maison Aux Sources de Dieu."
+        description="Tableau de bord des coûts de revient et marges de l’unité industrielle."
       />
 
       {/* KPI Cards */}

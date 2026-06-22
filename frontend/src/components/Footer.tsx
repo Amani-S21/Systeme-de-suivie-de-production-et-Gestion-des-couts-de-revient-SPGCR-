@@ -58,7 +58,6 @@ const navCols = [
     title: 'Institutionnel',
     links: [
       { label: 'ISIG Goma',                  href: '#' },
-      { label: 'Maison Aux Sources de Dieu', href: '#' },
       { label: 'Contact',                    href: '/#contact' },
     ],
   },
@@ -68,7 +67,7 @@ const contactItems = [
   {
     icon: MapPin,
     label: 'Site industriel',
-    value: 'Maison Aux Sources de Dieu - Vin Ushindi',
+    value: 'Unité industrielle Vin Ushindi',
     detail: 'Goma, Republique Democratique du Congo',
   },
   {
@@ -204,7 +203,7 @@ export default function Footer() {
           <div className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-slate-200 bg-slate-50">
             <ShieldCheck className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" />
             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-              Accès restreint au personnel MSD
+              Accès restreint au personnel autorisé
             </span>
           </div>
 
@@ -250,8 +249,7 @@ export default function Footer() {
             © {new Date().getFullYear()} — Projet Tutoré ·{' '}
             <span className="text-slate-700">ISIG Goma</span>
             {' '}·{' '}
-            <span className="text-slate-700">Maison Aux Sources de Dieu</span>
-            {' '}(Vin Ushindi)
+            <span className="text-slate-700">Vin Ushindi</span>
           </p>
 
           <div className="flex items-center gap-5">

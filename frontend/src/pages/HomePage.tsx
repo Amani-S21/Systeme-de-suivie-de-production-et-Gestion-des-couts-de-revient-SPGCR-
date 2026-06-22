@@ -78,7 +78,7 @@ const steps = [
     num: '02',
     icon: ShieldCheck,
     title: 'Validation Admin',
-    desc: 'Audit des accès par les responsables MSD pour garantir l\'intégrité des données d\'usine.',
+    desc: 'Audit des accès par les responsables habilités pour garantir l\'intégrité des données d\'usine.',
   },
   {
     num: '03',
@@ -139,7 +139,7 @@ const faqs = [
   },
   {
     q: "Qui peut valider un nouveau compte opérateur ?",
-    a: 'Seuls les responsables habilités de la Maison Aux Sources de Dieu valident les nouveaux comptes. Cette procédure garantit une sécurité maximale et une traçabilité complète des accès.',
+    a: 'Seuls les responsables habilités de l’unité industrielle valident les nouveaux comptes. Cette procédure garantit une sécurité maximale et une traçabilité complète des accès.',
   },
   {
     q: 'Le système est-il compatible avec les imprimantes de rapports ?',
@@ -224,7 +224,7 @@ export default function HomePage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600" />
               </span>
-              Système Opérationnel — Vin Ushindi · MSD
+              Système Opérationnel — SPGCR · Vin Ushindi
             </motion.div>
 
             <div className="max-w-5xl w-full z-10 text-center">
@@ -249,7 +249,7 @@ export default function HomePage() {
                 className="max-w-lg mx-auto text-slate-500 text-sm sm:text-[15px] font-medium leading-relaxed mb-10"
               >
                 Plateforme industrielle de gestion du coût de revient pour la{' '}
-                <span className="text-slate-800 font-semibold">Maison Aux Sources de Dieu</span>.
+                <span className="text-slate-800 font-semibold">l’unité industrielle Vin Ushindi</span>.
                 Numérisation des flux physiques, automatisation des marges brutes, traçabilité totale.
               </motion.p>
 
@@ -431,10 +431,10 @@ export default function HomePage() {
                 </p>
                 <div className="border-t border-slate-100 pt-5 flex items-center gap-4">
                   <div className="w-8 h-8 rounded-md bg-slate-950 flex items-center justify-center flex-shrink-0">
-                    <span className="text-white text-[10px] font-black">MSD</span>
+                    <span className="text-white text-[10px] font-black">SPGCR</span>
                   </div>
                   <div>
-                    <div className="text-[11px] font-black uppercase tracking-widest text-slate-900">Direction MSD</div>
+                    <div className="text-[11px] font-black uppercase tracking-widest text-slate-900">Administration SPGCR</div>
                     <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Audit & Contrôle de Gestion</div>
                   </div>
                 </div>

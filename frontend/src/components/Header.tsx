@@ -90,11 +90,11 @@ export default function Header({ user, profile }: Props) {
           </div>
           <span className="text-slate-700 text-[9px] select-none">|</span>
           <span className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.15em]">
-            Vin Ushindi · Maison Aux Sources de Dieu
+            SPGCR · Vin Ushindi
           </span>
         </div>
         <span className="text-[9px] font-bold text-slate-600 uppercase tracking-[0.2em]">
-          Maison Aux Sources de Dieu · Vin Ushindi
+          Unité industrielle · Vin Ushindi
         </span>
       </div>
 
