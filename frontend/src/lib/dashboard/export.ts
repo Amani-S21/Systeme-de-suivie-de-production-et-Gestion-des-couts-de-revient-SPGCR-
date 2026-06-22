@@ -1,10 +1,11 @@
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { notify } from '@/lib/notifications'
 
 /**
  * Shared client-side export helpers.
  * - exportToCsv  → triggers a CSV download
- * - exportToPdf  → opens the browser print dialog (the table must be visible in the page)
+ * - exportToPrint → generates a styled PDF report from supplied or visible rows
  */
 
 export function exportToCsv(filename: string, rows: Record<string, unknown>[]) {
@@ -30,6 +31,7 @@ export function exportToCsv(filename: string, rows: Record<string, unknown>[]) {
   a.download = `${slugify(filename) || 'export-spgcr'}.csv`
   a.click()
   URL.revokeObjectURL(url)
+  notify('success', 'Le fichier CSV compatible Excel a été généré.')
 }
 
 function visibleTableRows(): Record<string, unknown>[] {
@@ -133,6 +135,7 @@ export function exportToPrint(title: string, suppliedRows?: Record<string, unkno
 
   doc.setProperties({ title: cleanReportTitle(title), subject: 'Rapport SPGCR', author: 'SPGCR - Vin Ushindi', creator: 'SPGCR' })
   doc.save(`${slugify(title) || 'rapport-spgcr'}.pdf`)
+  notify('success', 'Le rapport PDF a été généré avec succès.')
 }
 
 function cleanReportTitle(title: string) {
