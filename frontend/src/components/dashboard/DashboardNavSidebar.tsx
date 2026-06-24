@@ -29,7 +29,7 @@ export default function DashboardNavSidebar({ role, collapsed, mobileOpen, onMob
       {children.map((child) => {
         const hasNested = Boolean(child.children?.length)
         const childActive = isChildActive(child)
-        const expanded = openGroups[child.href] ?? childActive
+        const expanded = openGroups[child.href] ?? false
 
         if (hasNested) {
           return (
