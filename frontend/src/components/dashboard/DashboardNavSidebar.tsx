@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 import { ChevronRight, LogOut, Settings, X } from 'lucide-react'
 import Link, { usePathname } from '@/router'
 import { signOut } from '@/services/session'
-import { getNavItemsForRole } from '@/lib/dashboard/navigation'
+import { getNavItemsForRole, type NavChildItem } from '@/lib/dashboard/navigation'
 import type { AppRole } from '@/types/spgcr'
 
 interface Props {
@@ -19,6 +19,51 @@ export default function DashboardNavSidebar({ role, collapsed, mobileOpen, onMob
   const [isSigningOut, startTransition] = useTransition()
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
   const items = getNavItemsForRole(role)
+  const currentPath = `${window.location.pathname}${window.location.search}`
+
+  const isChildActive = (item: NavChildItem): boolean =>
+    currentPath === item.href || Boolean(item.children?.some(isChildActive))
+
+  const renderChildren = (children: NavChildItem[], level = 0) => (
+    <div className={`${level === 0 ? 'ml-5 mt-1 border-l border-white/15 pl-3' : 'ml-3 mt-1 border-l border-white/10 pl-3'} space-y-1`}>
+      {children.map((child) => {
+        const hasNested = Boolean(child.children?.length)
+        const childActive = isChildActive(child)
+        const expanded = openGroups[child.href] ?? childActive
+
+        if (hasNested) {
+          return (
+            <div key={child.href}>
+              <button
+                type="button"
+                onClick={() => setOpenGroups((groups) => ({ ...groups, [child.href]: !expanded }))}
+                className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition-colors ${
+                  childActive ? 'bg-blue-500/20 text-white' : 'text-white/70 hover:bg-white/8 hover:text-white'
+                }`}
+              >
+                <span className="truncate">{child.label}</span>
+                <ChevronRight className={`ml-auto h-3.5 w-3.5 transition-transform ${expanded ? 'rotate-90' : ''}`} />
+              </button>
+              {expanded && renderChildren(child.children!, level + 1)}
+            </div>
+          )
+        }
+
+        return (
+          <Link
+            key={child.href}
+            href={child.href}
+            onClick={onMobileClose}
+            className={`block rounded-md px-3 py-2 text-xs font-medium transition-colors ${
+              childActive ? 'bg-blue-500/25 text-white' : 'text-white/65 hover:bg-white/8 hover:text-white'
+            }`}
+          >
+            {child.label}
+          </Link>
+        )
+      })}
+    </div>
+  )
 
   const content = (compact: boolean) => (
     <>
@@ -38,7 +83,7 @@ export default function DashboardNavSidebar({ role, collapsed, mobileOpen, onMob
 
       <nav className="dashboard-sidebar-scroll flex-1 space-y-2 overflow-y-auto px-2.5 py-5">
         {items.map((item) => {
-          const active = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
+          const active = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href)) || Boolean(item.children?.some(isChildActive))
           const Icon = item.icon
           const hasChildren = Boolean(item.children?.length)
           const expanded = openGroups[item.href] ?? active
@@ -57,25 +102,7 @@ export default function DashboardNavSidebar({ role, collapsed, mobileOpen, onMob
                   <span className="truncate">{item.label}</span>
                   <ChevronRight className={`ml-auto h-4 w-4 transition-transform ${expanded ? 'rotate-90' : ''}`} />
                 </button>
-                {expanded && (
-                  <div className="ml-5 mt-1 space-y-1 border-l border-white/15 pl-3">
-                    {item.children!.map((child) => {
-                      const childActive = `${window.location.pathname}${window.location.search}` === child.href
-                      return (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          onClick={onMobileClose}
-                          className={`block rounded-md px-3 py-2 text-xs font-medium transition-colors ${
-                            childActive ? 'bg-blue-500/25 text-white' : 'text-white/65 hover:bg-white/8 hover:text-white'
-                          }`}
-                        >
-                          {child.label}
-                        </Link>
-                      )
-                    })}
-                  </div>
-                )}
+                {expanded && renderChildren(item.children!)}
               </div>
             )
           }
