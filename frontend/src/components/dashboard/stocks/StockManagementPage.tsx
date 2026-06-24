@@ -1,4 +1,6 @@
 import { AlertTriangle, Boxes, ClipboardList, PackageSearch, Search } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+import type React from 'react'
 import { useMemo, useState } from 'react'
 import type { BomItem, Material, Product, Production } from '@/types'
 import PageHeader from '@/components/dashboard/ui/PageHeader'
@@ -167,7 +169,7 @@ function StockTable({
   empty,
 }: {
   title: string
-  icon: typeof Boxes
+  icon: LucideIcon
   columns: string[]
   rows: React.ReactNode[][]
   empty: string

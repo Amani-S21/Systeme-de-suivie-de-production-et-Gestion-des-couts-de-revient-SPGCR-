@@ -14,6 +14,7 @@ import ProductionDashboard from '@/components/dashboard/ProductionDashboard'
 import ChargesPageClient from '@/components/dashboard/charges/ChargesPageClient'
 import ReportsPageClient from '@/components/dashboard/reports/ReportsPageClient'
 import ProductCatalogPage from '@/components/dashboard/products/ProductCatalogPage'
+import StockManagementPage from '@/components/dashboard/stocks/StockManagementPage'
 import OperatorDashboard from '@/components/dashboard/OperatorDashboard'
 import AccessDenied from '@/components/dashboard/AccessDenied'
 import HomePage from '@/pages/HomePage'
@@ -108,6 +109,7 @@ const PAGE_PERMISSIONS: Record<string, AppRole[] | 'all'> = {
   '/dashboard/lots': 'all',
   '/dashboard/profil': 'all',
   '/dashboard/composants': ['admin_msd', 'responsable_production'],
+  '/dashboard/stocks': ['admin_msd', 'responsable_production'],
   '/dashboard/charges': ['admin_msd', 'responsable_production'],
   '/dashboard/analyses': ['admin_msd', 'responsable_production'],
   '/dashboard/produits': ['admin_msd', 'responsable_production'],
@@ -239,11 +241,12 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
   const page = path.split('?')[0]
   const content = useMemo(() => {
     if (!canAccessPage(page, role)) return <AccessDenied />
-    if (page === '/dashboard/produits') return <ProductCatalogPage products={products} />
+    if (page === '/dashboard/produits') return <ProductCatalogPage products={products} productions={productions} averageUnitCost={Number(summary?.kpis.average_unit_cost || 0)} />
     if (page === '/dashboard/operations') {
       return <OperationsOverview summary={summary} role={role} userId={String(user.id)} products={products} materials={materials} productions={productions} operators={operators} />
     }
     if (page === '/dashboard/composants') return <ComposantsPageClient composants={toComposants(materials)} />
+    if (page === '/dashboard/stocks') return <StockManagementPage materials={materials} products={products} productions={productions} boms={boms} />
     if (page === '/dashboard/nomenclatures') {
       const produitsFinis = toProduits(products)
       const composants = toComposants(materials).map((c) => ({ id: c.id, code: c.code, nom: c.nom, unite_mesure: c.unite_mesure }))
