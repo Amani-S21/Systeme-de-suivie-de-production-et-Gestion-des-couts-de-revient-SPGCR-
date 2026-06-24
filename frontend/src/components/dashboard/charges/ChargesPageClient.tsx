@@ -72,8 +72,10 @@ function ChargeModal({ open, charge, products, onClose, onSaved }: { open: boole
 
 export default function ChargesPageClient() {
   const [charges, setCharges] = useState<Charge[]>([])
+  const [products, setProducts] = useState<Product[]>([])
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
+  const [productId, setProductId] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   const [loading, setLoading] = useState(false)
@@ -84,10 +86,11 @@ export default function ChargesPageClient() {
 
   async function load() {
     setLoading(true)
-    try { setCharges(await api.charges({ search, category, dateFrom, dateTo })) } finally { setLoading(false) }
+    try { setCharges(await api.charges({ search, category, productId, dateFrom, dateTo })) } finally { setLoading(false) }
   }
-  useEffect(() => { void load() }, [])
+  useEffect(() => { void load(); api.products().then(setProducts).catch(() => setProducts([])) }, [])
   const total = useMemo(() => charges.reduce((sum, item) => sum + Number(item.amount), 0), [charges])
+  const productName = (id?: number | null) => products.find(product => product.id === id)?.name || 'Non rattache'
   const rows = charges.map(c => ({ Date: c.charge_date, Libellé: c.label, Catégorie: categoryLabel(c.category), 'Montant FCFA': Number(c.amount) }))
   return <div className="space-y-5">
     <PageHeader title="Charges" description="Gestion des charges directes, indirectes et autres frais de production." action={<PrimaryButton onClick={() => { setEdit(null); setModalOpen(true) }}><Plus className="h-4 w-4" />Ajouter une charge</PrimaryButton>} />
