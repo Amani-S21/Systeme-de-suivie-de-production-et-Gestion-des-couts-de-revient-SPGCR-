@@ -54,6 +54,7 @@ export default function StockManagementPage({ materials, products, productions, 
   const showNeeds = !section || section === 'besoins'
   const showStock = !section || section === 'stock'
   const showAlerts = !section || section === 'alertes'
+  const canAddNeed = !section || section === 'besoins'
 
   useEffect(() => {
     localStorage.setItem(NEEDS_STORAGE_KEY, JSON.stringify(manualNeeds))
@@ -157,7 +158,7 @@ export default function StockManagementPage({ materials, products, productions, 
       <PageHeader
         title="Gestion des stocks"
         description="Etat des besoins, stock existant et alertes de stock insuffisant pour les matieres premieres."
-        action={<PrimaryButton onClick={() => setNeedModalOpen(true)}><Plus className="h-4 w-4" />Ajouter un etat de besoin</PrimaryButton>}
+        action={canAddNeed ? <PrimaryButton onClick={() => setNeedModalOpen(true)}><Plus className="h-4 w-4" />Ajouter un etat de besoin</PrimaryButton> : null}
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
