@@ -108,7 +108,7 @@ export const DASHBOARD_NAV: NavItem[] = [
 ]
 
 export function getNavItemsForRole(role: AppRole): NavItem[] {
-  return DASHBOARD_NAV.filter(
+  return DASHBOARD_NAV.filter((item) => item.href !== '/dashboard/operations').filter(
     (item) =>
       item.roles === 'all' ||
       (Array.isArray(item.roles) && item.roles.includes(role))
