@@ -319,7 +319,7 @@ export default function StockManagementPage({ materials, products, productions, 
                   ))}
                 </select>
               </label>
-              <label className="grid gap-1 text-xs font-bold">
+              <label className="grid gap-1 text-xs font-bold sm:col-span-2">
                 PRODUIT / BESOIN
                 <input
                   required
