@@ -54,7 +54,15 @@ export const DASHBOARD_NAV: NavItem[] = [
           { label: 'Charges', href: '/dashboard/charges' },
         ],
       },
-      { label: 'Gestion des stocks', href: '/dashboard/stocks' },
+      {
+        label: 'Gestion des stocks',
+        href: '/dashboard/stocks',
+        children: [
+          { label: 'Etat des besoins', href: '/dashboard/stocks?section=besoins' },
+          { label: 'Stock existant', href: '/dashboard/stocks?section=stock' },
+          { label: "Alerte d'un stock insuffisant", href: '/dashboard/stocks?section=alertes' },
+        ],
+      },
     ],
   },
   {

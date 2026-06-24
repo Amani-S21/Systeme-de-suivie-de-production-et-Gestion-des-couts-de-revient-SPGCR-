@@ -22,6 +22,10 @@ function formatNumber(value: number) {
 
 export default function StockManagementPage({ materials, products, productions, boms }: Props) {
   const [query, setQuery] = useState('')
+  const section = new URLSearchParams(window.location.search).get('section')
+  const showNeeds = !section || section === 'besoins'
+  const showStock = !section || section === 'stock'
+  const showAlerts = !section || section === 'alertes'
 
   const needs = useMemo(() => {
     const neededByMaterial = new Map<number, { quantity: number; lots: Set<string> }>()
@@ -110,8 +114,9 @@ export default function StockManagementPage({ materials, products, productions, 
           />
         </div>
 
-        <div className="grid gap-5 p-4 xl:grid-cols-[1.15fr_0.85fr]">
+        <div className={`${section ? 'space-y-5 p-4' : 'grid gap-5 p-4 xl:grid-cols-[1.15fr_0.85fr]'}`}>
           <div className="space-y-5">
+            {showNeeds && (
             <StockTable
               title="Etat des besoins"
               icon={PackageSearch}
@@ -125,7 +130,9 @@ export default function StockManagementPage({ materials, products, productions, 
               ])}
               empty="Aucun besoin calcule pour les productions planifiees ou en cours."
             />
+            )}
 
+            {showStock && (
             <StockTable
               title="Stock existant"
               icon={Boxes}
@@ -139,8 +146,10 @@ export default function StockManagementPage({ materials, products, productions, 
               ])}
               empty="Aucune matiere premiere en stock."
             />
+            )}
           </div>
 
+          {showAlerts && (
           <StockTable
             title="Alerte d'un stock insuffisant"
             icon={AlertTriangle}
@@ -155,6 +164,7 @@ export default function StockManagementPage({ materials, products, productions, 
             ])}
             empty="Aucune alerte de stock insuffisant."
           />
+          )}
         </div>
       </section>
     </div>
