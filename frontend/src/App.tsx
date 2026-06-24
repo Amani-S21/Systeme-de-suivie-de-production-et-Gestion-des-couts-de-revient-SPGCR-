@@ -352,7 +352,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
         users={users}
       />
     )
-  }, [page, materials, products, productions, boms, summary, users, operators, user])
+  }, [path, page, materials, products, productions, boms, summary, users, operators, user])
 
   return (
     <DashboardShell role={role} prenom={user.first_name} nom={user.last_name} email={user.email}>

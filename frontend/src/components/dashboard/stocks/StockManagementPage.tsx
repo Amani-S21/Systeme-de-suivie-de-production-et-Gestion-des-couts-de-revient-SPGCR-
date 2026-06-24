@@ -1,13 +1,15 @@
-import { AlertTriangle, Boxes, ClipboardList, PackageSearch, Search } from 'lucide-react'
+import { AlertTriangle, Boxes, ClipboardList, PackageSearch, Plus, Search, X } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type React from 'react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { BomItem, Material, Product, Production } from '@/types'
 import PageHeader from '@/components/dashboard/ui/PageHeader'
+import PrimaryButton from '@/components/dashboard/ui/PrimaryButton'
 import KpiCard from '@/components/dashboard/ui/KpiCard'
 import ExportButtons from '@/components/dashboard/ui/ExportButtons'
 import { exportToCsv, exportToPrint } from '@/lib/dashboard/export'
 import { cardBase } from '@/lib/dashboard/design'
+import { notify } from '@/lib/notifications'
 
 interface Props {
   materials: Material[]
@@ -16,37 +18,79 @@ interface Props {
   boms: Record<number, BomItem[]>
 }
 
+interface ManualNeed {
+  id: string
+  materialId: number
+  productLabel: string
+  reference: string
+  quantity: number
+}
+
+const NEEDS_STORAGE_KEY = 'spcr_manual_needs'
+
 function formatNumber(value: number) {
   return value.toLocaleString('fr-FR', { maximumFractionDigits: 2 })
 }
 
 export default function StockManagementPage({ materials, products, productions, boms }: Props) {
   const [query, setQuery] = useState('')
+  const [needModalOpen, setNeedModalOpen] = useState(false)
+  const [manualNeeds, setManualNeeds] = useState<ManualNeed[]>(() => {
+    const raw = localStorage.getItem(NEEDS_STORAGE_KEY)
+    if (!raw) return []
+    try {
+      return JSON.parse(raw) as ManualNeed[]
+    } catch {
+      return []
+    }
+  })
+  const [needForm, setNeedForm] = useState({
+    materialId: '',
+    productLabel: '',
+    reference: '',
+    quantity: '',
+  })
   const section = new URLSearchParams(window.location.search).get('section')
   const showNeeds = !section || section === 'besoins'
   const showStock = !section || section === 'stock'
   const showAlerts = !section || section === 'alertes'
 
+  useEffect(() => {
+    localStorage.setItem(NEEDS_STORAGE_KEY, JSON.stringify(manualNeeds))
+  }, [manualNeeds])
+
   const needs = useMemo(() => {
     const neededByMaterial = new Map<number, { quantity: number; lots: Set<string> }>()
+    const productsByMaterial = new Map<number, Set<string>>()
     productions
       .filter((production) => production.status === 'planifiee' || production.status === 'en_cours')
       .forEach((production) => {
+        const productName = products.find((product) => product.id === production.product_id)?.name || production.product?.name || `Produit ${production.product_id}`
         const lines = boms[production.product_id] || []
         lines.forEach((line) => {
           const current = neededByMaterial.get(line.material_id) || { quantity: 0, lots: new Set<string>() }
           current.quantity += Number(line.quantity_required || 0) * Number(production.quantity || 0)
           current.lots.add(production.reference)
           neededByMaterial.set(line.material_id, current)
+          const productSet = productsByMaterial.get(line.material_id) || new Set<string>()
+          productSet.add(productName)
+          productsByMaterial.set(line.material_id, productSet)
         })
       })
 
+    manualNeeds.forEach((need) => {
+      const current = neededByMaterial.get(need.materialId) || { quantity: 0, lots: new Set<string>() }
+      current.quantity += need.quantity
+      current.lots.add(need.reference)
+      neededByMaterial.set(need.materialId, current)
+      const productSet = productsByMaterial.get(need.materialId) || new Set<string>()
+      productSet.add(need.productLabel)
+      productsByMaterial.set(need.materialId, productSet)
+    })
+
     return materials.map((material) => {
       const need = neededByMaterial.get(material.id)
-      const productNames = productions
-        .filter((production) => production.status === 'planifiee' || production.status === 'en_cours')
-        .filter((production) => (boms[production.product_id] || []).some((line) => line.material_id === material.id))
-        .map((production) => products.find((product) => product.id === production.product_id)?.name || production.product?.name || `Produit ${production.product_id}`)
+      const productNames = Array.from(productsByMaterial.get(material.id) || [])
 
       return {
         id: material.id,
@@ -57,10 +101,10 @@ export default function StockManagementPage({ materials, products, productions, 
         seuil: Number(material.minimum_stock || 0),
         besoin: need?.quantity || 0,
         lots: need ? Array.from(need.lots).join(', ') : '-',
-        produits: Array.from(new Set(productNames)).join(', ') || '-',
+        produits: productNames.join(', ') || '-',
       }
     })
-  }, [materials, products, productions, boms])
+  }, [materials, products, productions, boms, manualNeeds])
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase()
@@ -84,11 +128,36 @@ export default function StockManagementPage({ materials, products, productions, 
     Lots: item.lots,
   }))
 
+  function submitManualNeed(event: React.FormEvent) {
+    event.preventDefault()
+    const materialId = Number(needForm.materialId)
+    const quantity = Number(needForm.quantity)
+    if (!materialId || quantity <= 0 || !needForm.productLabel.trim()) {
+      notify('error', 'Veuillez remplir la matiere, le produit concerne et une quantite valide.')
+      return
+    }
+    const reference = needForm.reference.trim() || `BES-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`
+    setManualNeeds((items) => [
+      ...items,
+      {
+        id: crypto.randomUUID(),
+        materialId,
+        productLabel: needForm.productLabel.trim(),
+        reference,
+        quantity,
+      },
+    ])
+    setNeedForm({ materialId: '', productLabel: '', reference: '', quantity: '' })
+    setNeedModalOpen(false)
+    notify('success', "L'etat de besoin a ete ajoute.")
+  }
+
   return (
     <div className="space-y-5">
       <PageHeader
         title="Gestion des stocks"
         description="Etat des besoins, stock existant et alertes de stock insuffisant pour les matieres premieres."
+        action={<PrimaryButton onClick={() => setNeedModalOpen(true)}><Plus className="h-4 w-4" />Ajouter un etat de besoin</PrimaryButton>}
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -167,6 +236,74 @@ export default function StockManagementPage({ materials, products, productions, 
           )}
         </div>
       </section>
+
+      {needModalOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+          <button type="button" className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" onClick={() => setNeedModalOpen(false)} aria-label="Fermer" />
+          <form onSubmit={submitManualNeed} className="relative w-full max-w-lg rounded-lg bg-white shadow-2xl">
+            <div className="flex items-center justify-between border-b px-5 py-4">
+              <div>
+                <h2 className="font-bold text-slate-900">Ajouter un etat de besoin</h2>
+                <p className="mt-1 text-xs text-slate-500">Besoin manuel lie a une matiere premiere.</p>
+              </div>
+              <button type="button" onClick={() => setNeedModalOpen(false)} className="rounded-md p-2 hover:bg-slate-100" aria-label="Fermer">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="grid gap-4 p-5 sm:grid-cols-2">
+              <label className="grid gap-1 text-xs font-bold sm:col-span-2">
+                MATIERE PREMIERE
+                <select
+                  required
+                  value={needForm.materialId}
+                  onChange={(event) => setNeedForm({ ...needForm, materialId: event.target.value })}
+                  className="h-10 rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                >
+                  <option value="">Selectionner une matiere</option>
+                  {materials.map((material) => (
+                    <option key={material.id} value={material.id}>{material.name} - {material.code}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="grid gap-1 text-xs font-bold">
+                PRODUIT / BESOIN
+                <input
+                  required
+                  value={needForm.productLabel}
+                  onChange={(event) => setNeedForm({ ...needForm, productLabel: event.target.value })}
+                  placeholder="Ex: Produit A"
+                  className="h-10 rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                />
+              </label>
+              <label className="grid gap-1 text-xs font-bold">
+                REFERENCE
+                <input
+                  value={needForm.reference}
+                  onChange={(event) => setNeedForm({ ...needForm, reference: event.target.value })}
+                  placeholder="BES-2026-0001"
+                  className="h-10 rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                />
+              </label>
+              <label className="grid gap-1 text-xs font-bold sm:col-span-2">
+                QUANTITE DEMANDEE
+                <input
+                  required
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={needForm.quantity}
+                  onChange={(event) => setNeedForm({ ...needForm, quantity: event.target.value })}
+                  className="h-10 rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                />
+              </label>
+            </div>
+            <div className="flex justify-end gap-2 border-t bg-slate-50 px-5 py-4">
+              <button type="button" onClick={() => setNeedModalOpen(false)} className="rounded-md border px-4 py-2 text-sm">Annuler</button>
+              <button className="rounded-md bg-[#102544] px-4 py-2 text-sm font-bold text-white">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   )
 }
