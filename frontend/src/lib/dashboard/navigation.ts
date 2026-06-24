@@ -58,10 +58,10 @@ export const DASHBOARD_NAV: NavItem[] = [
     ],
   },
   {
-    label: 'Charges',
-    href: '/dashboard/charges',
-    icon: ClipboardList,
-    roles: ['admin_msd', 'responsable_production'],
+    label: 'Production',
+    href: '/dashboard/lots',
+    icon: Factory,
+    roles: 'all',
   },
   {
     label: 'Calcul des coûts',
@@ -76,12 +76,8 @@ export const DASHBOARD_NAV: NavItem[] = [
   {
     label: 'Produits',
     href: '/dashboard/produits',
-    icon: Layers,
+    icon: Boxes,
     roles: ['admin_msd', 'responsable_production'],
-    children: [
-      { label: 'Catalogue produits', href: '/dashboard/produits' },
-      { label: 'Recettes BOM', href: '/dashboard/nomenclatures' },
-    ],
   },
   {
     label: 'Rapports',
