@@ -40,16 +40,22 @@ export const DASHBOARD_NAV: NavItem[] = [
     roles: 'all',
   },
   {
-    label: 'Production',
-    href: '/dashboard/lots',
-    icon: Factory,
-    roles: 'all',
-  },
-  {
     label: 'Matières premières',
     href: '/dashboard/composants',
     icon: Package,
     roles: ['admin_msd', 'responsable_production'],
+    children: [
+      {
+        label: 'Composants',
+        href: '/dashboard/composants',
+        children: [
+          { label: 'Liste des composants', href: '/dashboard/composants' },
+          { label: 'Recettes', href: '/dashboard/nomenclatures' },
+          { label: 'Charges', href: '/dashboard/charges' },
+        ],
+      },
+      { label: 'Gestion des stocks', href: '/dashboard/stocks' },
+    ],
   },
   {
     label: 'Charges',
