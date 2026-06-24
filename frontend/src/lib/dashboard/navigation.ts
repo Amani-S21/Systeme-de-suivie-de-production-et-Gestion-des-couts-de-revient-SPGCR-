@@ -1,11 +1,10 @@
 import type { LucideIcon } from 'lucide-react'
 import {
+  Boxes,
   Calculator,
-  ClipboardList,
   Factory,
   LayoutDashboard,
   Package,
-  Layers,
   Users,
   ScrollText,
   Settings,
@@ -13,12 +12,18 @@ import {
 } from 'lucide-react'
 import type { AppRole } from '@/types/spgcr'
 
+export interface NavChildItem {
+  label: string
+  href: string
+  children?: NavChildItem[]
+}
+
 export interface NavItem {
   label: string
   href: string
   icon: LucideIcon
   roles: AppRole[] | 'all'
-  children?: { label: string; href: string }[]
+  children?: NavChildItem[]
 }
 
 export const DASHBOARD_NAV: NavItem[] = [
