@@ -13,7 +13,7 @@ import DashboardSectionPlaceholder from '@/components/dashboard/DashboardSection
 import ProductionDashboard from '@/components/dashboard/ProductionDashboard'
 import ChargesPageClient from '@/components/dashboard/charges/ChargesPageClient'
 import ReportsPageClient from '@/components/dashboard/reports/ReportsPageClient'
-import ProductCatalogPage from '@/components/dashboard/products/ProductCatalogPage'
+import FinishedProductsPage from '@/components/dashboard/products/FinishedProductsPage'
 import StockManagementPage from '@/components/dashboard/stocks/StockManagementPage'
 import OperatorDashboard from '@/components/dashboard/OperatorDashboard'
 import AccessDenied from '@/components/dashboard/AccessDenied'
@@ -241,7 +241,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
   const page = path.split('?')[0]
   const content = useMemo(() => {
     if (!canAccessPage(page, role)) return <AccessDenied />
-    if (page === '/dashboard/produits') return <ProductCatalogPage products={products} productions={productions} averageUnitCost={Number(summary?.kpis.average_unit_cost || 0)} />
+    if (page === '/dashboard/produits') return <FinishedProductsPage products={products} productions={productions} />
     if (page === '/dashboard/operations') {
       return <OperationsOverview summary={summary} role={role} userId={String(user.id)} products={products} materials={materials} productions={productions} operators={operators} />
     }
