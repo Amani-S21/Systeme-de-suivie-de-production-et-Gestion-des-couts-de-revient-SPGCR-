@@ -42,8 +42,17 @@ export interface Charge {
   amount: string
   charge_date: string
   description?: string | null
+  product_id?: number | null
   created_by_id?: number | null
   created_at: string
+}
+
+export interface ProductChargeSummary {
+  product_id: number
+  labor_cost: string
+  overhead_cost: string
+  other_cost: string
+  total_cost: string
 }
 
 export interface Production {

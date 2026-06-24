@@ -8,15 +8,20 @@ from app.db.session import get_db
 from app.models.charge import Charge
 from app.models.enums import UserRole
 from app.models.user import User
-from app.schemas.charge import ChargeCreate, ChargeRead, ChargeUpdate
-from app.services.charge_service import create_charge, list_charges, update_charge
+from app.schemas.charge import ChargeCreate, ChargeRead, ChargeUpdate, ProductChargeSummary
+from app.services.charge_service import create_charge, list_charges, product_charge_summary, update_charge
 
 router = APIRouter(prefix="/charges", tags=["charges"], dependencies=[Depends(require_roles(UserRole.admin_msd, UserRole.responsable_production))])
 
 
 @router.get("", response_model=list[ChargeRead])
-def index(search: str | None = None, category: str | None = None, date_from: date | None = Query(None), date_to: date | None = Query(None), db: Session = Depends(get_db)):
-    return list_charges(db, search, category, date_from, date_to)
+def index(search: str | None = None, category: str | None = None, product_id: int | None = None, date_from: date | None = Query(None), date_to: date | None = Query(None), db: Session = Depends(get_db)):
+    return list_charges(db, search, category, date_from, date_to, product_id)
+
+
+@router.get("/product/{product_id}/summary", response_model=ProductChargeSummary)
+def summary(product_id: int, db: Session = Depends(get_db)):
+    return product_charge_summary(db, product_id)
 
 
 @router.post("", response_model=ChargeRead)

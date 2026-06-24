@@ -16,7 +16,9 @@ class Charge(Base):
     amount: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
     charge_date: Mapped[date] = mapped_column(Date, nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    product_id: Mapped[int | None] = mapped_column(ForeignKey("products.id"), nullable=True)
     created_by_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     created_by = relationship("User")
+    product = relationship("Product")

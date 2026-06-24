@@ -12,6 +12,7 @@ class ChargeCreate(OrmModel):
     amount: Decimal = Field(gt=0)
     charge_date: date
     description: str | None = None
+    product_id: int | None = None
 
 
 class ChargeUpdate(OrmModel):
@@ -20,9 +21,18 @@ class ChargeUpdate(OrmModel):
     amount: Decimal | None = Field(None, gt=0)
     charge_date: date | None = None
     description: str | None = None
+    product_id: int | None = None
 
 
 class ChargeRead(ChargeCreate):
     id: int
     created_by_id: int | None
     created_at: datetime
+
+
+class ProductChargeSummary(OrmModel):
+    product_id: int
+    labor_cost: Decimal = Decimal("0")
+    overhead_cost: Decimal = Decimal("0")
+    other_cost: Decimal = Decimal("0")
+    total_cost: Decimal = Decimal("0")
