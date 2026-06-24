@@ -1,4 +1,4 @@
-import { AlertTriangle, Boxes, ClipboardList, PackageSearch, Plus, Search, X } from 'lucide-react'
+import { AlertTriangle, Boxes, ClipboardList, Eye, PackageSearch, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type React from 'react'
 import { useEffect, useMemo, useState } from 'react'
@@ -6,6 +6,8 @@ import type { BomItem, Material, Product, Production } from '@/types'
 import PageHeader from '@/components/dashboard/ui/PageHeader'
 import PrimaryButton from '@/components/dashboard/ui/PrimaryButton'
 import KpiCard from '@/components/dashboard/ui/KpiCard'
+import DetailModal from '@/components/dashboard/ui/DetailModal'
+import ConfirmDeleteModal from '@/components/dashboard/ui/ConfirmDeleteModal'
 import ExportButtons from '@/components/dashboard/ui/ExportButtons'
 import { exportToCsv, exportToPrint } from '@/lib/dashboard/export'
 import { cardBase } from '@/lib/dashboard/design'
@@ -32,9 +34,16 @@ function formatNumber(value: number) {
   return value.toLocaleString('fr-FR', { maximumFractionDigits: 2 })
 }
 
+function generateNeedReference() {
+  return `BES-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`
+}
+
 export default function StockManagementPage({ materials, products, productions, boms }: Props) {
   const [query, setQuery] = useState('')
   const [needModalOpen, setNeedModalOpen] = useState(false)
+  const [editingNeed, setEditingNeed] = useState<ManualNeed | null>(null)
+  const [viewNeed, setViewNeed] = useState<ManualNeed | null>(null)
+  const [deleteNeed, setDeleteNeed] = useState<ManualNeed | null>(null)
   const [manualNeeds, setManualNeeds] = useState<ManualNeed[]>(() => {
     const raw = localStorage.getItem(NEEDS_STORAGE_KEY)
     if (!raw) return []
@@ -129,6 +138,32 @@ export default function StockManagementPage({ materials, products, productions, 
     Lots: item.lots,
   }))
 
+  const filteredManualNeeds = useMemo(() => {
+    const needle = query.trim().toLowerCase()
+    return manualNeeds
+      .map((need) => ({
+        ...need,
+        material: materials.find((material) => material.id === need.materialId),
+      }))
+      .filter((need) => !needle || `${need.reference} ${need.productLabel} ${need.material?.name || ''} ${need.material?.code || ''}`.toLowerCase().includes(needle))
+  }, [manualNeeds, materials, query])
+
+  function openNeedModal(need?: ManualNeed) {
+    setEditingNeed(need || null)
+    setNeedForm(need ? {
+      materialId: String(need.materialId),
+      productLabel: need.productLabel,
+      reference: need.reference,
+      quantity: String(need.quantity),
+    } : {
+      materialId: '',
+      productLabel: '',
+      reference: generateNeedReference(),
+      quantity: '',
+    })
+    setNeedModalOpen(true)
+  }
+
   function submitManualNeed(event: React.FormEvent) {
     event.preventDefault()
     const materialId = Number(needForm.materialId)
@@ -137,20 +172,19 @@ export default function StockManagementPage({ materials, products, productions, 
       notify('error', 'Veuillez remplir la matiere, le produit concerne et une quantite valide.')
       return
     }
-    const reference = needForm.reference.trim() || `BES-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`
-    setManualNeeds((items) => [
-      ...items,
-      {
-        id: crypto.randomUUID(),
-        materialId,
-        productLabel: needForm.productLabel.trim(),
-        reference,
-        quantity,
-      },
-    ])
+    const reference = needForm.reference.trim() || generateNeedReference()
+    const payload = {
+      id: editingNeed?.id || crypto.randomUUID(),
+      materialId,
+      productLabel: needForm.productLabel.trim(),
+      reference,
+      quantity,
+    }
+    setManualNeeds((items) => editingNeed ? items.map((item) => item.id === editingNeed.id ? payload : item) : [...items, payload])
+    setEditingNeed(null)
     setNeedForm({ materialId: '', productLabel: '', reference: '', quantity: '' })
     setNeedModalOpen(false)
-    notify('success', "L'etat de besoin a ete ajoute.")
+    notify('success', editingNeed ? "L'etat de besoin a ete modifie." : "L'etat de besoin a ete ajoute.")
   }
 
   return (
@@ -158,7 +192,7 @@ export default function StockManagementPage({ materials, products, productions, 
       <PageHeader
         title="Gestion des stocks"
         description="Etat des besoins, stock existant et alertes de stock insuffisant pour les matieres premieres."
-        action={canAddNeed ? <PrimaryButton onClick={() => setNeedModalOpen(true)}><Plus className="h-4 w-4" />Ajouter un etat de besoin</PrimaryButton> : null}
+        action={canAddNeed ? <PrimaryButton onClick={() => openNeedModal()}><Plus className="h-4 w-4" />Ajouter un etat de besoin</PrimaryButton> : null}
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -187,19 +221,38 @@ export default function StockManagementPage({ materials, products, productions, 
         <div className={`${section ? 'space-y-5 p-4' : 'grid gap-5 p-4 xl:grid-cols-[1.15fr_0.85fr]'}`}>
           <div className="space-y-5">
             {showNeeds && (
-            <StockTable
-              title="Etat des besoins"
-              icon={PackageSearch}
-              columns={['Matiere', 'Produit concerne', 'Lots', 'Besoin', 'Stock']}
-              rows={filtered.map((item) => [
-                <span className="font-semibold">{item.designation}</span>,
-                item.produits,
-                item.lots,
-                `${formatNumber(item.besoin)} ${item.unite}`,
-                `${formatNumber(item.stock)} ${item.unite}`,
-              ])}
-              empty="Aucun besoin calcule pour les productions planifiees ou en cours."
-            />
+              <>
+                <StockTable
+                  title="Etat des besoins"
+                  icon={PackageSearch}
+                  columns={['Matiere', 'Produit concerne', 'Lots / numeros', 'Besoin', 'Stock']}
+                  rows={filtered.map((item) => [
+                    <span className="font-semibold">{item.designation}</span>,
+                    item.produits,
+                    item.lots,
+                    `${formatNumber(item.besoin)} ${item.unite}`,
+                    `${formatNumber(item.stock)} ${item.unite}`,
+                  ])}
+                  empty="Aucun besoin calcule pour les productions planifiees ou en cours."
+                />
+                <StockTable
+                  title="Besoins ajoutes manuellement"
+                  icon={ClipboardList}
+                  columns={['Numero', 'Matiere', 'Produit / besoin', 'Quantite', 'Actions']}
+                  rows={filteredManualNeeds.map((need) => [
+                    <span className="font-mono text-xs">{need.reference}</span>,
+                    <span className="font-semibold">{need.material?.name || 'Matiere supprimee'}</span>,
+                    need.productLabel,
+                    `${formatNumber(need.quantity)} ${need.material?.unit || ''}`,
+                    <div className="flex justify-end gap-1">
+                      <button type="button" title="Voir" onClick={() => setViewNeed(need)} className="rounded-md p-2 hover:bg-slate-100"><Eye className="h-4 w-4" /></button>
+                      <button type="button" title="Modifier" onClick={() => openNeedModal(need)} className="rounded-md p-2 hover:bg-slate-100"><Pencil className="h-4 w-4" /></button>
+                      <button type="button" title="Supprimer" onClick={() => setDeleteNeed(need)} className="rounded-md p-2 text-red-600 hover:bg-red-50"><Trash2 className="h-4 w-4" /></button>
+                    </div>,
+                  ])}
+                  empty="Aucun etat de besoin ajoute manuellement."
+                />
+              </>
             )}
 
             {showStock && (
@@ -240,14 +293,14 @@ export default function StockManagementPage({ materials, products, productions, 
 
       {needModalOpen && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
-          <button type="button" className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" onClick={() => setNeedModalOpen(false)} aria-label="Fermer" />
+          <button type="button" className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" onClick={() => { setNeedModalOpen(false); setEditingNeed(null) }} aria-label="Fermer" />
           <form onSubmit={submitManualNeed} className="relative w-full max-w-lg rounded-lg bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b px-5 py-4">
               <div>
-                <h2 className="font-bold text-slate-900">Ajouter un etat de besoin</h2>
-                <p className="mt-1 text-xs text-slate-500">Besoin manuel lie a une matiere premiere.</p>
+                <h2 className="font-bold text-slate-900">{editingNeed ? 'Modifier un etat de besoin' : 'Ajouter un etat de besoin'}</h2>
+                <p className="mt-1 text-xs text-slate-500">Le numero est genere automatiquement pour identifier la demande.</p>
               </div>
-              <button type="button" onClick={() => setNeedModalOpen(false)} className="rounded-md p-2 hover:bg-slate-100" aria-label="Fermer">
+              <button type="button" onClick={() => { setNeedModalOpen(false); setEditingNeed(null) }} className="rounded-md p-2 hover:bg-slate-100" aria-label="Fermer">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -276,15 +329,6 @@ export default function StockManagementPage({ materials, products, productions, 
                   className="h-10 rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
                 />
               </label>
-              <label className="grid gap-1 text-xs font-bold">
-                REFERENCE
-                <input
-                  value={needForm.reference}
-                  onChange={(event) => setNeedForm({ ...needForm, reference: event.target.value })}
-                  placeholder="BES-2026-0001"
-                  className="h-10 rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                />
-              </label>
               <label className="grid gap-1 text-xs font-bold sm:col-span-2">
                 QUANTITE DEMANDEE
                 <input
@@ -299,12 +343,33 @@ export default function StockManagementPage({ materials, products, productions, 
               </label>
             </div>
             <div className="flex justify-end gap-2 border-t bg-slate-50 px-5 py-4">
-              <button type="button" onClick={() => setNeedModalOpen(false)} className="rounded-md border px-4 py-2 text-sm">Annuler</button>
+              <button type="button" onClick={() => { setNeedModalOpen(false); setEditingNeed(null) }} className="rounded-md border px-4 py-2 text-sm">Annuler</button>
               <button className="rounded-md bg-[#102544] px-4 py-2 text-sm font-bold text-white">Enregistrer</button>
             </div>
           </form>
         </div>
       )}
+      <DetailModal open={!!viewNeed} title="Detail de l'etat de besoin" onClose={() => setViewNeed(null)}>
+        {viewNeed && (
+          <dl className="grid gap-4 sm:grid-cols-2">
+            <div><dt className="text-xs text-slate-500">Numero</dt><dd className="font-mono font-bold">{viewNeed.reference}</dd></div>
+            <div><dt className="text-xs text-slate-500">Matiere premiere</dt><dd className="font-bold">{materials.find((item) => item.id === viewNeed.materialId)?.name || 'Matiere supprimee'}</dd></div>
+            <div><dt className="text-xs text-slate-500">Produit / besoin</dt><dd>{viewNeed.productLabel}</dd></div>
+            <div><dt className="text-xs text-slate-500">Quantite demandee</dt><dd className="font-bold">{formatNumber(viewNeed.quantity)} {materials.find((item) => item.id === viewNeed.materialId)?.unit || ''}</dd></div>
+          </dl>
+        )}
+      </DetailModal>
+      <ConfirmDeleteModal
+        open={!!deleteNeed}
+        title="Supprimer cet etat de besoin ?"
+        description="Cette action retirera ce besoin manuel du calcul des besoins et des alertes."
+        onCancel={() => setDeleteNeed(null)}
+        onConfirm={() => {
+          if (deleteNeed) setManualNeeds((items) => items.filter((item) => item.id !== deleteNeed.id))
+          setDeleteNeed(null)
+          notify('success', "L'etat de besoin a ete supprime.")
+        }}
+      />
     </div>
   )
 }
