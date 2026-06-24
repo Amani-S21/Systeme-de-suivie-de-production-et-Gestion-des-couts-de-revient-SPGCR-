@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Banknote, Eye, Layers3, Pencil, Plus, ReceiptText, Search, Trash2, X } from 'lucide-react'
 import { api } from '@/api'
-import type { Charge } from '@/types'
+import type { Charge, Product } from '@/types'
 import PageHeader from '@/components/dashboard/ui/PageHeader'
 import PrimaryButton from '@/components/dashboard/ui/PrimaryButton'
 import ConfirmDeleteModal from '@/components/dashboard/ui/ConfirmDeleteModal'
@@ -13,6 +13,7 @@ import { cardBase } from '@/lib/dashboard/design'
 
 const CATEGORIES = [
   ['main_oeuvre', "Main d'oeuvre"],
+  ['charge_indirecte', 'Charge indirecte'],
   ['energie', 'Énergie'],
   ['transport', 'Transport'],
   ['maintenance', 'Maintenance'],
@@ -20,19 +21,19 @@ const CATEGORIES = [
   ['autre', 'Autre charge'],
 ] as const
 
-const emptyForm = { label: '', category: 'energie', amount: '', charge_date: new Date().toISOString().slice(0, 10), description: '' }
+const emptyForm = { label: '', category: 'main_oeuvre', amount: '', charge_date: new Date().toISOString().slice(0, 10), description: '', product_id: '' }
 
 function categoryLabel(value: string) {
   return CATEGORIES.find(([key]) => key === value)?.[1] || value
 }
 
-function ChargeModal({ open, charge, onClose, onSaved }: { open: boolean; charge: Charge | null; onClose: () => void; onSaved: () => void }) {
+function ChargeModal({ open, charge, products, onClose, onSaved }: { open: boolean; charge: Charge | null; products: Product[]; onClose: () => void; onSaved: () => void }) {
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   useEffect(() => {
     if (!open) return
-    setForm(charge ? { label: charge.label, category: charge.category, amount: String(charge.amount), charge_date: charge.charge_date, description: charge.description || '' } : emptyForm)
+    setForm(charge ? { label: charge.label, category: charge.category, amount: String(charge.amount), charge_date: charge.charge_date, description: charge.description || '', product_id: charge.product_id ? String(charge.product_id) : '' } : emptyForm)
     setError('')
   }, [open, charge])
   if (!open) return null
@@ -40,7 +41,7 @@ function ChargeModal({ open, charge, onClose, onSaved }: { open: boolean; charge
     event.preventDefault()
     setSaving(true); setError('')
     try {
-      const payload = { ...form, amount: Number(form.amount) }
+      const payload = { ...form, amount: Number(form.amount), product_id: Number(form.product_id) }
       if (charge) await api.updateCharge(charge.id, payload)
       else await api.createCharge(payload)
       onSaved(); onClose()
@@ -58,6 +59,7 @@ function ChargeModal({ open, charge, onClose, onSaved }: { open: boolean; charge
           {error && <p className="sm:col-span-2 rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</p>}
           <label className="grid gap-1 text-xs font-bold text-slate-600 sm:col-span-2">LIBELLÉ<input required minLength={2} className={inputClass} value={form.label} onChange={e => setForm({ ...form, label: e.target.value })} /></label>
           <label className="grid gap-1 text-xs font-bold text-slate-600">CATÉGORIE<select className={inputClass} value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>{CATEGORIES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+          <label className="grid gap-1 text-xs font-bold text-slate-600 sm:col-span-2">PRODUIT CONCERNE<select required className={inputClass} value={form.product_id} onChange={e => setForm({ ...form, product_id: e.target.value })}><option value="">Selectionner un produit</option>{products.map(product => <option key={product.id} value={product.id}>{product.name} - {product.sku}</option>)}</select></label>
           <label className="grid gap-1 text-xs font-bold text-slate-600">MONTANT (FCFA)<input required min="1" type="number" className={inputClass} value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} /></label>
           <label className="grid gap-1 text-xs font-bold text-slate-600">DATE<input required type="date" className={inputClass} value={form.charge_date} onChange={e => setForm({ ...form, charge_date: e.target.value })} /></label>
           <label className="grid gap-1 text-xs font-bold text-slate-600 sm:col-span-2">DESCRIPTION<textarea rows={3} className="w-full rounded-md border border-slate-200 p-3 text-sm outline-none focus:border-blue-400" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} /></label>
