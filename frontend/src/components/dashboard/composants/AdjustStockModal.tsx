@@ -363,7 +363,7 @@ export default function AdjustStockModal({
             />
           </FormField>
           <FormField
-            label="Prix d'achat total ($)"
+            label="Prix d'achat total (FCFA)"
             htmlFor="prix"
             required
             error={formState.errors.mouvement?.prixAchatTotal?.message}
@@ -402,7 +402,7 @@ export default function AdjustStockModal({
             </div>
             <div className="flex justify-between gap-4">
               <dt className="text-slate-500">Nouveau CUMP</dt>
-              <dd className="text-lg font-bold text-slate-900">${previewCump.toFixed(2)}</dd>
+              <dd className="text-lg font-bold text-slate-900">{previewCump.toFixed(2)} FCFA</dd>
             </div>
           </dl>
         </div>

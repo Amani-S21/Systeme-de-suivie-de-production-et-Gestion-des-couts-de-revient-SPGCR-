@@ -102,7 +102,7 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
       Catégorie: CATEGORIE_LABELS[c.categorie] ?? c.categorie,
       'Stock actuel': c.stock_actuel,
       Unité: c.unite_mesure,
-      'CUMP ($)': c.cout_unitaire_moyen_pondere,
+      'CUMP (FCFA)': c.cout_unitaire_moyen_pondere,
     })))
   }
 
@@ -113,7 +113,7 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
       Catégorie: CATEGORIE_LABELS[c.categorie] ?? c.categorie,
       'Stock actuel': c.stock_actuel,
       Unité: c.unite_mesure,
-      'CUMP ($)': c.cout_unitaire_moyen_pondere,
+      'CUMP (FCFA)': c.cout_unitaire_moyen_pondere,
     })))
   }
 

@@ -245,7 +245,7 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
             />
           </FormField>
           <FormField
-            label="Coût unitaire moyen pondéré ($)"
+            label="Coût unitaire moyen pondéré (FCFA)"
             htmlFor="cout"
             required
             error={fieldErrors.cout_unitaire_moyen_pondere}
@@ -290,7 +290,7 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-slate-500">CUMP</dt>
-            <dd className="font-medium">${data.cout_unitaire_moyen_pondere.toFixed(2)}</dd>
+            <dd className="font-medium">{data.cout_unitaire_moyen_pondere.toFixed(2)} FCFA</dd>
           </div>
         </dl>
       )}
