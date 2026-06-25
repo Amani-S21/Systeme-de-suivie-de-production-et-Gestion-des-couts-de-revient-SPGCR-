@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import {
-  TrendingUp, DollarSign, BarChart2, Calendar, ArrowUpDown, Search,
+  TrendingUp, Banknote, BarChart2, Calendar, ArrowUpDown, Search,
 } from 'lucide-react'
 import PageHeader from '@/components/dashboard/ui/PageHeader'
 import ExportButtons from '@/components/dashboard/ui/ExportButtons'
@@ -100,12 +100,12 @@ export default function AnalysesFinancieresClient({ rows, stats }: Props) {
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex items-start gap-4 rounded-xl border border-slate-100 bg-white p-5 shadow-sm">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50">
-            <DollarSign className="h-5 w-5 text-blue-600" />
+            <Banknote className="h-5 w-5 text-blue-600" />
           </span>
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Coût de Revient Moyen</p>
             <p className="mt-1 text-2xl font-bold text-slate-900 tabular-nums">
-              {fmt(stats.cout_moyen)} <span className="text-sm font-medium text-slate-500">$/Bouteille</span>
+              {fmt(stats.cout_moyen)} <span className="text-sm font-medium text-slate-500">FCFA/Bouteille</span>
             </p>
             <p className="mt-0.5 text-xs text-slate-500">
               Moyenne sur {rows.length} lot{rows.length !== 1 ? 's' : ''} clôturé{rows.length !== 1 ? 's' : ''}
