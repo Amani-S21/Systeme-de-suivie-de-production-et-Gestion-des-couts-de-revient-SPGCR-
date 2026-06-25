@@ -132,7 +132,7 @@ export default function ClotureLotForm({ lotId, numeroLot, productId, quantitePr
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
             <label htmlFor="coutMainOeuvre" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              Coût direct de la Main d&apos;œuvre <span className="font-normal text-slate-400">($)</span>
+              Coût direct de la Main d&apos;œuvre <span className="font-normal text-slate-400">(FCFA)</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -155,7 +155,7 @@ export default function ClotureLotForm({ lotId, numeroLot, productId, quantitePr
 
           <div className="space-y-1.5">
             <label htmlFor="chargesIndirectes" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              Charges indirectes fixes <span className="font-normal text-slate-400">($)</span>
+              Charges indirectes fixes <span className="font-normal text-slate-400">(FCFA)</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

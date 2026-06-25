@@ -148,7 +148,7 @@ export default function ClotureLotModal({
       {step === 2 && (
         <div className="space-y-4">
           <FormField
-            label="Coût direct main-d'œuvre ($)"
+            label="Coût direct main-d'œuvre (FCFA)"
             htmlFor="mainOeuvre"
             required
             error={fieldErrors.cout_main_oeuvre}
@@ -164,7 +164,7 @@ export default function ClotureLotModal({
             />
           </FormField>
           <FormField
-            label="Charges indirectes fixes ($)"
+            label="Charges indirectes fixes (FCFA)"
             htmlFor="charges"
             required
             error={fieldErrors.charges_indirectes}
@@ -190,11 +190,11 @@ export default function ClotureLotModal({
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-slate-500">Main-d&apos;œuvre</dt>
-            <dd className="font-medium">${coutMainOeuvre.toFixed(2)}</dd>
+            <dd className="font-medium">{coutMainOeuvre.toFixed(2)} FCFA</dd>
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-slate-500">Charges indirectes</dt>
-            <dd className="font-medium">${chargesIndirectes.toFixed(2)}</dd>
+            <dd className="font-medium">{chargesIndirectes.toFixed(2)} FCFA</dd>
           </div>
         </dl>
       )}

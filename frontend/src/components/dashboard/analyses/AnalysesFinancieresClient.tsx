@@ -74,8 +74,8 @@ export default function AnalysesFinancieresClient({ rows, stats }: Props) {
     exportToCsv('analyses_financieres', filtered.map((r) => ({
       'N° Lot': r.numero_lot,
       Produit: r.produit_nom,
-      'Coût matières ($)': r.cout_direct_matieres,
-      'Coût unitaire ($/btl)': r.cout_unitaire_theorique,
+      'Coût matières (FCFA)': r.cout_direct_matieres,
+      'Coût unitaire (FCFA/btl)': r.cout_unitaire_theorique,
       'Date clôture': fmtDate(r.calcule_at),
     })))
   }
@@ -83,8 +83,8 @@ export default function AnalysesFinancieresClient({ rows, stats }: Props) {
     exportToPrint('Analyses Financières — SPGCR', filtered.map((r) => ({
       'N° Lot': r.numero_lot,
       Produit: r.produit_nom,
-      'Coût matières ($)': r.cout_direct_matieres,
-      'Coût unitaire ($/btl)': r.cout_unitaire_theorique,
+      'Coût matières (FCFA)': r.cout_direct_matieres,
+      'Coût unitaire (FCFA/btl)': r.cout_unitaire_theorique,
       'Date clôture': fmtDate(r.calcule_at),
     })))
   }
@@ -165,8 +165,8 @@ export default function AnalysesFinancieresClient({ rows, stats }: Props) {
                 <tr className="border-b border-slate-100 bg-slate-50/70 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   <th className="px-6 py-3"><SortBtn col="N° Lot" active={sortKey==='numero_lot'} dir={sortDir} onClick={()=>toggleSort('numero_lot')}/></th>
                   <th className="px-6 py-3"><SortBtn col="Produit" active={sortKey==='produit_nom'} dir={sortDir} onClick={()=>toggleSort('produit_nom')}/></th>
-                  <th className="px-6 py-3 text-right"><SortBtn col="Coût Matières ($)" active={sortKey==='cout_direct_matieres'} dir={sortDir} onClick={()=>toggleSort('cout_direct_matieres')}/></th>
-                  <th className="px-6 py-3 text-right"><SortBtn col="Coût Unitaire ($/btl)" active={sortKey==='cout_unitaire_theorique'} dir={sortDir} onClick={()=>toggleSort('cout_unitaire_theorique')}/></th>
+                  <th className="px-6 py-3 text-right"><SortBtn col="Coût Matières (FCFA)" active={sortKey==='cout_direct_matieres'} dir={sortDir} onClick={()=>toggleSort('cout_direct_matieres')}/></th>
+                  <th className="px-6 py-3 text-right"><SortBtn col="Coût Unitaire (FCFA/btl)" active={sortKey==='cout_unitaire_theorique'} dir={sortDir} onClick={()=>toggleSort('cout_unitaire_theorique')}/></th>
                   <th className="px-6 py-3">
                     <span className="inline-flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
