@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { AlertCircle, BarChart2, Clock3, DollarSign, Factory, PackageCheck, Receipt, TrendingUp } from 'lucide-react'
+import { AlertCircle, Banknote, BarChart2, Clock3, Factory, PackageCheck, Receipt, TrendingUp } from 'lucide-react'
 import DashboardShell from '@/components/dashboard/DashboardShell'
 import QuickActionsGrid from '@/components/dashboard/QuickActionsGrid'
 import KpiCard from '@/components/dashboard/ui/KpiCard'
@@ -160,7 +160,7 @@ function OperationsOverview({ summary, role, userId, products, materials, produc
       {role === 'operateur_usine' ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><KpiCard label="Lots en cours" value={String(productions.filter(p => p.status === 'en_cours').length)} icon={Factory} accent="amber" /><KpiCard label="Quantité affectée" value={`${productions.reduce((sum,p) => sum + Number(p.quantity), 0).toLocaleString('fr-FR')} unités`} icon={PackageCheck} accent="indigo" /><KpiCard label="Lots clôturés" value={String(productions.filter(p => p.status === 'terminee').length)} icon={PackageCheck} accent="emerald" /><KpiCard label="Lots planifiés" value={String(productions.filter(p => p.status === 'planifiee').length)} icon={Clock3} accent="slate" /></div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><KpiCard label="Cout de revient moyen / bouteille" value={`${money(kpis?.average_unit_cost || 0)} FCFA`} icon={DollarSign} accent="indigo" /><KpiCard label="Marge brute totale estimee" value={`${Number(kpis?.margin_rate || 0).toFixed(1)} %`} icon={TrendingUp} accent="emerald" /><KpiCard label="Lots clotures" value={String(productions.filter((p) => p.status === 'terminee').length)} icon={PackageCheck} accent="amber" /><KpiCard label="Charges indirectes imputees" value={`${money(kpis?.total_production_cost || 0)} FCFA`} icon={Receipt} accent="slate" /></div>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><KpiCard label="Cout de revient moyen / bouteille" value={`${money(kpis?.average_unit_cost || 0)} FCFA`} icon={Banknote} accent="indigo" /><KpiCard label="Marge brute totale estimee" value={`${Number(kpis?.margin_rate || 0).toFixed(1)} %`} icon={TrendingUp} accent="emerald" /><KpiCard label="Lots clotures" value={String(productions.filter((p) => p.status === 'terminee').length)} icon={PackageCheck} accent="amber" /><KpiCard label="Charges indirectes imputees" value={`${money(kpis?.total_production_cost || 0)} FCFA`} icon={Receipt} accent="slate" /></div>
       )}
 
     </div>

@@ -1,4 +1,4 @@
-import { Boxes, DollarSign, Eye, PackageCheck, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
+import { Banknote, Boxes, Eye, PackageCheck, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
 import type React from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import type { Product, Production } from '@/types'
@@ -140,7 +140,7 @@ export default function FinishedProductsPage({ products, productions }: { produc
       <div className="grid gap-4 sm:grid-cols-3">
         <KpiCard label="Produits references" value={String(products.length)} icon={Boxes} accent="indigo" />
         <KpiCard label="Lots clotures" value={String(finishedRows.length)} icon={PackageCheck} accent="emerald" />
-        <KpiCard label="Prix de vente total" value={`${finishedRows.reduce((sum, item) => sum + item.totalSalePrice, 0).toLocaleString('fr-FR')} FCFA`} icon={DollarSign} accent="amber" />
+        <KpiCard label="Prix de vente total" value={`${finishedRows.reduce((sum, item) => sum + item.totalSalePrice, 0).toLocaleString('fr-FR')} FCFA`} icon={Banknote} accent="amber" />
       </div>
 
       <section className={`${cardBase} overflow-hidden`}>
