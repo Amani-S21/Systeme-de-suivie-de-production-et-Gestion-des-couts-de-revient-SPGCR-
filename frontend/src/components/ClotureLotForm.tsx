@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { DollarSign, Loader2, AlertCircle, CheckCircle, Lock } from 'lucide-react';
+import { Banknote, Loader2, AlertCircle, CheckCircle, Lock } from 'lucide-react';
 import { api } from '@/api';
 
 interface ClotureLotFormProps {
@@ -136,7 +136,7 @@ export default function ClotureLotForm({ lotId, numeroLot, productId, quantitePr
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <DollarSign className="h-4 w-4 text-slate-400 dark:text-slate-500" />
+                <Banknote className="h-4 w-4 text-slate-400 dark:text-slate-500" />
               </div>
               <input
                 id="coutMainOeuvre"
@@ -159,7 +159,7 @@ export default function ClotureLotForm({ lotId, numeroLot, productId, quantitePr
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <DollarSign className="h-4 w-4 text-slate-400 dark:text-slate-500" />
+                <Banknote className="h-4 w-4 text-slate-400 dark:text-slate-500" />
               </div>
               <input
                 id="chargesIndirectes"
