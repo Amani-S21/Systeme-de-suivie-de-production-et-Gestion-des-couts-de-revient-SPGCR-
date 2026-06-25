@@ -326,6 +326,7 @@ export default function QuickActionsGrid({
           onClose={() => setActiveModal(null)}
           lotId={activeLot.id}
           numeroLot={activeLot.numeroLot}
+          productId={activeLot.productId}
           quantiteProduite={activeLot.quantiteProduite}
         />
       )}

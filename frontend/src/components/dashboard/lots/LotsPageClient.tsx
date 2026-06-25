@@ -368,6 +368,7 @@ export default function LotsPageClient({
           <ClotureLotForm
             lotId={lotToCloturer.id}
             numeroLot={lotToCloturer.numeroLot}
+            productId={lotToCloturer.produitFiniId}
             quantiteProduite={lotToCloturer.quantitePrevue}
             onSuccess={() => { setClotureLotId(null); router.refresh() }}
           />

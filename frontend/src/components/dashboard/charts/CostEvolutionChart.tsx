@@ -40,12 +40,12 @@ export default function CostEvolutionChart({ data }: { data: DataPoint[] }) {
           tick={{ fontSize: 10, fill: '#94a3b8' }}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(v) => `$${v}`}
+          tickFormatter={(v) => `${v} FCFA`}
         />
         <Tooltip
           contentStyle={tooltipStyle}
           formatter={(value, name) => [
-            `$${Number(value ?? 0).toFixed(2)}`,
+            `${Number(value ?? 0).toFixed(2)} FCFA`,
             name === 'coutTotal' ? 'Coût de revient' : 'Marge brute',
           ]}
         />

@@ -11,7 +11,7 @@ import UtilisateursPageClient from '@/components/dashboard/utilisateurs/Utilisat
 import ProfilPageClient from '@/components/dashboard/profil/ProfilPageClient'
 import DashboardSectionPlaceholder from '@/components/dashboard/DashboardSectionPlaceholder'
 import ProductionDashboard from '@/components/dashboard/ProductionDashboard'
-import ChargesPageClient from '@/components/dashboard/charges/ChargesPageClient'
+import ChargesConfigPageClient from '@/components/dashboard/charges/ChargesConfigPageClient'
 import ReportsPageClient from '@/components/dashboard/reports/ReportsPageClient'
 import FinishedProductsPage from '@/components/dashboard/products/FinishedProductsPage'
 import StockManagementPage from '@/components/dashboard/stocks/StockManagementPage'
@@ -153,6 +153,7 @@ function OperationsOverview({ summary, role, userId, products, materials, produc
           id: String(productions.find((p) => p.status === 'en_cours')!.id),
           numeroLot: productions.find((p) => p.status === 'en_cours')!.reference,
           quantiteProduite: Number(productions.find((p) => p.status === 'en_cours')!.quantity),
+          productId: String(productions.find((p) => p.status === 'en_cours')!.product_id),
         } : null}
       />
 
@@ -334,7 +335,7 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
         created_at: new Date().toISOString(),
       }} email={user.email} />
     }
-    if (page === '/dashboard/charges') return <ChargesPageClient />
+    if (page === '/dashboard/charges') return <ChargesConfigPageClient />
     if (page === '/dashboard/rapports') return <ReportsPageClient />
     if (page === '/dashboard/historique') return <DashboardSectionPlaceholder title="Historique & Logs" description="Journal des actions et audits de production." icon={BarChart2} />
     if (page === '/dashboard/succursales') return <DashboardSectionPlaceholder title="Gestion des Succursales" description="Gestion des sites, depots et points de production." icon={PackageCheck} />

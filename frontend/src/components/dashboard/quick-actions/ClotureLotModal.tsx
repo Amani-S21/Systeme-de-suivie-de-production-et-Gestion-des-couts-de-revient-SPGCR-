@@ -15,6 +15,7 @@ interface ClotureLotModalProps {
   onClose: () => void
   lotId: string
   numeroLot: string
+  productId: string
   quantiteProduite: number
 }
 
@@ -23,12 +24,14 @@ export default function ClotureLotModal({
   onClose,
   lotId,
   numeroLot,
+  productId,
   quantiteProduite,
 }: ClotureLotModalProps) {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [coutMainOeuvre, setCoutMainOeuvre] = useState(0)
   const [chargesIndirectes, setChargesIndirectes] = useState(0)
+  const [autresCharges, setAutresCharges] = useState(0)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [serverError, setServerError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -40,10 +43,16 @@ export default function ClotureLotModal({
       setStep(1)
       setCoutMainOeuvre(0)
       setChargesIndirectes(0)
+      setAutresCharges(0)
       setFieldErrors({})
       setServerError(null)
+      api.productChargeSummary(productId).then((summary) => {
+        setCoutMainOeuvre(Number(summary.labor_cost || 0))
+        setChargesIndirectes(Number(summary.overhead_cost || 0))
+        setAutresCharges(Number(summary.other_cost || 0))
+      }).catch((err) => setServerError(err instanceof Error ? err.message : 'Impossible de charger les charges configurees.'))
     }
-  }, [open])
+  }, [open, productId])
 
   function validateStep(s: number): boolean {
     setFieldErrors({})
@@ -77,7 +86,7 @@ export default function ClotureLotModal({
       await api.calculateCost(Number(lotId), {
         labor_cost: coutMainOeuvre,
         overhead_cost: chargesIndirectes,
-        other_cost: 0,
+        other_cost: autresCharges,
       })
       await api.updateProduction(lotId, { status: 'terminee' })
       onClose()
@@ -149,11 +158,9 @@ export default function ClotureLotModal({
               type="number"
               step="0.01"
               min="0"
-              className={formInputClass(!!fieldErrors.cout_main_oeuvre)}
+              readOnly
+              className={`${formInputClass(!!fieldErrors.cout_main_oeuvre)} cursor-not-allowed bg-slate-100`}
               value={coutMainOeuvre || ''}
-              onChange={(e) =>
-                setCoutMainOeuvre(parseFloat(e.target.value) || 0)
-              }
             />
           </FormField>
           <FormField
@@ -167,11 +174,9 @@ export default function ClotureLotModal({
               type="number"
               step="0.01"
               min="0"
-              className={formInputClass(!!fieldErrors.charges_indirectes)}
+              readOnly
+              className={`${formInputClass(!!fieldErrors.charges_indirectes)} cursor-not-allowed bg-slate-100`}
               value={chargesIndirectes || ''}
-              onChange={(e) =>
-                setChargesIndirectes(parseFloat(e.target.value) || 0)
-              }
             />
           </FormField>
         </div>

@@ -63,7 +63,7 @@ export default function CostBreakdownPie({ data }: { data: Slice[] }) {
           contentStyle={tooltipStyle}
           formatter={(_value, _name, item) => {
             const real = (item?.payload as { realValue?: number })?.realValue ?? 0
-            return [`$${Number(real).toFixed(2)}`, item?.name ?? '']
+            return [`${Number(real).toFixed(2)} FCFA`, item?.name ?? '']
           }}
         />
         <Legend wrapperStyle={{ fontSize: '11px' }} />

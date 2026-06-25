@@ -1,23 +1,52 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DollarSign, Loader2, AlertCircle, CheckCircle, Lock } from 'lucide-react';
 import { api } from '@/api';
 
 interface ClotureLotFormProps {
   lotId: string;
   numeroLot: string;
+  productId?: string;
   quantiteProduite: number;
   onSuccess?: (data: any) => void;
 }
 
-export default function ClotureLotForm({ lotId, numeroLot, quantiteProduite, onSuccess }: ClotureLotFormProps) {
+export default function ClotureLotForm({ lotId, numeroLot, productId, quantiteProduite, onSuccess }: ClotureLotFormProps) {
   const [coutMainOeuvre, setCoutMainOeuvre] = useState<string>('');
   const [chargesIndirectes, setChargesIndirectes] = useState<string>('');
+  const [autresCharges, setAutresCharges] = useState<string>('0');
+  const [loadingCharges, setLoadingCharges] = useState(false);
   
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadConfiguredCharges() {
+      setLoadingCharges(true);
+      setError(null);
+      try {
+        const summary = await api.productChargeSummary(productId);
+        if (!mounted) return;
+        setCoutMainOeuvre(String(Number(summary.labor_cost || 0)));
+        setChargesIndirectes(String(Number(summary.overhead_cost || 0)));
+        setAutresCharges(String(Number(summary.other_cost || 0)));
+      } catch (err: any) {
+        if (mounted) setError(err.message || "Impossible de charger les charges configurees du produit.");
+      } finally {
+        if (mounted) setLoadingCharges(false);
+      }
+    }
+    if (productId) void loadConfiguredCharges();
+    else {
+      setCoutMainOeuvre('0');
+      setChargesIndirectes('0');
+      setAutresCharges('0');
+    }
+    return () => { mounted = false; };
+  }, [productId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +68,7 @@ export default function ClotureLotForm({ lotId, numeroLot, quantiteProduite, onS
       const data = await api.calculateCost(Number(lotId), {
         labor_cost: mainOeuvreVal,
         overhead_cost: chargesIndVal,
-        other_cost: 0,
+        other_cost: parseFloat(autresCharges) || 0,
       });
       await api.updateProduction(lotId, { status: 'terminee' });
 
@@ -115,11 +144,11 @@ export default function ClotureLotForm({ lotId, numeroLot, quantiteProduite, onS
                 step="0.01"
                 min="0"
                 required
-                disabled={isLoading || !!success}
-                placeholder="Ex : 150.00"
-                className="pl-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                readOnly
+                disabled={isLoading || loadingCharges || !!success}
+                placeholder="Automatique"
+                className="pl-10 w-full cursor-not-allowed rounded-md border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-950 px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none disabled:opacity-80 transition-all duration-200"
                 value={coutMainOeuvre}
-                onChange={(e) => setCoutMainOeuvre(e.target.value)}
               />
             </div>
           </div>
@@ -138,19 +167,32 @@ export default function ClotureLotForm({ lotId, numeroLot, quantiteProduite, onS
                 step="0.01"
                 min="0"
                 required
-                disabled={isLoading || !!success}
-                placeholder="Ex : 50.00"
-                className="pl-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                readOnly
+                disabled={isLoading || loadingCharges || !!success}
+                placeholder="Automatique"
+                className="pl-10 w-full cursor-not-allowed rounded-md border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-950 px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none disabled:opacity-80 transition-all duration-200"
                 value={chargesIndirectes}
-                onChange={(e) => setChargesIndirectes(e.target.value)}
               />
             </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+              Autres charges configurées <span className="font-normal text-slate-400">(FCFA)</span>
+            </label>
+            <input
+              type="number"
+              readOnly
+              disabled
+              value={autresCharges}
+              className="w-full cursor-not-allowed rounded-md border border-slate-300 bg-slate-100 px-3 py-2.5 text-sm text-slate-900 disabled:opacity-80"
+            />
           </div>
 
           <div className="pt-2">
             <button
               type="submit"
-              disabled={isLoading || !!success}
+              disabled={isLoading || loadingCharges || !!success}
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 disabled:opacity-60 disabled:bg-indigo-600 disabled:cursor-not-allowed flex justify-center items-center gap-2 transition-all duration-200 shadow-sm hover:shadow active:scale-[0.99]"
             >
               {isLoading ? (

@@ -10,6 +10,7 @@ export interface ActiveLotInfo {
   id: string
   numeroLot: string
   quantiteProduite: number
+  productId: string
 }
 
 export interface ProduitFiniOption {

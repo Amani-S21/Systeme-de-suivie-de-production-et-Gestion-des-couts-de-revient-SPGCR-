@@ -1,10 +1,10 @@
 export function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'USD',
+  const amount = new Intl.NumberFormat('fr-FR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value)
+
+  return `${amount} FCFA`
 }
 
 export function formatNumber(value: number, decimals = 0): string {
