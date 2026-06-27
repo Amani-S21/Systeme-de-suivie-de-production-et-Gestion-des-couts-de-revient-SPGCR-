@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: spcr-api
+    runtime: python
+    plan: free
+    region: frankfurt
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: spcr-postgres
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "720"
+      - key: DEFAULT_ADMIN_EMAIL
+        value: admin@spcr.com
+      - key: DEFAULT_ADMIN_LOGIN
+        value: admin
+      - key: DEFAULT_ADMIN_PASSWORD
+        sync: false
+      - key: DEFAULT_ADMIN_FIRST_NAME
+        value: Admin
+      - key: DEFAULT_ADMIN_LAST_NAME
+        value: SPCR
+      - key: BACKEND_CORS_ORIGINS
+        sync: false
+
+databases:
+  - name: spcr-postgres
+    plan: free
+    region: frankfurt
+    databaseName: spcr_db
+    user: spcr_user
+    ipAllowList: []
