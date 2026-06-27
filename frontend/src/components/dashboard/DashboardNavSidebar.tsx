@@ -73,7 +73,7 @@ export default function DashboardNavSidebar({ role, collapsed, mobileOpen, onMob
         </span>
         {!compact && (
           <div className="min-w-0 text-white">
-            <div className="text-[28px] font-black leading-none">SPCR</div>
+            <div className="text-[28px] font-black leading-none">SPGCR</div>
             <p className="mt-2 text-[11px] font-medium leading-[1.35] text-white/90">
               Suivi de Production et<br />Gestion des Coûts de Revient
             </p>

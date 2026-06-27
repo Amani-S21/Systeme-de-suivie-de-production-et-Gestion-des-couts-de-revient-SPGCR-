@@ -130,7 +130,7 @@ export default function LoginPage() {
             SPGCR
           </h2>
           <p className="mt-1.5 text-xs text-slate-500 font-medium uppercase tracking-wider">
-            Suivi de Production & Gestion des Coûts de Revient
+            Système de Production & Gestion des Coûts de Revient
           </p>
         </div>
 
