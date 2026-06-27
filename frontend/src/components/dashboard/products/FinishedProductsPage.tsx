@@ -149,7 +149,7 @@ export default function FinishedProductsPage({ products, productions }: { produc
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Rechercher une designation ou un numero de lot..." className="h-9 w-full rounded-md border pl-9 pr-3 text-sm" />
           </div>
-          <ExportButtons onExportExcel={() => exportToCsv('produits-finis', exportRows)} onExportPdf={() => exportToPrint('Produits finis - SPGCR', exportRows)} />
+          <ExportButtons onExportExcel={() => exportToCsv('produits-finis', exportRows)} onExportPdf={() => exportToPrint('Produits finis - SPCR', exportRows)} />
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[860px] text-left text-sm">

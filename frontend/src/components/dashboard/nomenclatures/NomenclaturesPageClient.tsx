@@ -93,7 +93,7 @@ export default function NomenclaturesPageClient({ formules, produitsFinis, compo
     })))
   }
   function handleExportPdf() {
-    exportToPrint('Catalogue & Recettes — SPGCR', filtered.map((f) => ({
+    exportToPrint('Catalogue & Recettes — SPCR', filtered.map((f) => ({
       SKU: f.produit_code,
       Produit: f.produit_nom,
       Format: f.unite_commerciale ? (UNITE_LABELS[f.unite_commerciale] ?? f.unite_commerciale) : '—',

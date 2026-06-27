@@ -107,7 +107,7 @@ export default function ComposantsPageClient({ composants }: ComposantsPageClien
   }
 
   function handleExportPdf() {
-    exportToPrint('Composants & Stocks — SPGCR', filtered.map((c) => ({
+    exportToPrint('Composants & Stocks — SPCR', filtered.map((c) => ({
       Code: c.code,
       Nom: c.nom,
       Catégorie: CATEGORIE_LABELS[c.categorie] ?? c.categorie,

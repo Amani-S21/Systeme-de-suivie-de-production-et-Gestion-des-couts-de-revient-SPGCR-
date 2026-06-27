@@ -10,10 +10,10 @@ const documents = [
   {
     filename: 'confidentialite.pdf',
     title: 'Politique de confidentialité',
-    subtitle: 'Protection des données et règles de traitement du système SPGCR',
+    subtitle: 'Protection des données et règles de traitement du système SPCR',
     sections: [
       ['1. Objet et périmètre', [
-        'La présente politique décrit la manière dont SPGCR collecte, utilise, protège, conserve et supprime les informations nécessaires au suivi de la production industrielle et au calcul des coûts de revient.',
+        'La présente politique décrit la manière dont SPCR collecte, utilise, protège, conserve et supprime les informations nécessaires au suivi de la production industrielle et au calcul des coûts de revient.',
         'Elle s’applique à tous les utilisateurs autorisés, aux administrateurs, aux responsables de production, aux opérateurs d’usine ainsi qu’aux personnes chargées de la maintenance technique ou du contrôle interne.',
       ]],
       ['2. Catégories de données traitées', [
@@ -26,7 +26,7 @@ const documents = [
         'Elles servent également à produire des indicateurs fiables, préparer les audits, détecter les anomalies, sécuriser les accès et faciliter la continuité des activités de production.',
       ]],
       ['4. Principes de protection', [
-        'SPGCR applique les principes de finalité déterminée, de minimisation, d’exactitude, de limitation de conservation, de confidentialité et de responsabilité. Chaque donnée doit être pertinente au regard d’une opération métier identifiable.',
+        'SPCR applique les principes de finalité déterminée, de minimisation, d’exactitude, de limitation de conservation, de confidentialité et de responsabilité. Chaque donnée doit être pertinente au regard d’une opération métier identifiable.',
         'Les utilisateurs doivent vérifier les informations saisies avant validation. Toute erreur découverte doit être corrigée rapidement afin de préserver l’exactitude des stocks, des coûts et des rapports.',
       ]],
       ['5. Gestion des accès', [
@@ -50,7 +50,7 @@ const documents = [
         'Les procédures de reprise sont testées périodiquement. Une restauration ne doit être effectuée que par une personne habilitée et doit être documentée dans le journal d’exploitation.',
       ]],
       ['10. Exportations et rapports', [
-        'Les fichiers PDF et CSV générés par SPGCR peuvent contenir des informations internes. Leur destinataire doit être autorisé et leur diffusion doit rester limitée à la finalité professionnelle prévue.',
+        'Les fichiers PDF et CSV générés par SPCR peuvent contenir des informations internes. Leur destinataire doit être autorisé et leur diffusion doit rester limitée à la finalité professionnelle prévue.',
         'L’utilisateur est responsable du stockage, de l’impression et de la transmission des documents exportés. Un rapport devenu inutile doit être supprimé des postes, supports amovibles et espaces de partage.',
       ]],
       ['11. Sécurité des échanges', [
@@ -63,7 +63,7 @@ const documents = [
       ]],
       ['13. Droits et demandes', [
         'Une personne concernée peut demander la consultation ou la correction de ses informations d’identification, sous réserve de la vérification de son identité et des obligations de traçabilité applicables.',
-        'Les demandes sont adressées à l’administration SPGCR. Une suppression peut être refusée lorsque la conservation est nécessaire à la sécurité, à l’audit ou à l’intégrité d’une opération de production.',
+        'Les demandes sont adressées à l’administration SPCR. Une suppression peut être refusée lorsque la conservation est nécessaire à la sécurité, à l’audit ou à l’intégrité d’une opération de production.',
       ]],
       ['14. Responsabilités des utilisateurs', [
         'Chaque utilisateur protège son poste, verrouille sa session en cas d’absence, respecte son périmètre d’autorisation et évite d’introduire des données confidentielles dans des champs non prévus à cet effet.',
@@ -71,17 +71,17 @@ const documents = [
       ]],
       ['15. Mise à jour de la politique', [
         'Cette politique peut évoluer afin de tenir compte des changements fonctionnels, techniques ou organisationnels. La version disponible dans le pied de page de l’application constitue la version de référence.',
-        'Dernière révision : 22 juin 2026. Pour toute question, utiliser les coordonnées de contact affichées sur la plateforme SPGCR.',
+        'Dernière révision : 22 juin 2026. Pour toute question, utiliser les coordonnées de contact affichées sur la plateforme SPCR.',
       ]],
     ],
   },
   {
     filename: 'conditions-acces.pdf',
     title: "Conditions d'accès et d'utilisation",
-    subtitle: 'Règles applicables aux comptes, aux rôles et aux opérations SPGCR',
+    subtitle: 'Règles applicables aux comptes, aux rôles et aux opérations SPCR',
     sections: [
       ['1. Acceptation des conditions', [
-        'L’accès à SPGCR implique l’acceptation des présentes conditions. L’utilisateur reconnaît utiliser un outil professionnel destiné au suivi de production, à la gestion des stocks et au calcul des coûts de revient.',
+        'L’accès à SPCR implique l’acceptation des présentes conditions. L’utilisateur reconnaît utiliser un outil professionnel destiné au suivi de production, à la gestion des stocks et au calcul des coûts de revient.',
         'Toute personne qui ne peut pas respecter ces règles doit s’abstenir d’utiliser la plateforme et contacter l’administrateur.',
       ]],
       ['2. Éligibilité et création du compte', [
@@ -142,17 +142,17 @@ const documents = [
       ]],
       ['16. Assistance et responsabilité', [
         'L’utilisateur signale les erreurs fonctionnelles avec les informations nécessaires à leur reproduction, sans transmettre son mot de passe. L’équipe technique traite les demandes selon leur priorité et leur impact.',
-        'Dernière révision : 22 juin 2026. Les coordonnées d’assistance sont disponibles dans la section Contact de SPGCR.',
+        'Dernière révision : 22 juin 2026. Les coordonnées d’assistance sont disponibles dans la section Contact de SPCR.',
       ]],
     ],
   },
   {
     filename: 'documentation.pdf',
     title: 'Documentation fonctionnelle et technique',
-    subtitle: 'Guide d’exploitation de la plateforme SPGCR',
+    subtitle: 'Guide d’exploitation de la plateforme SPCR',
     sections: [
       ['1. Présentation générale', [
-        'SPGCR est un outil de suivi de production et de gestion des coûts de revient. Il accompagne la transformation des matières premières en produits finis et centralise les données nécessaires au pilotage industriel.',
+        'SPCR est un outil de suivi de production et de gestion des coûts de revient. Il accompagne la transformation des matières premières en produits finis et centralise les données nécessaires au pilotage industriel.',
         'La plateforme couvre les comptes, matières, stocks, produits, recettes BOM, lots, charges, calculs, tableaux de bord et exports.',
       ]],
       ['2. Architecture', [
@@ -212,7 +212,7 @@ const documents = [
         'Les résultats alimentent les analyses et rapports. Une valeur nulle signifie généralement qu’aucune donnée correspondante n’a encore été enregistrée.',
       ]],
       ['16. Rapports PDF', [
-        'Chaque export PDF utilise le même modèle officiel : en-tête SPGCR, titre, code du rapport, date de génération, tableau paginé, totaux pertinents et pied de page numéroté.',
+        'Chaque export PDF utilise le même modèle officiel : en-tête SPCR, titre, code du rapport, date de génération, tableau paginé, totaux pertinents et pied de page numéroté.',
         'Les exports lancés depuis les pages Stocks, Lots, Produits, Charges, Analyses, Utilisateurs, Historique et Succursales utilisent les lignes filtrées de leur page.',
       ]],
       ['17. Exports CSV', [
@@ -237,7 +237,7 @@ const documents = [
       ]],
       ['22. Glossaire', [
         'BOM : nomenclature ou recette standard. CUMP : coût unitaire moyen pondéré. Lot : ordre de production identifié. KPI : indicateur clé. API : interface utilisée par React pour communiquer avec FastAPI.',
-        'Dernière révision : 22 juin 2026. Cette documentation doit évoluer avec les fonctionnalités et migrations futures de SPGCR.',
+        'Dernière révision : 22 juin 2026. Cette documentation doit évoluer avec les fonctionnalités et migrations futures de SPCR.',
       ]],
     ],
   },
@@ -261,7 +261,7 @@ function generatePdf(definition) {
     doc.setTextColor(255, 255, 255)
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(firstPage ? 16 : 11)
-    doc.text('SPGCR', 22, firstPage ? 12 : 9)
+    doc.text('SPCR', 22, firstPage ? 12 : 9)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7.5)
     doc.text('Système de Pilotage et de Gestion du Coût de Revient', 22, firstPage ? 17 : 14)
@@ -330,15 +330,15 @@ function generatePdf(definition) {
     doc.setTextColor(100, 116, 139)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7)
-    doc.text('SPGCR · Document interne de référence · Vin Ushindi', left, pageHeight - 8)
+    doc.text('SPCR · Document interne de référence · Vin Ushindi', left, pageHeight - 8)
     doc.text(`Page ${page} / ${totalPages}`, pageWidth - right, pageHeight - 8, { align: 'right' })
   }
 
   doc.setProperties({
     title: definition.title,
     subject: definition.subtitle,
-    author: 'SPGCR - Vin Ushindi',
-    creator: 'SPGCR',
+    author: 'SPCR - Vin Ushindi',
+    creator: 'SPCR',
   })
 
   fs.mkdirSync(outputDirectory, { recursive: true })
@@ -351,4 +351,3 @@ for (const documentDefinition of documents) {
   const result = generatePdf(documentDefinition)
   process.stdout.write(`${result.filename}: ${result.pages} pages, ${result.bytes} octets\n`)
 }
-

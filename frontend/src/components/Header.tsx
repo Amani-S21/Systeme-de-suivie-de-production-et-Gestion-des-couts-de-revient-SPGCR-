@@ -90,7 +90,7 @@ export default function Header({ user, profile }: Props) {
           </div>
           <span className="text-slate-700 text-[9px] select-none">|</span>
           <span className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.15em]">
-            SPGCR · Vin Ushindi
+            SPCR · Vin Ushindi
           </span>
         </div>
         <span className="text-[9px] font-bold text-slate-600 uppercase tracking-[0.2em]">
@@ -119,7 +119,7 @@ export default function Header({ user, profile }: Props) {
             </div>
             <div className="leading-none">
               <div className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-950 italic">
-                SPGCR
+                SPCR
               </div>
               <div className="text-[8px] font-bold text-slate-400 uppercase tracking-widest hidden sm:block">
                 Coût de Revient
@@ -233,7 +233,7 @@ export default function Header({ user, profile }: Props) {
                   <BarChart2 className="w-3.5 h-3.5 text-white" />
                 </div>
                 <span className="text-[13px] font-black uppercase tracking-[0.15em] italic text-slate-950">
-                  SPGCR
+                  SPCR
                 </span>
               </Link>
               <button

@@ -218,7 +218,7 @@ export default function LotsPageClient({
           <p className="text-sm text-slate-500 font-medium">Suivi en temps réel des ordres de fabrication.</p>
         </div>
         <div className="flex items-center gap-2">
-          <ExportButtons onExportExcel={handleExportCsv} onExportPdf={() => exportToPrint('Lots de Production — SPGCR', filteredLots.map(l => ({ 'N° Lot': l.numeroLot, Produit: l.produitNom, Opérateur: l.operateurNom, Date: formatDate(l.dateLancement), Statut: l.statut })))} />
+          <ExportButtons onExportExcel={handleExportCsv} onExportPdf={() => exportToPrint('Lots de Production — SPCR', filteredLots.map(l => ({ 'N° Lot': l.numeroLot, Produit: l.produitNom, Opérateur: l.operateurNom, Date: formatDate(l.dateLancement), Statut: l.statut })))} />
           {role !== 'operateur_usine' && (
             <button
               onClick={() => setNewLotOpen(true)}

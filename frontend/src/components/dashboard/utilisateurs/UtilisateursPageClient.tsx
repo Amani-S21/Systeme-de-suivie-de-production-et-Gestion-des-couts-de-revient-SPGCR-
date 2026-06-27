@@ -114,7 +114,7 @@ export default function UtilisateursPageClient({ pending, active }: Props) {
     })))
   }
   function handleExportPdf() {
-    exportToPrint('Gestion des Utilisateurs — SPGCR', filtered.map((u) => ({
+    exportToPrint('Gestion des Utilisateurs — SPCR', filtered.map((u) => ({
       Prénom: u.prenom,
       Nom: u.nom,
       Rôle: ROLE_LABELS[u.role],
@@ -127,7 +127,7 @@ export default function UtilisateursPageClient({ pending, active }: Props) {
     <>
       <PageHeader
         title="Gestion des Utilisateurs"
-        description="Validation des comptes, attribution des rôles et journal des accès SPGCR."
+        description="Validation des comptes, attribution des rôles et journal des accès SPCR."
       />
 
       {error && (
@@ -315,7 +315,7 @@ export default function UtilisateursPageClient({ pending, active }: Props) {
       <ConfirmDeleteModal
         open={!!deleteId}
         title="Supprimer ce compte utilisateur ?"
-        description="Le compte sera définitivement retiré du système SPGCR. Cette action est irréversible."
+        description="Le compte sera définitivement retiré du système SPCR. Cette action est irréversible."
         onConfirm={() => {
           if (!deleteId) return
           runAction(deleteId, () => deleteUserAccount(deleteId))

@@ -10,7 +10,7 @@
 endobj
 4 0 obj
 <<
-/Length 12830
+/Length 12826
 >>
 stream
 0.5670000000000001 w
@@ -30,7 +30,7 @@ BT
 18.3999999999999986 TL
 1. g
 62.3622047244094517 807.8742519685039269 Td
-(SPGCR) Tj
+(SPCR) Tj
 ET
 BT
 /F1 7.5 Tf
@@ -65,7 +65,7 @@ BT
 10.3499999999999996 TL
 0.392 0.455 0.545 rg
 48.1889763779527627 700.15771653543311 Td
-(Guide d’exploitation de la plateforme SPGCR) Tj
+(Guide d’exploitation de la plateforme SPCR) Tj
 ET
 0.94 0.96 1. rg
 51.5905511811023629 687.9687401574802834 m
@@ -91,7 +91,7 @@ BT
 10.5799999999999983 TL
 0.2 0.255 0.333 rg
 48.1889763779527627 651.9687401574802834 Td
-(SPGCR est un outil de suivi de production et de gestion des coûts de revient. Il accompagne la) Tj
+(SPCR est un outil de suivi de production et de gestion des coûts de revient. Il accompagne la) Tj
 ET
 BT
 /F1 9.2 Tf
@@ -391,7 +391,7 @@ BT
 8.0499999999999989 TL
 0.392 0.455 0.545 rg
 48.1889763779527627 22.6771653543306684 Td
-(SPGCR · Document interne de référence · Vin Ushindi) Tj
+(SPCR · Document interne de référence · Vin Ushindi) Tj
 ET
 BT
 /F1 7 Tf
@@ -412,7 +412,7 @@ endobj
 endobj
 6 0 obj
 <<
-/Length 12713
+/Length 12711
 >>
 stream
 0.5670000000000001 w
@@ -432,7 +432,7 @@ BT
 12.6499999999999986 TL
 1. g
 62.3622047244094517 816.3781889763779418 Td
-(SPGCR) Tj
+(SPCR) Tj
 ET
 BT
 /F1 7.5 Tf
@@ -779,7 +779,7 @@ BT
 8.0499999999999989 TL
 0.392 0.455 0.545 rg
 48.1889763779527627 22.6771653543306684 Td
-(SPGCR · Document interne de référence · Vin Ushindi) Tj
+(SPCR · Document interne de référence · Vin Ushindi) Tj
 ET
 BT
 /F1 7 Tf
@@ -800,7 +800,7 @@ endobj
 endobj
 8 0 obj
 <<
-/Length 13011
+/Length 13008
 >>
 stream
 0.5670000000000001 w
@@ -820,7 +820,7 @@ BT
 12.6499999999999986 TL
 1. g
 62.3622047244094517 816.3781889763779418 Td
-(SPGCR) Tj
+(SPCR) Tj
 ET
 BT
 /F1 7.5 Tf
@@ -900,7 +900,7 @@ BT
 10.5799999999999983 TL
 0.2 0.255 0.333 rg
 48.1889763779527627 639.4962992125983874 Td
-(Chaque export PDF utilise le même modèle officiel : en-tête SPGCR, titre, code du rapport, date de) Tj
+(Chaque export PDF utilise le même modèle officiel : en-tête SPCR, titre, code du rapport, date de) Tj
 ET
 BT
 /F1 9.2 Tf
@@ -1181,7 +1181,7 @@ BT
 8.0499999999999989 TL
 0.392 0.455 0.545 rg
 48.1889763779527627 22.6771653543306684 Td
-(SPGCR · Document interne de référence · Vin Ushindi) Tj
+(SPCR · Document interne de référence · Vin Ushindi) Tj
 ET
 BT
 /F1 7 Tf
@@ -1202,7 +1202,7 @@ endobj
 endobj
 10 0 obj
 <<
-/Length 2909
+/Length 2906
 >>
 stream
 0.5670000000000001 w
@@ -1222,7 +1222,7 @@ BT
 12.6499999999999986 TL
 1. g
 62.3622047244094517 816.3781889763779418 Td
-(SPGCR) Tj
+(SPCR) Tj
 ET
 BT
 /F1 7.5 Tf
@@ -1276,7 +1276,7 @@ BT
 10.5799999999999983 TL
 0.2 0.255 0.333 rg
 48.1889763779527627 686.5514173228345953 Td
-(Dernière révision : 22 juin 2026. Cette documentation doit évoluer avec les fonctionnalités et migrations futures de SPGCR.) Tj
+(Dernière révision : 22 juin 2026. Cette documentation doit évoluer avec les fonctionnalités et migrations futures de SPCR.) Tj
 ET
 0.89 0.91 0.94 RG
 48.1889763779527627 36.8503937007874072 m
@@ -1287,7 +1287,7 @@ BT
 8.0499999999999989 TL
 0.392 0.455 0.545 rg
 48.1889763779527627 22.6771653543306684 Td
-(SPGCR · Document interne de référence · Vin Ushindi) Tj
+(SPCR · Document interne de référence · Vin Ushindi) Tj
 ET
 BT
 /F1 7 Tf
@@ -1469,10 +1469,10 @@ endobj
 <<
 /Producer (jsPDF 4.2.1)
 /Title (Documentation fonctionnelle et technique)
-/Subject (þÿ G u i d e   d  e x p l o i t a t i o n   d e   l a   p l a t e f o r m e   S P G C R)
-/Author (SPGCR - Vin Ushindi)
-/Creator (SPGCR)
-/CreationDate (D:20260622034104-07'00')
+/Subject (þÿ G u i d e   d  e x p l o i t a t i o n   d e   l a   p l a t e f o r m e   S P C R)
+/Author (SPCR - Vin Ushindi)
+/Creator (SPCR)
+/CreationDate (D:20260627071629-07'00')
 >>
 endobj
 26 0 obj
@@ -1486,39 +1486,39 @@ endobj
 xref
 0 27
 0000000000 65535 f 
-0000042239 00000 n 
-0000044079 00000 n 
+0000042227 00000 n 
+0000044067 00000 n 
 0000000015 00000 n 
 0000000152 00000 n 
-0000013035 00000 n 
-0000013172 00000 n 
-0000025938 00000 n 
-0000026075 00000 n 
-0000039139 00000 n 
-0000039277 00000 n 
-0000042314 00000 n 
-0000042440 00000 n 
-0000042571 00000 n 
-0000042705 00000 n 
-0000042843 00000 n 
-0000042967 00000 n 
-0000043096 00000 n 
-0000043228 00000 n 
-0000043364 00000 n 
-0000043492 00000 n 
-0000043619 00000 n 
-0000043748 00000 n 
-0000043881 00000 n 
-0000043983 00000 n 
-0000044332 00000 n 
-0000044615 00000 n 
+0000013031 00000 n 
+0000013168 00000 n 
+0000025932 00000 n 
+0000026069 00000 n 
+0000039130 00000 n 
+0000039268 00000 n 
+0000042302 00000 n 
+0000042428 00000 n 
+0000042559 00000 n 
+0000042693 00000 n 
+0000042831 00000 n 
+0000042955 00000 n 
+0000043084 00000 n 
+0000043216 00000 n 
+0000043352 00000 n 
+0000043480 00000 n 
+0000043607 00000 n 
+0000043736 00000 n 
+0000043869 00000 n 
+0000043971 00000 n 
+0000044320 00000 n 
+0000044599 00000 n 
 trailer
 <<
 /Size 27
 /Root 26 0 R
 /Info 25 0 R
-/ID [ <975325B76FFE58090B3AD70FE8307F85> <975325B76FFE58090B3AD70FE8307F85> ]
+/ID [ <EC838DC3E245D5A7670C0D0A5637AB8D> <EC838DC3E245D5A7670C0D0A5637AB8D> ]
 >>
 startxref
-44719
+44703
 %%EOF

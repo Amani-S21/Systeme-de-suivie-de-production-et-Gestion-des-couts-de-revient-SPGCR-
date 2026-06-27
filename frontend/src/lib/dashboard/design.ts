@@ -1,4 +1,4 @@
-/** Classes utilitaires du design system Light Pro SPGCR */
+/** Classes utilitaires du design system Light Pro SPCR */
 export const cardBase =
   'rounded-lg border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md'
 

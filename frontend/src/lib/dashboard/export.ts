@@ -28,7 +28,7 @@ export function exportToCsv(filename: string, rows: Record<string, unknown>[]) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `${slugify(filename) || 'export-spgcr'}.csv`
+  a.download = `${slugify(filename) || 'export-spcr'}.csv`
   a.click()
   URL.revokeObjectURL(url)
   notify('success', 'Le fichier CSV compatible Excel a été généré.')
@@ -52,7 +52,7 @@ export function exportToPrint(title: string, suppliedRows?: Record<string, unkno
   const orientation = headers.length > 6 ? 'landscape' : 'portrait'
   const doc = new jsPDF({ orientation, unit: 'mm', format: 'a4' })
   const now = new Date()
-  const reportCode = `SPGCR-RPT-${now.toISOString().slice(0, 10).replace(/-/g, '')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`
+  const reportCode = `SPCR-RPT-${now.toISOString().slice(0, 10).replace(/-/g, '')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`
   const pageWidth = doc.internal.pageSize.getWidth()
   const pageHeight = doc.internal.pageSize.getHeight()
 
@@ -64,7 +64,7 @@ export function exportToPrint(title: string, suppliedRows?: Record<string, unkno
     doc.setTextColor(255, 255, 255)
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(13)
-    doc.text('SPGCR', 28, 12)
+    doc.text('SPCR', 28, 12)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7.5)
     doc.text('Système de Pilotage et de Gestion du Coût de Revient', 28, 17)
@@ -129,17 +129,17 @@ export function exportToPrint(title: string, suppliedRows?: Record<string, unkno
     doc.setTextColor(100, 116, 139)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7)
-    doc.text('Document confidentiel · Usage interne autorisé · Généré automatiquement par SPGCR', 14, pageHeight - 8)
+    doc.text('Document confidentiel · Usage interne autorisé · Généré automatiquement par SPCR', 14, pageHeight - 8)
     doc.text(`Page ${page} / ${totalPages}`, pageWidth - 14, pageHeight - 8, { align: 'right' })
   }
 
-  doc.setProperties({ title: cleanReportTitle(title), subject: 'Rapport SPGCR', author: 'SPGCR - Vin Ushindi', creator: 'SPGCR' })
-  doc.save(`${slugify(title) || 'rapport-spgcr'}.pdf`)
+  doc.setProperties({ title: cleanReportTitle(title), subject: 'Rapport SPCR', author: 'SPCR - Vin Ushindi', creator: 'SPCR' })
+  doc.save(`${slugify(title) || 'rapport-spcr'}.pdf`)
   notify('success', 'Le rapport PDF a été généré avec succès.')
 }
 
 function cleanReportTitle(title: string) {
-  return title.replace(/\s*[—-]\s*SPGCR\s*$/i, '').trim()
+  return title.replace(/\s*[—-]\s*SPCR\s*$/i, '').trim()
 }
 
 function slugify(value: string) {

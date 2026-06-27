@@ -73,7 +73,7 @@ const contactItems = [
   {
     icon: Mail,
     label: 'Support plateforme',
-    value: 'support@spgcr.local',
+    value: 'support@spcr.local',
     detail: 'Assistance comptes, acces et rapports',
   },
   {
@@ -104,7 +104,7 @@ export default function Footer() {
               Contact & assistance
             </span>
             <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-slate-950">
-              Coordination SPGCR
+              Coordination SPCR
             </h3>
             <p className="mt-2 text-sm font-medium leading-relaxed text-slate-500">
               Pour toute demande liee aux acces, aux donnees de production, aux rapports
@@ -181,7 +181,7 @@ export default function Footer() {
               <BarChart2 className="w-4 h-4 text-white" />
             </div>
             <div className="leading-none">
-              <div className="text-[14px] font-black uppercase tracking-[0.15em] text-slate-950 italic">SPGCR</div>
+              <div className="text-[14px] font-black uppercase tracking-[0.15em] text-slate-950 italic">SPCR</div>
               <div className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Coût de Revient</div>
             </div>
           </div>

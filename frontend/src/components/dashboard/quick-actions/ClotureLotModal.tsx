@@ -140,7 +140,7 @@ export default function ClotureLotModal({
           </div>
           <p className="mt-2 border-t border-slate-100 pt-3 text-xs text-slate-500">
             La clôture déclenchera le calcul automatique du coût de revient via l&apos;Edge
-            Function SPGCR.
+            Function SPCR.
           </p>
         </dl>
       )}
