@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from fastapi import HTTPException, status
+from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from app.models.cost import Cost
@@ -36,7 +37,9 @@ def calculate_cost(db: Session, production_id: int, payload: CostCreate, user_id
     unit_cost = total / production.quantity if production.quantity else Decimal("0")
     sale_price = production.product.sale_price if production.product else Decimal("0")
     margin_rate = calculate_margin_rate(sale_price, unit_cost)
-    cost = production.cost or Cost(production_id=production.id)
+    cost = db.scalar(select(Cost).where(Cost.production_id == production.id))
+    if cost is None:
+        cost = Cost(production_id=production.id)
     cost.raw_material_cost = raw
     cost.labor_cost = payload.labor_cost
     cost.overhead_cost = payload.overhead_cost
