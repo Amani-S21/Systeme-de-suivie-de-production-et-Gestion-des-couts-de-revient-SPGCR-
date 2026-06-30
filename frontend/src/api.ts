@@ -2,23 +2,85 @@ import type { BomItem, Charge, DashboardSummary, Material, Product, ProductCharg
 import { notify } from './lib/notifications'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
+const API_ORIGIN = new URL(API_URL, window.location.origin).origin
+const READY_CACHE_MS = 2 * 60 * 1000
+
+let lastReadyAt = 0
+let readinessPromise: Promise<void> | null = null
+
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 65000) {
+  const controller = new AbortController()
+  const timeout = window.setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    return await fetch(url, { ...options, signal: controller.signal })
+  } finally {
+    window.clearTimeout(timeout)
+  }
+}
+
+async function waitForBackend(): Promise<void> {
+  if (Date.now() - lastReadyAt < READY_CACHE_MS) return
+  if (readinessPromise) return readinessPromise
+
+  readinessPromise = (async () => {
+    let lastError: unknown
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      try {
+        const response = await fetchWithTimeout(`${API_ORIGIN}/health`)
+        if (response.ok) {
+          lastReadyAt = Date.now()
+          return
+        }
+        lastError = new Error(`Health check HTTP ${response.status}`)
+      } catch (error) {
+        lastError = error
+      }
+      if (attempt < 2) {
+        await new Promise((resolve) => window.setTimeout(resolve, 1500))
+      }
+    }
+    console.error('SPCR backend unavailable', lastError)
+    throw new Error(
+      "Le serveur est temporairement indisponible. Patientez quelques secondes puis réessayez."
+    )
+  })().finally(() => {
+    readinessPromise = null
+  })
+
+  return readinessPromise
+}
 
 function token() {
   return localStorage.getItem('spcr_token')
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  await waitForBackend()
   const headers = new Headers(options.headers)
   if (!(options.body instanceof FormData)) {
     headers.set('Content-Type', 'application/json')
   }
   if (token()) headers.set('Authorization', `Bearer ${token()}`)
-  const response = await fetch(`${API_URL}${path}`, { ...options, headers })
+  let response: Response
+  try {
+    response = await fetchWithTimeout(`${API_URL}${path}`, { ...options, headers })
+  } catch (error) {
+    lastReadyAt = 0
+    console.error(`API request failed: ${path}`, error)
+    const message =
+      "La communication avec le serveur a été interrompue. Vérifiez votre connexion puis réessayez."
+    notify('error', message)
+    throw new Error(message)
+  }
   if (!response.ok) {
     const error = await response.json().catch(() => ({}))
     const detail = Array.isArray(error.detail)
       ? error.detail.map((item: { msg?: string }) => item.msg || 'Donnée invalide').join(', ')
-      : error.detail || 'Erreur API'
+      : typeof error.detail === 'string'
+        ? error.detail
+        : error.detail
+          ? JSON.stringify(error.detail)
+          : 'Erreur API'
     notify('error', detail)
     throw new Error(detail)
   }
@@ -45,12 +107,20 @@ function mutationMessage(path: string, method: string) {
 }
 
 export async function login(username: string, password: string) {
+  await waitForBackend()
   const body = new URLSearchParams({ username, password })
-  const response = await fetch(`${API_URL}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body,
-  })
+  let response: Response
+  try {
+    response = await fetchWithTimeout(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    })
+  } catch (error) {
+    lastReadyAt = 0
+    console.error('Login request failed', error)
+    throw new Error("Impossible de joindre le serveur. Patientez quelques secondes puis réessayez.")
+  }
   if (!response.ok) throw new Error('Identifiants invalides')
   return response.json() as Promise<{ access_token: string; user: User }>
 }
