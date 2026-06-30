@@ -51,6 +51,7 @@ export default function NouveauLotModal({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [serverError, setServerError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [confirmBelowMinimumStock, setConfirmBelowMinimumStock] = useState(false)
 
   const isOperateurOnly = role === 'operateur_usine'
   const isDirty =
@@ -66,6 +67,7 @@ export default function NouveauLotModal({
       setFieldErrors({})
       setServerError(null)
       setIsSubmitting(false)
+      setConfirmBelowMinimumStock(false)
     }
   }, [open, currentUserId, role, operateurs])
 
@@ -131,6 +133,7 @@ export default function NouveauLotModal({
         produit_fini_id: data.produitFiniId,
         quantite_produite: data.quantite,
         operateur_id: data.operateurId,
+        confirm_below_minimum_stock: confirmBelowMinimumStock,
       })
       if (result.error) {
         setServerError(result.error)
@@ -319,6 +322,18 @@ export default function NouveauLotModal({
               <dd className="font-mono font-medium text-slate-900">{data.numeroLot}</dd>
             </div>
           </dl>
+          <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-3 text-xs leading-relaxed text-amber-900">
+            <input
+              type="checkbox"
+              checked={confirmBelowMinimumStock}
+              onChange={(event) => {
+                setServerError(null)
+                setConfirmBelowMinimumStock(event.target.checked)
+              }}
+              className="mt-0.5 h-4 w-4"
+            />
+            Confirmer le lancement si la consommation amène un composant à son seuil minimum. Un stock insuffisant bloquera toujours la production.
+          </label>
         </div>
       )}
     </MultiStepModal>

@@ -29,6 +29,10 @@ export const composantMouvementSchema = z.object({
   prixAchatTotal: z
     .number({ error: 'Saisissez un montant valide.' })
     .positive("Le prix d'achat doit être strictement positif."),
+  seuilMinimum: z
+    .number({ error: 'Saisissez un seuil valide.' })
+    .positive('Le seuil minimum doit être strictement supérieur à zéro.'),
+  seuilConfirme: z.boolean(),
 })
 
 export const adjustStockFormSchema = z.object({

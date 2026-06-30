@@ -19,6 +19,9 @@ export const formuleCatalogueNewSchema = z.object({
   unite_commerciale: z.enum(['bouteille', 'carton'], {
     error: 'Choisissez une unité (bouteille ou carton).',
   }),
+  prix_vente: z
+    .number({ error: 'Saisissez un prix de vente valide.' })
+    .positive('Le prix de vente doit être strictement supérieur à zéro.'),
 })
 
 /** Étape 1 — rattachement à un produit déjà présent au catalogue */

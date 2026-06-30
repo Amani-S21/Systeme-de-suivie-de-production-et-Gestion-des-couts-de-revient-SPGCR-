@@ -33,6 +33,11 @@ def add_stock_movement(db: Session, material_id: int, payload: StockMovementCrea
     if not material:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Matiere introuvable")
     if payload.movement_type == "sortie":
+        if material.quantity < payload.quantity:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"Stock insuffisant pour {material.name}",
+            )
         material.quantity -= payload.quantity
     elif payload.movement_type == "entree":
         material.quantity += payload.quantity

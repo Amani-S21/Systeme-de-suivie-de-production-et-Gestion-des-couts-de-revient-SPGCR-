@@ -57,6 +57,8 @@ export interface NouveauComposantFormData {
   unite_mesure: 'litre' | 'kg' | 'unite'
   stock_actuel: number
   cout_unitaire_moyen_pondere: number
+  seuil_minimum: number
+  seuil_confirme: boolean
 }
 
 export interface NouvelleBomFormData {

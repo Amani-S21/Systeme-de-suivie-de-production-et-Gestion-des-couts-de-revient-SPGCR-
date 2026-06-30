@@ -8,7 +8,7 @@ export async function persistProduitFiniCatalogue(payload: any): Promise<{ id?: 
       name: payload.nom,
       sku: String(payload.code).toUpperCase(),
       unit: payload.unite_commerciale,
-      sale_price: 0,
+      sale_price: Number(payload.prix_vente),
     })
     return { id: String(product.id) }
   } catch (error) {

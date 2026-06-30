@@ -16,16 +16,18 @@ class MaterialBase(OrmModel):
 
 
 class MaterialCreate(MaterialBase):
-    pass
+    quantity: Decimal = Field(default=Decimal("0"), ge=0)
+    unit_cost: Decimal = Field(default=Decimal("0"), ge=0)
+    minimum_stock: Decimal = Field(gt=0)
 
 
 class MaterialUpdate(OrmModel):
     code: str | None = None
     name: str | None = None
     unit: str | None = None
-    quantity: Decimal | None = None
-    unit_cost: Decimal | None = None
-    minimum_stock: Decimal | None = None
+    quantity: Decimal | None = Field(default=None, ge=0)
+    unit_cost: Decimal | None = Field(default=None, ge=0)
+    minimum_stock: Decimal | None = Field(default=None, gt=0)
 
 
 class MaterialRead(MaterialBase):
@@ -35,5 +37,5 @@ class MaterialRead(MaterialBase):
 
 class StockMovementCreate(OrmModel):
     movement_type: str
-    quantity: Decimal
+    quantity: Decimal = Field(gt=0)
     reason: str

@@ -6,6 +6,7 @@ export async function createProductionLot(input: {
   produit_fini_id: string
   quantite_produite: number
   operateur_id: string
+  confirm_below_minimum_stock?: boolean
 }): Promise<{ success?: true; error?: string }> {
   await api.createProduction({
     product_id: Number(input.produit_fini_id),
@@ -13,6 +14,7 @@ export async function createProductionLot(input: {
     quantity: input.quantite_produite,
     status: 'en_cours',
     materials: [],
+    confirm_below_minimum_stock: Boolean(input.confirm_below_minimum_stock),
   })
   return { success: true }
 }
@@ -24,7 +26,7 @@ export async function createComposant(input: NouveauComposantFormData): Promise<
     unit: input.unite_mesure,
     quantity: input.stock_actuel,
     unit_cost: input.cout_unitaire_moyen_pondere,
-    minimum_stock: 0,
+    minimum_stock: input.seuil_minimum,
   })
   return { success: true }
 }

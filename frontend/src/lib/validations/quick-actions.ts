@@ -18,6 +18,9 @@ export const nouveauComposantStep2Schema = z.object({
   cout_unitaire_moyen_pondere: z
     .number({ error: 'Saisissez un montant valide.' })
     .min(0, 'Le CUMP ne peut pas être négatif.'),
+  seuil_minimum: z
+    .number({ error: 'Saisissez un seuil valide.' })
+    .positive('Le seuil minimum doit être strictement supérieur à zéro.'),
 })
 
 export const nouveauComposantSchema = nouveauComposantStep1Schema.merge(

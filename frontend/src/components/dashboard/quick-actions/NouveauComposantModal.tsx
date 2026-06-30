@@ -35,6 +35,8 @@ const initialData: NouveauComposantFormData = {
   unite_mesure: 'unite',
   stock_actuel: 0,
   cout_unitaire_moyen_pondere: 0,
+  seuil_minimum: 0,
+  seuil_confirme: false,
 }
 
 interface NouveauComposantModalProps {
@@ -88,6 +90,7 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
       const parsed = nouveauComposantStep2Schema.safeParse({
         stock_actuel: data.stock_actuel,
         cout_unitaire_moyen_pondere: data.cout_unitaire_moyen_pondere,
+        seuil_minimum: data.seuil_minimum,
       })
       if (!parsed.success) {
         applyZodErrors(parsed.error.issues)
@@ -104,6 +107,11 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
     }
     if (!validateStep(2)) {
       setStep(2)
+      return
+    }
+    if (!data.seuil_confirme) {
+      setStep(3)
+      setServerError("Confirmez le seuil minimum avant d'enregistrer le composant.")
       return
     }
     setIsSubmitting(true)
@@ -265,6 +273,28 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
               className={formInputClass(!!fieldErrors.cout_unitaire_moyen_pondere)}
             />
           </FormField>
+          <FormField
+            label="Seuil minimum d'alerte"
+            htmlFor="seuil"
+            required
+            error={fieldErrors.seuil_minimum}
+          >
+            <input
+              id="seuil"
+              type="number"
+              min="0.001"
+              step="0.001"
+              value={data.seuil_minimum || ''}
+              onChange={(e) =>
+                setData((d) => ({
+                  ...d,
+                  seuil_minimum: parseFloat(e.target.value) || 0,
+                  seuil_confirme: false,
+                }))
+              }
+              className={formInputClass(!!fieldErrors.seuil_minimum)}
+            />
+          </FormField>
         </div>
       )}
 
@@ -292,6 +322,22 @@ export default function NouveauComposantModal({ open, onClose }: NouveauComposan
             <dt className="text-slate-500">CUMP</dt>
             <dd className="font-medium">{data.cout_unitaire_moyen_pondere.toFixed(2)} FCFA</dd>
           </div>
+          <div className="flex justify-between gap-4 border-t border-slate-100 pt-2">
+            <dt className="text-slate-500">Seuil minimum</dt>
+            <dd className="font-medium">{data.seuil_minimum} {data.unite_mesure}</dd>
+          </div>
+          <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-3 text-xs text-amber-900">
+            <input
+              type="checkbox"
+              checked={data.seuil_confirme}
+              onChange={(e) => {
+                setServerError(null)
+                setData((d) => ({ ...d, seuil_confirme: e.target.checked }))
+              }}
+              className="mt-0.5 h-4 w-4"
+            />
+            Je confirme ce seuil d'alerte minimum.
+          </label>
         </dl>
       )}
     </MultiStepModal>

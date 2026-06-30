@@ -80,7 +80,7 @@ function ProductModal({ open, product, onClose, onSaved }: { open: boolean; prod
           </label>
           <label className="grid gap-1 text-xs font-bold sm:col-span-2">
             PRIX UNITAIRE / PRIX DE VENTE (FCFA)
-            <input type="number" min="0" className={input} value={form.sale_price} onChange={(event) => setForm({ ...form, sale_price: event.target.value })} />
+            <input type="number" min="1" step="0.01" required className={input} value={form.sale_price} onChange={(event) => setForm({ ...form, sale_price: event.target.value })} />
           </label>
         </div>
         <div className="flex justify-end gap-2 border-t bg-slate-50 px-5 py-4">

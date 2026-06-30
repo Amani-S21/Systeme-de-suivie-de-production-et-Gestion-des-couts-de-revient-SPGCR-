@@ -9,7 +9,7 @@ export async function submitAdjustStock(raw: AdjustStockFormValues): Promise<{ s
       unit: raw.identification.unite_mesure,
       quantity: raw.mouvement.quantiteAchetee,
       unit_cost: raw.mouvement.quantiteAchetee > 0 ? raw.mouvement.prixAchatTotal / raw.mouvement.quantiteAchetee : 0,
-      minimum_stock: 0,
+      minimum_stock: raw.mouvement.seuilMinimum,
     })
     return { success: true, composantId: String(created.id) }
   }
@@ -30,6 +30,9 @@ export async function submitAdjustStock(raw: AdjustStockFormValues): Promise<{ s
     quantity: purchasedQuantity,
     reason: 'Approvisionnement depuis les operations industrielles',
   })
-  await api.updateMaterial(material.id, { unit_cost: weightedCost })
+  await api.updateMaterial(material.id, {
+    unit_cost: weightedCost,
+    minimum_stock: raw.mouvement.seuilMinimum,
+  })
   return { success: true, composantId: String(material.id) }
 }

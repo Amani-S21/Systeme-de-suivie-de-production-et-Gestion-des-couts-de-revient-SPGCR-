@@ -64,6 +64,18 @@ export interface Production {
   quantity: string
   status: 'planifiee' | 'en_cours' | 'terminee' | 'annulee'
   created_at: string
+  cost?: {
+    id: number
+    production_id: number
+    raw_material_cost: string
+    labor_cost: string
+    overhead_cost: string
+    other_cost: string
+    total_cost: string
+    unit_cost: string
+    margin_rate: string
+    calculated_at: string
+  } | null
 }
 
 export interface DashboardSummary {

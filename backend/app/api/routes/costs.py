@@ -17,7 +17,7 @@ def calculate(production_id: int, payload: CostCreate, db: Session = Depends(get
     production = db.get(Production, production_id)
     if user.role == UserRole.operateur_usine and (not production or user.id not in {production.operator_id, production.created_by_id}):
         raise HTTPException(status_code=403, detail="Ce lot ne vous est pas affecte")
-    cost = calculate_cost(db, production_id, payload)
+    cost = calculate_cost(db, production_id, payload, user_id=user.id)
     db.commit()
     db.refresh(cost)
     return cost

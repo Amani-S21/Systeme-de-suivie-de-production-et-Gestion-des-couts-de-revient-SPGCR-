@@ -64,6 +64,7 @@ function toComposants(materials: Material[]) {
     unite_mesure: m.unit,
     stock_actuel: Number(m.quantity),
     cout_unitaire_moyen_pondere: Number(m.unit_cost),
+    seuil_minimum: Number(m.minimum_stock),
   }))
 }
 
@@ -306,20 +307,23 @@ function DashboardApp({ path, user, reloadUser }: { path: string; user: User; re
       )
     }
     if (page === '/dashboard/analyses') {
-      const rows = productions.map((p) => ({
+      const rows = productions.filter((p) => p.cost).map((p) => ({
         id: String(p.id),
         lot_id: String(p.id),
         numero_lot: p.reference,
         produit_nom: p.product?.name || `Produit ${p.product_id}`,
-        cout_direct_matieres: 0,
-        cout_revient_total: 0,
-        cout_unitaire_theorique: Number(summary?.kpis.average_unit_cost || 0),
-        marge_brute_estimee: Number(summary?.kpis.margin_rate || 0),
-        calcule_at: p.created_at,
+        cout_direct_matieres: Number(p.cost?.raw_material_cost || 0),
+        cout_revient_total: Number(p.cost?.total_cost || 0),
+        cout_unitaire_theorique: Number(p.cost?.unit_cost || 0),
+        marge_brute_estimee: Number(p.cost?.margin_rate || 0),
+        calcule_at: p.cost?.calculated_at || p.created_at,
         quantite_produite: Number(p.quantity),
       }))
       const coutMoyen = rows.length ? rows.reduce((acc, row) => acc + row.cout_unitaire_theorique, 0) / rows.length : 0
-      return <AnalysesFinancieresClient rows={rows} stats={{ cout_moyen: coutMoyen, marge_globale: Number(summary?.kpis.margin_rate || 0) }} />
+      const margeGlobale = rows.length
+        ? rows.reduce((acc, row) => acc + Number(row.marge_brute_estimee || 0), 0) / rows.length
+        : null
+      return <AnalysesFinancieresClient rows={rows} stats={{ cout_moyen: coutMoyen, marge_globale: margeGlobale }} />
     }
     if (page === '/dashboard/utilisateurs') {
       const rows = toUsers(users)

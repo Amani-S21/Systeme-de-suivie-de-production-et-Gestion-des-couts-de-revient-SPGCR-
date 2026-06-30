@@ -14,14 +14,14 @@ class ProductBase(OrmModel):
 
 
 class ProductCreate(ProductBase):
-    pass
+    sale_price: Decimal = Field(gt=0)
 
 
 class ProductUpdate(OrmModel):
     name: str | None = None
     sku: str | None = None
     unit: str | None = None
-    sale_price: Decimal | None = None
+    sale_price: Decimal | None = Field(default=None, gt=0)
 
 
 class ProductRead(ProductBase):

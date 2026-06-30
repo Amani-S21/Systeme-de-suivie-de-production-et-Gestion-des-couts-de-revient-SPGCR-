@@ -20,7 +20,7 @@ const STEPS = ['Identification', 'Mouvement de stock', 'Récapitulatif']
 
 const defaultValues: AdjustStockFormValues = {
   identification: { mode: 'existing', composantId: '' },
-  mouvement: { quantiteAchetee: 0, prixAchatTotal: 0 },
+  mouvement: { quantiteAchetee: 0, prixAchatTotal: 0, seuilMinimum: 0, seuilConfirme: false },
 }
 
 interface AdjustStockModalProps {
@@ -52,7 +52,7 @@ export default function AdjustStockModal({
   useEffect(() => {
     if (open) {
       reset(initialComposantId
-        ? { identification: { mode: 'existing', composantId: initialComposantId }, mouvement: { quantiteAchetee: 0, prixAchatTotal: 0 } }
+        ? { identification: { mode: 'existing', composantId: initialComposantId }, mouvement: { quantiteAchetee: 0, prixAchatTotal: 0, seuilMinimum: 0, seuilConfirme: false } }
         : defaultValues)
       setStep(1)
       setServerError(null)
@@ -63,6 +63,14 @@ export default function AdjustStockModal({
     if (identification.mode !== 'existing') return null
     return composants.find((c) => c.id === identification.composantId) ?? null
   }, [identification, composants])
+
+  useEffect(() => {
+    if (!selectedComposant) return
+    setValue('mouvement.seuilMinimum', Number(selectedComposant.seuil_minimum || 0), {
+      shouldValidate: true,
+    })
+    setValue('mouvement.seuilConfirme', false)
+  }, [selectedComposant, setValue])
 
   const previewCump = useMemo(() => {
     if (identification.mode === 'new') {
@@ -128,6 +136,11 @@ export default function AdjustStockModal({
     }
     if (!movOk.success) {
       setStep(2)
+      return
+    }
+    if (!mouvement.seuilConfirme) {
+      setStep(3)
+      setServerError("Confirmez le seuil minimum avant de valider l'entrée en stock.")
       return
     }
     setServerError(null)
@@ -377,6 +390,21 @@ export default function AdjustStockModal({
               {...form.register('mouvement.prixAchatTotal', { valueAsNumber: true })}
             />
           </FormField>
+          <FormField
+            label="Seuil minimum d'alerte"
+            htmlFor="seuilMinimum"
+            required
+            error={formState.errors.mouvement?.seuilMinimum?.message}
+          >
+            <input
+              id="seuilMinimum"
+              type="number"
+              step="0.001"
+              min="0.001"
+              className={formInputClass(!!formState.errors.mouvement?.seuilMinimum)}
+              {...form.register('mouvement.seuilMinimum', { valueAsNumber: true })}
+            />
+          </FormField>
         </div>
       )}
 
@@ -404,7 +432,19 @@ export default function AdjustStockModal({
               <dt className="text-slate-500">Nouveau CUMP</dt>
               <dd className="text-lg font-bold text-slate-900">{previewCump.toFixed(2)} FCFA</dd>
             </div>
+            <div className="flex justify-between gap-4 border-t border-slate-100 pt-2">
+              <dt className="text-slate-500">Seuil minimum</dt>
+              <dd className="font-medium">{mouvement.seuilMinimum}</dd>
+            </div>
           </dl>
+          <label className="flex cursor-pointer items-start gap-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-3 text-xs text-amber-900">
+            <input
+              type="checkbox"
+              className="mt-0.5 h-4 w-4"
+              {...form.register('mouvement.seuilConfirme')}
+            />
+            Je confirme ce seuil d'alerte minimum.
+          </label>
         </div>
       )}
     </MultiStepModal>

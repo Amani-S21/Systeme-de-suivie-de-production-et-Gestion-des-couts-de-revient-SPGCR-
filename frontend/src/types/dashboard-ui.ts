@@ -22,6 +22,7 @@ export interface ComposantRow {
   unite_mesure: string
   stock_actuel: number
   cout_unitaire_moyen_pondere: number
+  seuil_minimum: number
 }
 
 export interface UserProfileRow {
@@ -79,4 +80,3 @@ export interface AnalysesStats {
   cout_moyen: number
   marge_globale: number | null
 }
-

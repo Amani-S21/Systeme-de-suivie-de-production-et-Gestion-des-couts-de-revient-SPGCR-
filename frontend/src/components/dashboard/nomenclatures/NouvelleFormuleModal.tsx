@@ -37,6 +37,7 @@ const defaultValues: CatalogueFormValues = {
     nom: '',
     code: '',
     unite_commerciale: 'bouteille',
+    prix_vente: 0,
   },
   lignes: {
     lignes: [{ composant_id: '', quantite_requise: 0 }],
@@ -165,6 +166,7 @@ export default function NouvelleFormuleModal({
               nom: cat.nom,
               code: cat.code,
               unite_commerciale: cat.unite_commerciale,
+              prix_vente: cat.prix_vente,
               draft_produit_fini_id: produitFiniId ?? undefined,
             }
           : { mode: 'existing' as const, produit_fini_id: cat.produit_fini_id }
@@ -288,6 +290,7 @@ export default function NouvelleFormuleModal({
                       nom: '',
                       code: '',
                       unite_commerciale: 'bouteille',
+                      prix_vente: 0,
                     })
                     setProduitFiniId(null)
                   }}
@@ -401,6 +404,21 @@ export default function NouvelleFormuleModal({
                   <option value="bouteille">Bouteille</option>
                   <option value="carton">Carton</option>
                 </select>
+              </FormField>
+              <FormField
+                label="Prix de vente unitaire (FCFA)"
+                htmlFor="prixVente"
+                required
+                error={catalogueFieldError('prix_vente')}
+              >
+                <input
+                  id="prixVente"
+                  type="number"
+                  min="1"
+                  step="0.01"
+                  className={formInputClass(!!catalogueFieldError('prix_vente'))}
+                  {...form.register('catalogue.prix_vente', { valueAsNumber: true })}
+                />
               </FormField>
             </>
           )}
