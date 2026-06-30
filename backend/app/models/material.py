@@ -1,10 +1,11 @@
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import DateTime, ForeignKey, Integer, Numeric, String, func
+from sqlalchemy import DateTime, Enum, ForeignKey, Integer, Numeric, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+from app.models.enums import MovementType
 
 
 class Material(Base):
@@ -27,7 +28,10 @@ class StockMovement(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     material_id: Mapped[int] = mapped_column(ForeignKey("materials.id"), nullable=False)
-    movement_type: Mapped[str] = mapped_column(String(30), nullable=False)
+    movement_type: Mapped[MovementType] = mapped_column(
+        Enum(MovementType, name="movementtype"),
+        nullable=False,
+    )
     quantity: Mapped[Decimal] = mapped_column(Numeric(14, 3), nullable=False)
     reason: Mapped[str] = mapped_column(String(255), nullable=False)
     created_by_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)

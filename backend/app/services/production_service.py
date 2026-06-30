@@ -6,7 +6,7 @@ from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session, selectinload
 
 from app.models.bom import BomItem
-from app.models.enums import ProductionStatus, UserRole
+from app.models.enums import MovementType, ProductionStatus, UserRole
 from app.models.material import Material, StockMovement
 from app.models.production import Production, ProductionMaterial
 from app.models.product import Product
@@ -174,7 +174,7 @@ def ensure_material_consumption(
         db.add(
             StockMovement(
                 material_id=material.id,
-                movement_type="sortie",
+                movement_type=MovementType.sortie,
                 quantity=quantity_used,
                 reason=f"Consommation automatique du lot {production.reference}",
                 created_by_id=created_by_id,

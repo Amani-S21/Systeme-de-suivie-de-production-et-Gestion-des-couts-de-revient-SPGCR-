@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from pydantic import Field
 
+from app.models.enums import MovementType
 from app.schemas.common import OrmModel
 
 
@@ -36,6 +37,6 @@ class MaterialRead(MaterialBase):
 
 
 class StockMovementCreate(OrmModel):
-    movement_type: str
+    movement_type: MovementType
     quantity: Decimal = Field(gt=0)
     reason: str
