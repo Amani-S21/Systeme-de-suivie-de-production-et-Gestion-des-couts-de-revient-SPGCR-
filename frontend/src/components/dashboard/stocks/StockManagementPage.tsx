@@ -214,7 +214,7 @@ export default function StockManagementPage({ materials, products, productions, 
           </div>
           <ExportButtons
             onExportExcel={() => exportToCsv('gestion-stocks', rows)}
-            onExportPdf={() => exportToPrint('Gestion des stocks - SPCR', rows)}
+            onExportPdf={() => exportToPrint('Gestion des stocks - SPGCR', rows)}
           />
         </div>
 

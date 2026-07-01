@@ -80,7 +80,7 @@ export default function AnalysesFinancieresClient({ rows, stats }: Props) {
     })))
   }
   function handleExportPdf() {
-    exportToPrint('Analyses Financières — SPCR', filtered.map((r) => ({
+    exportToPrint('Analyses Financières — SPGCR', filtered.map((r) => ({
       'N° Lot': r.numero_lot,
       Produit: r.produit_nom,
       'Coût matières (FCFA)': r.cout_direct_matieres,

@@ -10,7 +10,7 @@ PROJECT_ROOT = BACKEND_DIR.parent
 
 
 class Settings(BaseSettings):
-    app_name: str = "SPCR API"
+    app_name: str = "SPGCR API"
     api_v1_prefix: str = "/api/v1"
     database_url: str = Field(alias="DATABASE_URL")
     secret_key: str = Field(alias="SECRET_KEY")
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     default_admin_login: str = Field("admin", alias="DEFAULT_ADMIN_LOGIN")
     default_admin_password: str = Field(alias="DEFAULT_ADMIN_PASSWORD")
     default_admin_first_name: str = Field("Admin", alias="DEFAULT_ADMIN_FIRST_NAME")
-    default_admin_last_name: str = Field("SPCR", alias="DEFAULT_ADMIN_LAST_NAME")
+    default_admin_last_name: str = Field("SPGCR", alias="DEFAULT_ADMIN_LAST_NAME")
 
     model_config = SettingsConfigDict(
         env_file=(PROJECT_ROOT / ".env", BACKEND_DIR / ".env"),

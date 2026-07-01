@@ -1,9 +1,9 @@
-# SPCR - Suivi de Production et Gestion des Couts de Revient
+# SPGCR - Suivi de Production et Gestion des Couts de Revient
 
 Application decoupee en deux parties :
 
 - `backend/` : API FastAPI, PostgreSQL, SQLAlchemy, Alembic, JWT, roles et permissions.
-- `frontend/` : interface React/Vite reprenant le design du dashboard SPCR.
+- `frontend/` : interface React/Vite reprenant le design du dashboard SPGCR.
 
 ## Prerequis
 

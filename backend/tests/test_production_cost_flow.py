@@ -33,7 +33,7 @@ class ProductionCostFlowTest(unittest.TestCase):
             login="admin",
             hashed_password="test",
             first_name="Admin",
-            last_name="SPCR",
+            last_name="SPGCR",
             role=UserRole.admin_msd,
             is_active=True,
         )

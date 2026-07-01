@@ -224,7 +224,7 @@ export default function HomePage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600" />
               </span>
-              Système Opérationnel — SPCR · Vin Ushindi
+              Système Opérationnel — SPGCR · Vin Ushindi
             </motion.div>
 
             <div className="max-w-5xl w-full z-10 text-center">
@@ -426,15 +426,15 @@ export default function HomePage() {
                 <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-indigo-600 to-transparent rounded-t-md" />
                 <div className="mb-6 text-4xl text-indigo-200 font-black leading-none select-none">"</div>
                 <p className="text-slate-700 text-[15px] leading-relaxed font-medium italic mb-8">
-                  La traçabilité n'est plus une option, c'est le socle de notre vérité financière. Le SPCR nous permet
+                  La traçabilité n'est plus une option, c'est le socle de notre vérité financière. Le SPGCR nous permet
                   d'automatiser l'analyse des marges et de sécuriser chaque étape de notre chaîne de valeur.
                 </p>
                 <div className="border-t border-slate-100 pt-5 flex items-center gap-4">
                   <div className="w-8 h-8 rounded-md bg-slate-950 flex items-center justify-center flex-shrink-0">
-                    <span className="text-white text-[10px] font-black">SPCR</span>
+                    <span className="text-white text-[10px] font-black">SPGCR</span>
                   </div>
                   <div>
-                    <div className="text-[11px] font-black uppercase tracking-widest text-slate-900">Administration SPCR</div>
+                    <div className="text-[11px] font-black uppercase tracking-widest text-slate-900">Administration SPGCR</div>
                     <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Audit & Contrôle de Gestion</div>
                   </div>
                 </div>

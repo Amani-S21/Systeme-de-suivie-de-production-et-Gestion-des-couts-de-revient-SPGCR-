@@ -97,7 +97,7 @@ export default function SuccursalesPageClient({ initSuccursales, profiles }: Pro
     <>
       <PageHeader
         title="Gestion des Succursales"
-        description="Administration des sites physiques et dépôts régionaux du SPCR."
+        description="Administration des sites physiques et dépôts régionaux du SPGCR."
         action={
           <PrimaryButton onClick={() => { setEditTarget(null); setModalOpen(true) }}>
             <Plus className="h-4 w-4" />
@@ -140,7 +140,7 @@ export default function SuccursalesPageClient({ initSuccursales, profiles }: Pro
             </select>
             
             <div className="ml-2 border-l border-slate-100 pl-4">
-              <ExportButtons onExportExcel={handleExportExcel} onExportPdf={() => exportToPrint('Liste des Succursales — SPCR', filtered.map(s => ({ Code: s.code_depot, Nom: s.nom, Ville: s.ville, Adresse: s.adresse || '—', Responsable: s.responsable_nom, Statut: s.actif ? 'Actif' : 'Inactif' })))} />
+              <ExportButtons onExportExcel={handleExportExcel} onExportPdf={() => exportToPrint('Liste des Succursales — SPGCR', filtered.map(s => ({ Code: s.code_depot, Nom: s.nom, Ville: s.ville, Adresse: s.adresse || '—', Responsable: s.responsable_nom, Statut: s.actif ? 'Actif' : 'Inactif' })))} />
             </div>
           </div>
         </div>

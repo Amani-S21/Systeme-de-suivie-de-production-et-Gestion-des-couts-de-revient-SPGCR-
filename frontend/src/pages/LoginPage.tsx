@@ -127,7 +127,7 @@ export default function LoginPage() {
             Environnement Sécurisé v1.0
           </span>
           <h2 className="mt-4 text-3xl font-black tracking-tight text-slate-900">
-            SPCR
+            SPGCR
           </h2>
           <p className="mt-1.5 text-xs text-slate-500 font-medium uppercase tracking-wider">
             Système de Production & Gestion des Coûts de Revient

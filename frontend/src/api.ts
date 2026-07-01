@@ -39,7 +39,7 @@ async function waitForBackend(): Promise<void> {
         await new Promise((resolve) => window.setTimeout(resolve, 1500))
       }
     }
-    console.error('SPCR backend unavailable', lastError)
+    console.error('SPGCR backend unavailable', lastError)
     throw new Error(
       "Le serveur est temporairement indisponible. Patientez quelques secondes puis réessayez."
     )

@@ -102,7 +102,7 @@ export default function DashboardHeader({
           </button>
           <Link href="/dashboard" className="leading-none">
             <span className="text-sm font-bold tracking-tight text-slate-900 sm:text-base">
-              SPCR
+              SPGCR
             </span>
             <span className="mt-0.5 hidden text-[9px] font-semibold uppercase tracking-[0.2em] text-slate-400 sm:block">
               Vin Ushindi

@@ -210,7 +210,7 @@ export default function ChargesConfigPageClient() {
 
         <div className="flex items-center justify-between border-b bg-slate-50/40 px-4 py-3">
           <p className="text-xs font-semibold text-slate-500">{charges.length} ecriture(s) trouvee(s)</p>
-          <ExportButtons onExportExcel={() => exportToCsv('charges', rows)} onExportPdf={() => exportToPrint('Rapport des charges - SPCR', rows)} />
+          <ExportButtons onExportExcel={() => exportToCsv('charges', rows)} onExportPdf={() => exportToPrint('Rapport des charges - SPGCR', rows)} />
         </div>
 
         <div className="overflow-x-auto">
